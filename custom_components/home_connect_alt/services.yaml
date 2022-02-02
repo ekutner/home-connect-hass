@@ -1,0 +1,60 @@
+select_program:
+  name: Select program
+  description: Select a program and optionally set the program options
+  fields:
+    device_id:
+      description: The ID of the appliance to start the program on
+      name: device_id
+      required: true
+      selector:
+        device:
+          integration: home_connect_alt
+    program_key:
+      name: Program
+      description: >
+        The full key of a valid program for the selected appliance
+        For example: ConsumerProducts.CoffeeMaker.Program.Beverage.Espresso
+        Documentation: https://api-docs.home-connect.com/programs-and-options
+      example: ConsumerProducts.CoffeeMaker.Program.Beverage.Espresso
+      required: true
+      selector:
+        text:
+    options:
+      name: Options
+      description: >
+        A list of dictionaries with options for the program:
+        [
+          { "key": "... option key ...", "value": "... option value ... "}
+        ]
+      example: >
+        [
+          { "key": "ConsumerProducts.CoffeeMaker.Option.BeanAmount", "value": "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.DoubleShot" },
+          { "key": "ConsumerProducts.CoffeeMaker.Option.FillQuantity", "value": 50 },
+        ]
+      required: false
+      selector:
+        object:
+
+start_program:
+  name: Start program
+  description: Start the currently selected program
+  fields:
+    device_id:
+      description: The ID of the appliance to start the program on
+      name: device_id
+      required: true
+      selector:
+        device:
+          integration: home_connect_alt
+
+stop_program:
+  name: Stop program
+  description: Stop the currently active program
+  fields:
+    device_id:
+      description: The ID of the appliance to stop the program on
+      name: device_id
+      required: true
+      selector:
+        device:
+          integration: home_connect_alt

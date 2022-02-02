@@ -1,0 +1,18 @@
+name: Test hassfest
+
+on:
+  pull_request:
+    branches: ["master"]
+  push:
+    branches: ["master"]
+
+jobs:
+  hassfest:
+    runs-on: ubuntu-latest
+    name: hassfest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Test hassfest
+        uses: home-assistant/actions/hassfest@master
