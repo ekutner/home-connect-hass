@@ -1,9 +1,9 @@
 
 from home_connect_async import Appliance, HomeConnect
+from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
-from homeassistant.components.binary_sensor import BinarySensorEntity
 
 from .common import EntityBase
 from .const import DOMAIN, SPECIAL_ENTITIES

@@ -1,12 +1,22 @@
 default_config:
 
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+
+# Dev config starts here
 logger:
   default: info
   logs:
     custom_components.home_connect_alt: debug
 
 # If you need to debug uncomment the line below (doc: https://www.home-assistant.io/integrations/debugpy/)
-# debugpy:
+#debugpy:
 
 home_connect_alt:
   client_id: !secret home_connect_client_id

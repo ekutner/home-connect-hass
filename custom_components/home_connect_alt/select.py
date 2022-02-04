@@ -1,15 +1,18 @@
+""" Implement the Select entities of this implementation """
+
 from home_connect_async import Appliance, HomeConnect, HomeConnectError
+from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
-from homeassistant.components.select import SelectEntity
 
 from .common import EntityBase
-from .const import DEVICE_ICON_MAP, DOMAIN, SPECIAL_ENTITIES
+from .const import DEVICE_ICON_MAP, DOMAIN
 
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
+    """Add Selects for passed config_entry in HA."""
     homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
     added_appliances = []
 
@@ -47,6 +50,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
         added_appliances.append(appliance.haId)
 
 class ProgramSelect(EntityBase, SelectEntity):
+    """ Selection of available programs """
     @property
     def unique_id(self) -> str:
         return f'{self.haId}_programs'
@@ -94,6 +98,7 @@ class ProgramSelect(EntityBase, SelectEntity):
 
 
 class OptionSelect(EntityBase, SelectEntity):
+    """ Selection of program options """
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__options"
@@ -122,6 +127,7 @@ class OptionSelect(EntityBase, SelectEntity):
 
 
 class SettingsSelect(EntityBase, SelectEntity):
+    """ Selection of settings """
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__settings"

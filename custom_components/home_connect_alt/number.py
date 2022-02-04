@@ -1,16 +1,18 @@
+""" Implement the Number entities of this implementation """
+
 from home_connect_async import Appliance, HomeConnect, HomeConnectError
+from homeassistant.components.number import NumberEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
-from homeassistant.components.number import NumberEntity
 
 from .common import EntityBase
-from .const import DEVICE_ICON_MAP, DOMAIN, SPECIAL_ENTITIES
+from .const import DOMAIN
 
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
-    """Add sensors for passed config_entry in HA."""
+    """Add Numbers for passed config_entry in HA."""
     #auth = hass.data[DOMAIN][config_entry.entry_id]
     homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
     added_appliances = []
@@ -46,6 +48,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
 
 
 class OptionNumber(EntityBase, NumberEntity):
+    """ Class for numeric options """
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__options"
@@ -85,13 +88,14 @@ class OptionNumber(EntityBase, NumberEntity):
         try:
             await self._appliance.async_set_option(self._key, value)
         except HomeConnectError as ex:
-            raise HomeAssistantError(f"Failed to set option value ({ex.code})")
+            raise HomeAssistantError(f"Failed to set option value ({ex.code})") from ex
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
 
 
 class SettingsNumber(EntityBase, NumberEntity):
+    """ Class for numeric settings """
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__settings"
@@ -126,9 +130,8 @@ class SettingsNumber(EntityBase, NumberEntity):
         try:
             await self._appliance.async_apply_setting(self._key, value)
         except HomeConnectError as ex:
-            raise HomeAssistantError(f"Failed to apply setting value ({ex.code})")
+            raise HomeAssistantError(f"Failed to apply setting value ({ex.code})") from ex
 
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
-

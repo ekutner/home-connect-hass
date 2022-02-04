@@ -1,32 +1,25 @@
 """The Home Connect New integration."""
 from __future__ import annotations
+
 import asyncio
 import logging
 from datetime import datetime
 
-from home_connect_async.appliance import Appliance
-
 import voluptuous as vol
-import homeassistant
-
+from home_connect_async import Appliance, HomeConnect
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_CLIENT_ID, CONF_CLIENT_SECRET, Platform
 from homeassistant.core import Event, HomeAssistant
-from homeassistant.helpers import (
-    aiohttp_client,
-    config_entry_oauth2_flow,
-    config_validation as cv,
-    storage,
-    device_registry as dr,
-    entity_registry as er
-)
+from homeassistant.helpers import aiohttp_client, config_entry_oauth2_flow
+from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import storage
 from homeassistant.helpers.typing import ConfigType
 
 from . import api, config_flow
 from .const import *
 from .services import Services
-
-from home_connect_async import HomeConnect
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -43,7 +36,6 @@ CONFIG_SCHEMA = vol.Schema(
     extra=vol.ALLOW_EXTRA,
 )
 
-# TODO List the platforms that you want to support.
 # For your initial PR, limit it to 1 platform.
 PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.SELECT, Platform.NUMBER, Platform.BUTTON, Platform.SWITCH]
 
@@ -94,29 +86,29 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         aiohttp_client.async_get_clientsession(hass), session, host
     )
 
-    hc:HomeConnect = await async_load_from_cache(hass, auth)
-    if not hc:
+    homeconnect:HomeConnect = await async_load_from_cache(hass, auth)
+    if not homeconnect:
         # Create normally if failed to create from cache
-        hc = await HomeConnect.async_create(auth, delayed_load=True)
+        homeconnect = await HomeConnect.async_create(auth, delayed_load=True)
 
     conf[entry.entry_id] = auth
-    conf['homeconnect'] = hc
-    conf['services'] = register_services(hass, hc)
+    conf['homeconnect'] = homeconnect
+    conf['services'] = register_services(hass, homeconnect)
 
     #region internal event hadlers
     async def async_delayed_update_cache(delay:float = 0):
         asyncio.sleep(delay)
-        await async_save_to_cache(hass, hc)
+        await async_save_to_cache(hass, homeconnect)
 
-    async def on_data_loaded(hc:HomeConnect):
+    async def on_data_loaded(homeconnect:HomeConnect):
         # Save the state of the HomeConnect object to cache
-        await async_save_to_cache(hass, hc)
-        hc.register_callback(on_device_removed, "DEPAIRED")
-        hc.register_callback(on_device_added, "PAIRED")
-        hc.subscribe_for_updates()
+        await async_save_to_cache(hass, homeconnect)
+        homeconnect.register_callback(on_device_removed, "DEPAIRED")
+        homeconnect.register_callback(on_device_added, "PAIRED")
+        homeconnect.subscribe_for_updates()
 
     async def on_device_added(appliance:Appliance, event:str):
-        await async_save_to_cache(hass, hc)
+        await async_save_to_cache(hass, homeconnect)
 
     async def on_device_removed(appliance:Appliance, event:str):
         devreg = dr.async_get(hass)
@@ -132,10 +124,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # Setup all the callback listeners before starting to load the data
     hass.config_entries.async_setup_platforms(entry, PLATFORMS)
-    register_events_publisher(hass, hc)
+    register_events_publisher(hass, homeconnect)
 
     # Continue loading the HomeConnect data model and set the callback to be notified when done
-    hc.continue_data_load(on_complete=on_data_loaded)
+    homeconnect.continue_data_load(on_complete=on_data_loaded)
 
     return True
 
@@ -143,8 +135,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     conf = hass.data[DOMAIN]
-    hc:HomeConnect = conf['homeconnect']
-    hc.close()
+    homeconnect:HomeConnect = conf['homeconnect']
+    homeconnect.close()
 
     await async_save_to_cache(hass, None)
 
@@ -155,6 +147,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return unload_ok
 
 async def async_load_from_cache(hass:HomeAssistant, auth:api.AsyncConfigEntryAuth) -> HomeConnect | None:
+    """ Helper function to load cached Home Connect data for storage """
     cache = storage.Store(hass, version=1, key=f"{DOMAIN}_cache", private=True)
     try:
         refresh = HomeConnect.RefreshMode.ALL
@@ -166,36 +159,38 @@ async def async_load_from_cache(hass:HomeAssistant, auth:api.AsyncConfigEntryAut
 
             last_update = datetime.fromisoformat(cached_data['last_update'])
             delta = (datetime.now()-last_update).total_seconds()
-            if delta < 120000:
+            if delta < 120:
                 refresh = HomeConnect.RefreshMode.NOTHING
             elif delta < 3600*24*30:
                 refresh = HomeConnect.RefreshMode.DYNAMIC_ONLY
 
-        hc:HomeConnect = await HomeConnect.async_create(auth, json_data=json_data, refresh=refresh, delayed_load=True)
-        return hc
+        homeconnect:HomeConnect = await HomeConnect.async_create(auth, json_data=json_data, refresh=refresh, delayed_load=True)
+        return homeconnect
     except Exception as ex:
         # If there is any exception when creating the object from cache just create it normally
         _LOGGER.debug("Exception while reading cached data", exc_info=ex)
         return None
 
-async def async_save_to_cache(hass:HomeAssistant, hc:HomeConnect, cache:storage.Store=None) -> None:
+async def async_save_to_cache(hass:HomeAssistant, homeconnect:HomeConnect, cache:storage.Store=None) -> None:
+    """ Helper function to save the Home Connect data to Home Assistant storage """
     try:
         if not cache:
             cache = storage.Store(hass, version=1, key=f"{DOMAIN}_cache", private=True)
-        if hc:
+        if homeconnect:
             cached_data = {
                 'last_update': datetime.now().isoformat(),
-                'json_data': hc.to_json()
+                'json_data': homeconnect.to_json()
             }
             await cache.async_save(cached_data)
         else:
             await cache.async_remove()
     except Exception as ex:
         _LOGGER.warning("Exception when saving to cache", exc_info=ex)
-        pass
 
-def register_services(hass:HomeAssistant, hc:HomeConnect) -> Services:
-    services = Services(hass, hc)
+
+def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
+    """ Register the services offered by this integration """
+    services = Services(hass, homeconnect)
 
     select_program_scema = vol.Schema(
         {
@@ -224,7 +219,8 @@ def register_services(hass:HomeAssistant, hc:HomeConnect) -> Services:
     return services
 
 
-def register_events_publisher(hass:HomeAssistant, hc:HomeConnect):
+def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect):
+    """ Register for publishing events that are offered by this integration """
     device_reg = dr.async_get(hass)
 
     async def async_handle_event(appliance:Appliance, key:str, value:str):
@@ -246,13 +242,12 @@ def register_events_publisher(hass:HomeAssistant, hc:HomeConnect):
 
     # for appliance in hc.appliances.values():
     #     async_register(appliance)
-    hc.register_callback(register_appliance, "PAIRED")
+    homeconnect.register_callback(register_appliance, "PAIRED")
 
 
 class HomeConnectOauth2Impl(config_entry_oauth2_flow.LocalOAuth2Implementation):
+    """" Implement that OAuth2 class """
     @property
     def name(self) -> str:
         """Name of the implementation."""
         return "Home Connect Appliances"
-
-

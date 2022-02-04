@@ -1,30 +1,62 @@
 // See https://aka.ms/vscode-remote/devcontainer.json for format details.
 {
-	"image": "ludeeus/container:integration-debian",
-	"name": "Blueprint integration development",
-	"context": "..",
+	"name": "Home Connect Alt Integration Development",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			"VARIANT": "3.9",
+      "LOCAL_INTEGRATION_FOLDER": "${localWorkspaceFolder}"
+		},
+		"context": ".."
+	},
+	"containerEnv": {
+		"INTEGRATION_PATH": "${containerWorkspaceFolder}",
+    "GIT_EDITOR": "code"
+	},
 	"appPort": [
 		"9123:8123"
 	],
-	"postCreateCommand": "container install",
+	"mounts": [
+    "source=${localWorkspaceFolderBasename}_profile,target=/root,type=volume",  // create a persistent named volume mounted to /root (home of user root)
+    "target=/root/.vscode-server,type=volume",  // create an anonymous volume mounted to /root/.vscode-server which will be rebuilt with the container
+    "source=${localWorkspaceFolderBasename}_config,target=/config,type=volume",  // create a persistent named volume for the configuration folder
+		"source=${localWorkspaceFolder}/../home-connect-async,target=${containerWorkspaceFolder}/../home-connect-async,type=bind,consistency=consistent"
+	],
+	"postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/postcreate.sh",
+  "postStartCommand":  "${containerWorkspaceFolder}/.devcontainer/scripts/poststart.sh",
 	"extensions": [
-		"ms-python.python",
 		"github.vscode-pull-request-github",
 		"ryanluker.vscode-coverage-gutters",
-		"ms-python.vscode-pylance"
+		"ms-python.vscode-pylance",
+    "visualstudioexptteam.vscodeintellicode",
+    "redhat.vscode-yaml",
+    "esbenp.prettier-vscode",
+    "eamodio.gitlens"
 	],
-	"settings": {
-		"files.eol": "\n",
-		"editor.tabSize": 4,
-		"terminal.integrated.shell.linux": "/bin/bash",
-		"python.pythonPath": "/usr/bin/python3",
-		"python.analysis.autoSearchPaths": false,
-		"python.linting.pylintEnabled": true,
-		"python.linting.enabled": true,
-		"python.formatting.provider": "black",
-		"editor.formatOnPaste": false,
-		"editor.formatOnSave": true,
-		"editor.formatOnType": true,
-		"files.trimTrailingWhitespace": true
-	}
+  "settings": {
+    "python.pythonPath": "/usr/local/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.formatting.provider": "black",
+    "python.testing.pytestArgs": ["--no-cov"],
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "files.trimTrailingWhitespace": true,
+    "terminal.integrated.profiles.linux": {
+      "zsh": {
+        "path": "/usr/bin/zsh"
+      }
+    },
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "yaml.customTags": [
+      "!input scalar",
+      "!secret scalar",
+      "!include_dir_named scalar",
+      "!include_dir_list scalar",
+      "!include_dir_merge_list scalar",
+      "!include_dir_merge_named scalar"
+    ]
+  }
+
 }

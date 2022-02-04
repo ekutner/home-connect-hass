@@ -1,8 +1,10 @@
-from home_connect_async import HomeConnect,Appliance
+""" Implement the Sensor entities of this implementation """
+
+from home_connect_async import Appliance, HomeConnect
+from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
-from homeassistant.components.sensor import SensorEntity
 
 from .common import EntityBase
 from .const import DEVICE_ICON_MAP, DOMAIN, SPECIAL_ENTITIES
@@ -62,7 +64,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
 
 
 class CurrentProgramSensor(EntityBase, SensorEntity):
-
+    """ Selected program sensor """
     @property
     def unique_id(self) -> str:
         return f'{self.haId}_current_program'
@@ -105,6 +107,7 @@ class CurrentProgramSensor(EntityBase, SensorEntity):
 
 
 class ActivityOptionSensor(EntityBase, SensorEntity):
+    """ Special active program sensor """
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__status"
@@ -127,6 +130,7 @@ class ActivityOptionSensor(EntityBase, SensorEntity):
 
 
 class StatusSensor(EntityBase, SensorEntity):
+    """ Status sensor """
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__status"
@@ -145,6 +149,7 @@ class StatusSensor(EntityBase, SensorEntity):
 
 
 class HomeConnectSensor(SensorEntity):
+    """ Global Home Connect status sensor """
     should_poll = True
 
     def __init__(self, homeconnect:HomeConnect) -> None:

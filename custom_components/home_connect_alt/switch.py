@@ -1,13 +1,16 @@
+""" Implement the Switch entities of this implementation """
+
 from typing import Any
+
 from home_connect_async import Appliance, HomeConnect, HomeConnectError
+from homeassistant.components.switch import SwitchEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, HomeAssistantType
-from homeassistant.components.switch import SwitchEntity
+from homeassistant.helpers.typing import ConfigType
 
 from .common import EntityBase
-from .const import DEVICE_ICON_MAP, DOMAIN, SPECIAL_ENTITIES
+from .const import DOMAIN
 
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
@@ -47,6 +50,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
 
 
 class OptionSwitch(EntityBase, SwitchEntity):
+    """ Switch for binary options """
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__options"
@@ -76,7 +80,7 @@ class OptionSwitch(EntityBase, SwitchEntity):
 
 
 class SettingsSwitch(EntityBase, SwitchEntity):
-
+    """ Switch for binary settings """
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__settings"

@@ -1,17 +1,19 @@
 """Config flow for Home Connect New."""
 import logging
 
-from homeassistant.helpers import config_entry_oauth2_flow, config_validation as cv
-from homeassistant import config_entries
 import voluptuous as vol
+from homeassistant import config_entries
+from homeassistant.const import CONF_CLIENT_ID, CONF_CLIENT_SECRET
+from homeassistant.helpers import config_entry_oauth2_flow
+from homeassistant.helpers import config_validation as cv
+
+from .const import *
 
 # from homeassistant.helpers import (
 #     config_entry_oauth2_flow,
 #     config_validation as cv,
 # )
 
-from homeassistant.const import CONF_CLIENT_ID, CONF_CLIENT_SECRET
-from .const import *
 
 # CONFIG_SCHEMA = vol.Schema(
 #     {

@@ -1,8 +1,11 @@
-from abc import ABC, abstractmethod, abstractproperty
 import re
+from abc import ABC, abstractmethod, abstractproperty
+
 from home_connect_async import Appliance
 from homeassistant.core import callback
+
 from .const import DOMAIN
+
 
 class EntityBase(ABC):
     """Base representation of a Hello World Sensor."""

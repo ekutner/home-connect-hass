@@ -1,10 +1,6 @@
 """API for Home Connect New bound to Home Assistant OAuth."""
-from asyncio import run_coroutine_threadsafe
-
-from aiohttp import ClientSession
 import home_connect_async
-
-from homeassistant.core import HomeAssistant
+from aiohttp import ClientSession
 from homeassistant.helpers import config_entry_oauth2_flow
 
 # TODO the following two API examples are based on our suggested best practices
