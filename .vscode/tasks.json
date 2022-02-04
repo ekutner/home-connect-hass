@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Upgrade Home Assistant to latest dev",
+            "type": "shell",
+            "command": "$INTEGRATION_PATH/.devcontainer/scripts/install-ha.sh",
+            "problemMatcher": []
+        },
+        {
+            "label": "Install a specific version of Home Assistant",
+            "type": "shell",
+            "command": "$INTEGRATION_PATH/.devcontainer/scripts/install-ha.sh",
+            "args": [ "${input:hassVer}" ],
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+      {
+        "id": "hassVer",
+        "type": "promptString",
+        "description": "Home Assistant Version (branch or tag name)",
+        "default": "dev"
+      }
+    ]
+}

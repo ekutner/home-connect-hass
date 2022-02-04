@@ -2,7 +2,6 @@
 __pycache__
 *.egg-info
 
-.vscode
 *.code-workspace
 
 secrets.yaml
