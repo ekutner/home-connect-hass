@@ -10,15 +10,16 @@ fi
 
 for folder in /workspaces/*
 do
-    if [ -d "$folder/custom_components" ]
-    then
-        for component in $folder/custom_components/*
-        do
-            echo "Linking custom component $component"
-            name="$(basename $component)"
-            ln -s $component /config/custom_components/
-        done
-    elif [ -f "$folder/setup.py" ]
+    # if [ -d "$folder/custom_components" ]
+    # then
+    #     for component in $folder/custom_components/*
+    #     do
+    #         echo "Linking custom component $component"
+    #         name="$(basename $component)"
+    #         ln -s $component /config/custom_components/
+    #     done
+    #el
+    if [ -f "$folder/setup.py" ]
     then
         echo "Installing python dependency: $folder"
         pip3 install -e $folder

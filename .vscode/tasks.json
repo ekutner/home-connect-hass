@@ -1,19 +1,25 @@
 {
     "version": "2.0.0",
     "tasks": [
-        {
-            "label": "Upgrade Home Assistant to latest dev",
-            "type": "shell",
-            "command": "$INTEGRATION_PATH/.devcontainer/scripts/install-ha.sh",
-            "problemMatcher": []
-        },
-        {
-            "label": "Install a specific version of Home Assistant",
-            "type": "shell",
-            "command": "$INTEGRATION_PATH/.devcontainer/scripts/install-ha.sh",
-            "args": [ "${input:hassVer}" ],
-            "problemMatcher": []
-        }
+      {
+        "label": "Setup proxy custom_components for debugging",
+        "type": "shell",
+        "command": "$INTEGRATION_PATH/.devcontainer/scripts/proxy.sh",
+        "problemMatcher": []
+      },
+      {
+          "label": "Upgrade Home Assistant to latest dev",
+          "type": "shell",
+          "command": "$INTEGRATION_PATH/.devcontainer/scripts/install-ha.sh",
+          "problemMatcher": []
+      },
+      {
+          "label": "Install a specific version of Home Assistant",
+          "type": "shell",
+          "command": "$INTEGRATION_PATH/.devcontainer/scripts/install-ha.sh",
+          "args": [ "${input:hassVer}" ],
+          "problemMatcher": []
+      }
     ],
     "inputs": [
       {

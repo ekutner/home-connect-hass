@@ -1,9 +1,7 @@
 # Developing with Visual Studio Code + devcontainer
 
-The easiest way to get started with **custom** integration development is to use Visual Studio Code with devcontainers. This approach will create a preconfigured development environment with all the tools you need. Read more about [Developing inside a container](https://code.visualstudio.com/docs/remote/containers#_devcontainerjson-reference).
-
-The container will be built with all the pre-requisites required in order to run and debug your integration using a dedicated Home Assistant core instance.
-I've created this devcontainer after getting frustrated with the existing ones offered by the communitym which didn't include all the features I expected. In particular, supporting parallel development of the integration itself and an associated API library for abstracting access to the functionality the integration is exposing.
+This devcontainer sets up the environment to make it extremly easy to test this integration and with minor changes can be used for any integration.
+I've created this devcontainer after getting frustrated with the existing ones, offered by the community, which didn't include all the features I expected. In particular, supporting parallel development of the integration itself and an associated API library / SDK is very often developed in parallel.
 
 </br>
 
@@ -35,7 +33,14 @@ Opening multiple projects inside of a devcontainer is a bit cluncky so follow th
 
 If you ever need to reopen the container from sratch you can just click the workspace file. You will get a warning saying the workspace may not open properly, ignore that warning and continue.
 
+# How it works
+When the devcontainer is launched the assosicated scipts will automatically:
+1. Install Home Assistant 
+2. Load the main integration project + any number of library porojects into the */workspaces* folder
+3. pip install the API libraries
+4. Create a /config folder and copy the files from the .devcontainer/config folder to there
+5. Set-up a set of proxy folder with references to the integration files under */config/custom_components*. This allows Home Assistant to load the integration from its usual location which allowing vscode to debug it from the standard code location under */workspaces*
 
-</br>
-
+# How to debug
+Just launch the "Home Assistant" launch configuration from vscode. Setup breakpoints normally.
 

@@ -5,36 +5,39 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
-from .common import EntityBase
-from .const import DEVICE_ICON_MAP, DOMAIN, SPECIAL_ENTITIES
+from .common import EntityBase, EntityManager
+from .const import DEVICE_ICON_MAP, DOMAIN
 
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
+    """ Add buttons for passed config_entry in HA """
     homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
-    added_appliances = []
+    entity_manager = EntityManager()
 
-    def add_appliance(appliance:Appliance, event:str = None) -> None:
-        if event=="DEPAIRED":
-            added_appliances.remove(appliance.haId)
-            return
-        elif appliance.haId in added_appliances:
-            return
-
-        new_enities = []
+    def add_appliance(appliance:Appliance) -> None:
+        new_entities = []
         if appliance.available_programs:
             device = StartButton(appliance)
-            new_enities.append(device)
+            new_entities.append(device)
 
-        if len(new_enities)>0:
-            async_add_entities(new_enities)
+        if len(new_entities)>0:
+            entity_manager.register_entities(new_entities, async_add_entities)
 
-    homeconnect.register_callback(add_appliance, ["PAIRED", "DEPAIRED"] )
+    def remove_appliance(appliance:Appliance) -> None:
+        entity_manager.remove_appliance(appliance)
+
+    homeconnect.register_callback(add_appliance, "PAIRED")
+    homeconnect.register_callback(remove_appliance, "DEPAIRED")
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
-        added_appliances.append(appliance.haId)
+        # added_appliances.append(appliance.haId)
+
+    async_add_entities([HomeConnectRefreshButton(homeconnect)])
+
 
 
 class StartButton(EntityBase, ButtonEntity):
+    """ Class for buttons that start the selected program """
     @property
     def unique_id(self) -> str:
         return f'{self.haId}_start'
@@ -50,18 +53,59 @@ class StartButton(EntityBase, ButtonEntity):
         return None
 
     async def async_press(self) -> None:
+        """ Handle button press """
         try:
             await self._appliance.async_start_program()
         except HomeConnectError as ex:
             if ex.error_description:
-                raise HomeAssistantError(f"{ex.error_description} ({ex.code})")
+                raise HomeAssistantError(f"Failed to start the current program: {ex.error_description} ({ex.code})")
             else:
                 raise HomeAssistantError(f"Failed to start the current program ({ex.code})")
 
-
-    async def async_added_to_hass(self):
-        self._appliance.register_callback(self.async_on_update, "CONNECTION_CHANGED")
-    async def async_will_remove_from_hass(self):
-        self._appliance.deregister_callback(self.async_on_update, "CONNECTION_CHANGED")
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
+
+
+class HomeConnectRefreshButton(ButtonEntity):
+    """ Class for a button to trigger a global refresh of Home Connect data  """
+
+    def __init__(self, homeconnect:HomeConnect) -> None:
+        self._homeconnect = homeconnect
+
+    @property
+    def device_info(self):
+        """Return information to link this entity with the correct device."""
+        return {
+            "identifiers": {(DOMAIN, self.unique_id)},
+            "name": "Home Connect Service",
+            "manufacturer": "BSH"
+        }
+
+    @property
+    def unique_id(self) -> str:
+        return 'homeconnect_refresh'
+
+    @property
+    def name(self) -> str:
+        return "Home Connect Refresh"
+
+    @property
+    def icon(self) -> str:
+        return "mdi:cloud-refresh"
+
+    @property
+    def available(self) -> bool:
+        return True
+
+    async def async_press(self) -> None:
+        """ Handle button press """
+        try:
+            self._homeconnect.start_load_data_task(refresh=HomeConnect.RefreshMode.ALL)
+        except HomeConnectError as ex:
+            if ex.error_description:
+                raise HomeAssistantError(f"Failed to refresh the Home Connect data: {ex.error_description} ({ex.code})")
+            else:
+                raise HomeAssistantError(f"Failed to refresh the Home Connect data ({ex.code})")
+
+
+

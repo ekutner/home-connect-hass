@@ -1,11 +1,7 @@
 """Constants for the Home Connect New integration."""
 
+
 DOMAIN = "home_connect_alt"
-
-# TODO Update with your own urls
-# OAUTH2_AUTHORIZE = "https://www.example.com/auth/authorize"
-# OAUTH2_TOKEN = "https://www.example.com/auth/token"
-
 SIM_HOST = "https://simulator.home-connect.com"
 API_HOST = "https://api.home-connect.com"
 ENDPOINT_AUTHORIZE = "/security/oauth/authorize"
@@ -17,12 +13,30 @@ SPECIAL_ENTITIES = {
     "status": {
         "BSH.Common.Status.DoorState": { "type": "binary_sensor", "class": "door", "on_state": "BSH.Common.EnumType.DoorState.Open" },
     },
+    "options": {
+        "BSH.Common.Option.FinishInRelative": { "unit": None, "class": f"{DOMAIN}__timespan"}
+    },
     "activity_options": {
-        "BSH.Common.Option.ElapsedProgramTime": { "type": "sensor", "unit": "seconds", "appliances": ["Hood", "Oven", "WarmingDrawer"]},
-        "BSH.Common.Option.RemainingProgramTime": { "type": "sensor", "unit": "seconds", "appliances": ["CoffeeMachine", "Hood", "Oven", "Dishwasher", "Dryer", "Washer", "WasherDryer"]},
-        "BSH.Common.Option.ProgramProgress": { "type": "sensor", "unit": "%", "appliances": ["CoffeeMachine", "Hood", "Oven", "WarmingDrawer", "Dishwasher", "Dryer", "Washer", "WasherDryer"]},
-        "ConsumerProducts.CleaningRobot.Option.ProcessPhase": { "type": "Sensor", "appliances": ["CleaningRobot"]},
-        "BSH.Common.Option.Duration": { "type": "sensor", "appliances": ["Hood", "Oven", "Dryer"]},
+        "BSH.Common.Option.ElapsedProgramTime": {
+            "type": "sensor", "unit": "seconds", "class": f"{DOMAIN}__timespan",
+            "appliances": ["Hood", "Oven", "WarmingDrawer"]
+        },
+        "BSH.Common.Option.RemainingProgramTime": {
+            "type": "sensor", "unit": "seconds", "class": "timestamp",
+            "appliances": ["CoffeeMachine", "Hood", "Oven", "Dishwasher", "Dryer", "Washer", "WasherDryer"]
+        },
+        "BSH.Common.Option.ProgramProgress": {
+            "type": "sensor", "unit": "%",
+            "appliances": ["CoffeeMachine", "Hood", "Oven", "WarmingDrawer", "Dishwasher", "Dryer", "Washer", "WasherDryer"]
+        },
+        "ConsumerProducts.CleaningRobot.Option.ProcessPhase": {
+            "type": "Sensor",
+            "appliances": ["CleaningRobot"]
+        },
+        "BSH.Common.Option.Duration": {
+            "type": "sensor",
+            "appliances": ["Hood", "Oven", "Dryer"]
+        },
     }
 
 }
@@ -51,3 +65,4 @@ TRIGGERS_CONFIG = {
     "program_started": { "key": "BSH.Common.Status.OperationState", "value": "BSH.Common.EnumType.OperationState.Run" },
     "program_finished": { "key": "BSH.Common.Status.OperationState", "value": "BSH.Common.EnumType.OperationState.Finished" }
 }
+

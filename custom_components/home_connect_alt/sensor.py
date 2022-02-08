@@ -1,32 +1,33 @@
 """ Implement the Sensor entities of this implementation """
-
+from __future__ import annotations
+from datetime import datetime, timedelta
 from home_connect_async import Appliance, HomeConnect
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
-from .common import EntityBase
+from .common import EntityBase, EntityManager
 from .const import DEVICE_ICON_MAP, DOMAIN, SPECIAL_ENTITIES
 
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
-    """Add sensors for passed config_entry in HA."""
+    """ Add sensors for passed config_entry in HA """
     #auth = hass.data[DOMAIN][config_entry.entry_id]
     homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
-    added_appliances = []   # avoid duplication of entities for the same appliance (see  race condition below)
+    entity_manager = EntityManager()
 
-    def add_appliance(appliance:Appliance, event:str = None) -> None:
-        if event=="DEPAIRED":
-            added_appliances.remove(appliance.haId)
-            return
-        elif appliance.haId in added_appliances:
-            return
+    def add_appliance(appliance:Appliance) -> None:
+        new_entities = []
+        if appliance.available_programs and appliance.selected_program:
+            device = SelectedProgramSensor(appliance)
+            new_entities.append(device)
 
-        new_enities = []
-        if appliance.available_programs:
-            device = CurrentProgramSensor(appliance)
-            new_enities.append(device)
+        if appliance.selected_program:
+            for option in appliance.selected_program.options.values():
+                if not isinstance(option.value, bool):
+                    device = ProgramOptionSensor(appliance, option.key, SPECIAL_ENTITIES['options'].get(option.key, {}))
+                    new_entities.append(device)
 
         for (key, value) in appliance.status.items():
             device = None
@@ -41,37 +42,40 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
                         conf['class'] = 'temperature'
                     device = StatusSensor(appliance, key, conf)
             if device:
-                new_enities.append(device)
+                new_entities.append(device)
 
         for (key, conf) in SPECIAL_ENTITIES['activity_options'].items():
             if appliance.type in conf['appliances'] and conf['type']=='sensor':
                 device = ActivityOptionSensor(appliance, key, conf)
-                new_enities.append(device)
+                new_entities.append(device)
 
-        if len(new_enities)>0:
-            async_add_entities(new_enities)
+        if len(new_entities)>0:
+            entity_manager.register_entities(new_entities, async_add_entities)
 
-    # There is a race condition between the task that loads data from the Home Connect service
-    # and the initialization of the platforms, so we set up an event listener and create the entities for all
-    # the appliances that have alreday been loaded
-    homeconnect.register_callback(add_appliance, ["PAIRED", "DEPAIRED"] )
+    def remove_appliance(appliance:Appliance) -> None:
+        entity_manager.remove_appliance(appliance)
+
+    homeconnect.register_callback(add_appliance, "PAIRED")
+    homeconnect.register_callback(remove_appliance, "DEPAIRED")
+
+
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
-        added_appliances.append(appliance.haId)
+        #added_appliances.append(appliance.haId)
 
     # Add the global home connect satus sensor
-    async_add_entities([HomeConnectSensor(homeconnect)])
+    async_add_entities([HomeConnectStatusSensor(homeconnect)])
 
 
-class CurrentProgramSensor(EntityBase, SensorEntity):
+class SelectedProgramSensor(EntityBase, SensorEntity):
     """ Selected program sensor """
     @property
     def unique_id(self) -> str:
-        return f'{self.haId}_current_program'
+        return f'{self.haId}_selected_program'
 
     @property
     def name(self) -> str:
-        return f"{self._appliance.brand} {self._appliance.type} - Current Program"
+        return f"{self._appliance.brand} {self._appliance.type} - Selected Program"
 
     @property
     def icon(self) -> str:
@@ -88,14 +92,6 @@ class CurrentProgramSensor(EntityBase, SensorEntity):
         """Return the state of the sensor."""
         return self._appliance.selected_program.key if self._appliance.selected_program else None
 
-    async def async_added_to_hass(self):
-        """Run when this Entity has been added to HA."""
-        self._appliance.register_callback(self.async_on_update, ["BSH.Common.Root.SelectedProgram", "CONNECTION_CHANGED"])
-
-    async def async_will_remove_from_hass(self):
-        """Entity being removed from hass."""
-        self._appliance.deregister_callback(self.async_on_update,  ["BSH.Common.Root.SelectedProgram", "CONNECTION_CHANGED"])
-
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
 
@@ -106,27 +102,84 @@ class CurrentProgramSensor(EntityBase, SensorEntity):
     #     return await self._appliance.async_select_program(key=program, options=options)
 
 
-class ActivityOptionSensor(EntityBase, SensorEntity):
+class ProgramOptionSensor(EntityBase, SensorEntity):
     """ Special active program sensor """
     @property
     def device_class(self) -> str:
-        return f"{DOMAIN}__status"
+        if "class" in self._conf:
+            return self._conf["class"]
+        return f"{DOMAIN}__options"
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon')
+        return self._conf.get('icon', 'mdi:office-building-cog')
+
+    @property
+    def name(self) -> str:
+        if self._appliance.selected_program and (self._key in self._appliance.selected_program.options):
+            name = self._appliance.selected_program.options[self._key].name
+            if name:
+                return f"{self._appliance.brand} {self._appliance.type} - {name}"
+        return super().name
 
     @property
     def available(self) -> bool:
-        return self._appliance.active_program and self._key in self._appliance.active_program.options
+        return (self._key in self._appliance.selected_program.options) and super().available
+
+    @property
+    def internal_unit(self) -> str | None:
+        """ Get the original unit before manipulations """
+        if "unit" in self._conf:
+            return self._conf["unit"]
+        if self._appliance.active_program and (self._key in  self._appliance.active_program.options):
+            return self._appliance.active_program.options[self._key].unit
+        if self._appliance.selected_program and (self._key in  self._appliance.selected_program.options):
+            return self._appliance.selected_program.options[self._key].unit
+        return None
+
+    @property
+    def native_unit_of_measurement(self) -> str | None:
+        unit = self.internal_unit
+        if unit=="gram":
+            return "kg"
+        return unit
 
     @property
     def native_value(self):
         """Return the state of the sensor."""
-        return self._appliance.active_program.options[self._key].value
+
+        if self._appliance.active_program and self._key in  self._appliance.active_program.options:
+            option = self._appliance.active_program.options[self._key]
+        else:
+            option = self._appliance.selected_program.options[self._key]
+
+        if self.device_class == "timestamp":
+            return datetime.now() + timedelta(seconds=option.value)
+        if "timespan" in self.device_class:
+            m, s = divmod(option.value, 60)
+            h, m = divmod(m, 60)
+            return f"{h}:{m:02d}"
+        if self.internal_unit=="gram":
+            return round(option.value/1000, 1)
+        if option.displayvalue:
+            return option.displayvalue
+        if isinstance(option.value, str):
+            if option.value.endswith(".Off"):
+                return "Off"
+            if option.value.endswith(".On"):
+                return "On"
+        return option.value
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
+
+
+class ActivityOptionSensor(ProgramOptionSensor):
+    """ Special active program sensor """
+
+    @property
+    def available(self) -> bool:
+        return self._appliance.active_program and self._key in self._appliance.active_program.options
 
 
 class StatusSensor(EntityBase, SensorEntity):
@@ -137,7 +190,7 @@ class StatusSensor(EntityBase, SensorEntity):
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon')
+        return self._conf.get('icon', 'mdi:gauge-full')
 
     @property
     def native_value(self):
@@ -148,7 +201,7 @@ class StatusSensor(EntityBase, SensorEntity):
         self.async_write_ha_state()
 
 
-class HomeConnectSensor(SensorEntity):
+class HomeConnectStatusSensor(SensorEntity):
     """ Global Home Connect status sensor """
     should_poll = True
 

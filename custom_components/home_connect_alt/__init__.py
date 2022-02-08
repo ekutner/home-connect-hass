@@ -6,10 +6,10 @@ import logging
 from datetime import datetime
 
 import voluptuous as vol
-from home_connect_async import Appliance, HomeConnect
+from home_connect_async import Appliance, HomeConnect, HomeConnectError
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_CLIENT_ID, CONF_CLIENT_SECRET, Platform
-from homeassistant.core import Event, HomeAssistant
+from homeassistant.core import Event, HomeAssistant, HomeAssistantError
 from homeassistant.helpers import aiohttp_client, config_entry_oauth2_flow
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import device_registry as dr
@@ -89,7 +89,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     homeconnect:HomeConnect = await async_load_from_cache(hass, auth)
     if not homeconnect:
         # Create normally if failed to create from cache
-        homeconnect = await HomeConnect.async_create(auth, delayed_load=True)
+        try:
+            homeconnect = await HomeConnect.async_create(auth, delayed_load=True)
+        except HomeConnectError as ex:
+            _LOGGER.debug("Failed to create the HomeConnect object", exc_info=ex)
+            return False
+
 
     conf[entry.entry_id] = auth
     conf['homeconnect'] = homeconnect
@@ -127,7 +132,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     register_events_publisher(hass, homeconnect)
 
     # Continue loading the HomeConnect data model and set the callback to be notified when done
-    homeconnect.continue_data_load(on_complete=on_data_loaded)
+    try:
+        homeconnect.start_load_data_task(on_complete=on_data_loaded)
+    except HomeConnectError as ex:
+            _LOGGER.debug("Failed to load data the HomeConnect object", exc_info=ex)
 
     return True
 
@@ -233,16 +241,15 @@ def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect):
         hass.bus.async_fire(f"{DOMAIN}_event", event_data)
 
 
-    async def register_appliance(appliance:Appliance, event:str=None):
-        appliance.register_callback(async_handle_event, '*.event.*')
-
+    def register_appliance(appliance:Appliance):
         for event in PUBLISHED_EVENTS:
             appliance.register_callback(async_handle_event, event)
 
 
-    # for appliance in hc.appliances.values():
-    #     async_register(appliance)
-    homeconnect.register_callback(register_appliance, "PAIRED")
+    homeconnect.register_callback(register_appliance, ["PAIRED", "CONNECTED"])
+    for appliance in homeconnect.appliances.values():
+        register_appliance(appliance)
+
 
 
 class HomeConnectOauth2Impl(config_entry_oauth2_flow.LocalOAuth2Implementation):
