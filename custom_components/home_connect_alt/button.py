@@ -6,7 +6,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
 from .common import EntityBase, EntityManager
-from .const import DEVICE_ICON_MAP, DOMAIN
+from .const import DEVICE_ICON_MAP, DOMAIN, HOME_CONNECT_DEVICE
 
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
@@ -26,14 +26,14 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
+    # First add the integration button
+    async_add_entities([HomeConnectRefreshButton(homeconnect)])
+
+    # Subscribe for events and register existing appliances
     homeconnect.register_callback(add_appliance, "PAIRED")
     homeconnect.register_callback(remove_appliance, "DEPAIRED")
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
-        # added_appliances.append(appliance.haId)
-
-    async_add_entities([HomeConnectRefreshButton(homeconnect)])
-
 
 
 class StartButton(EntityBase, ButtonEntity):
@@ -75,11 +75,7 @@ class HomeConnectRefreshButton(ButtonEntity):
     @property
     def device_info(self):
         """Return information to link this entity with the correct device."""
-        return {
-            "identifiers": {(DOMAIN, self.unique_id)},
-            "name": "Home Connect Service",
-            "manufacturer": "BSH"
-        }
+        return HOME_CONNECT_DEVICE
 
     @property
     def unique_id(self) -> str:

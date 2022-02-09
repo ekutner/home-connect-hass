@@ -13,9 +13,7 @@
 		"INTEGRATION_PATH": "${containerWorkspaceFolder}",
     "GIT_EDITOR": "code"
 	},
-	"appPort": [
-		"9123:8123"
-	],
+  "appPort": "9123:8123",
 	"mounts": [
     "source=${localWorkspaceFolderBasename}_profile,target=/root,type=volume",  // create a persistent named volume mounted to /root (home of user root)
     "target=/root/.vscode-server,type=volume",  // create an anonymous volume mounted to /root/.vscode-server which will be rebuilt with the container

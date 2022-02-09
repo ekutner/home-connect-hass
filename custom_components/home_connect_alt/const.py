@@ -9,6 +9,12 @@ ENDPOINT_TOKEN = "/security/oauth/token"
 SCOPES = "IdentifyAppliance Monitor Control Settings"
 CONF_SIMULATE = "simulate"
 
+HOME_CONNECT_DEVICE = {
+    "identifiers": {(DOMAIN, "homeconnect")},
+    "name": "Home Connect Service",
+    "manufacturer": "BSH"
+}
+
 SPECIAL_ENTITIES = {
     "status": {
         "BSH.Common.Status.DoorState": { "type": "binary_sensor", "class": "door", "on_state": "BSH.Common.EnumType.DoorState.Open" },

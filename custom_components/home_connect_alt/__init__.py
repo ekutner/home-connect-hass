@@ -112,6 +112,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         homeconnect.register_callback(on_device_added, "PAIRED")
         homeconnect.subscribe_for_updates()
 
+    async def on_data_load_error(homeconnect:HomeConnect, ex:Exception):
+        _LOGGER.error("Failed to load data for the HomeConnect object", exc_info=ex)
+
     async def on_device_added(appliance:Appliance, event:str):
         await async_save_to_cache(hass, homeconnect)
 
@@ -132,10 +135,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     register_events_publisher(hass, homeconnect)
 
     # Continue loading the HomeConnect data model and set the callback to be notified when done
-    try:
-        homeconnect.start_load_data_task(on_complete=on_data_loaded)
-    except HomeConnectError as ex:
-            _LOGGER.debug("Failed to load data the HomeConnect object", exc_info=ex)
+    homeconnect.start_load_data_task(on_complete=on_data_loaded, on_error= on_data_load_error)
 
     return True
 

@@ -13,6 +13,7 @@ tts:
 logger:
   default: info
   logs:
+    home_connect_async: debug
     custom_components.home_connect_alt: debug
 
 # If you need to debug uncomment the line below (doc: https://www.home-assistant.io/integrations/debugpy/)

@@ -5,7 +5,14 @@
         "label": "Setup proxy custom_components for debugging",
         "type": "shell",
         "command": "$INTEGRATION_PATH/.devcontainer/scripts/proxy.sh",
-        "problemMatcher": []
+        "presentation": {
+          "echo": false,
+          "reveal": "silent",
+          "focus": false,
+          "panel": "shared",
+          "showReuseMessage": false,
+          "clear": false
+        }
       },
       {
           "label": "Upgrade Home Assistant to latest dev",

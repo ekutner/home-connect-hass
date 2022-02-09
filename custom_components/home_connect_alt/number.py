@@ -42,7 +42,6 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     homeconnect.register_callback(remove_appliance, "DEPAIRED")
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
-        #added_appliances.append(appliance.haId)
 
 
 class OptionNumber(EntityBase, NumberEntity):

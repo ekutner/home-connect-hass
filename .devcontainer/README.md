@@ -43,4 +43,5 @@ When the devcontainer is launched the assosicated scipts will automatically:
 
 # How to debug
 Just launch the "Home Assistant" launch configuration from vscode. Setup breakpoints normally.
+The Home Assistant portal can be access on http://localhost:9123 of the host machine.
 
