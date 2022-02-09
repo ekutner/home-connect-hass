@@ -8,8 +8,9 @@
         "presentation": {
           "echo": false,
           "reveal": "silent",
+          "close": true,
           "focus": false,
-          "panel": "shared",
+          "panel": "new",
           "showReuseMessage": false,
           "clear": false
         }
