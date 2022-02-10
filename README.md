@@ -48,13 +48,21 @@ After the integration is configured READ THE DAQ then add it from the Home-Assis
   This is, again, related to the Home Connect rate limits. Every time you restart Home Assistant the integration makes a few API calls to the service and if that happens too often it may block for up to 24 hours. The best way to fix this is to wait a day and restart Home Assistant again.
 
 * **I select a program or option but nothing happens on the appliance**  
-  Make sure remote control is configured and allowed on the appliance
+  Make sure the appliance is turned on. Typically the integration will automatically detect appliances that are turned off or disconnected from the network and disable them in Home Assistant but it may happen that it fails to detect that and then attempting make any changes to setting will fail.
 
 * **I try to start the selected program by pressing the button but nothing happens**  
   Make sure Remote Start is enabled on the appliance
 
-* **Some sensors are showing up as unavailable**  
-  Sensors related to program progress only become available when the appliance is running a program.
+* **Sensor related to program progress are showing up as unavailable**  
+  These sensors only become available when the appliance is running a program.
+
+* **All the program, option and settings selection boxes, switches and numbers are disabled**  
+  Make sure that *Remote Control* is allowed on the appliance. It is typically enabled by default but gets temporarily disabled when changing setting on the appliance itself.
+
+* **The *Start* button is disabled**  
+  Make sure that *Remote Control Start* is allowed on the appliance, it's disabled by default. 
+
+
 
 </br>
 

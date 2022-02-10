@@ -56,7 +56,12 @@ class OptionNumber(EntityBase, NumberEntity):
 
     @property
     def available(self) -> bool:
-        return self._key in self._appliance.selected_program.options and super().available
+        return self._key in self._appliance.selected_program.options \
+        and super().available \
+        and (
+            "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
+            self._appliance.status["BSH.Common.Status.RemoteControlActive"]
+        )
 
     @property
     def min_value(self) -> float:

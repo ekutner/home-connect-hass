@@ -68,7 +68,13 @@ class ProgramSelect(EntityBase, SelectEntity):
 
     @property
     def available(self) -> bool:
-        return self._appliance.connected and self._appliance.available_programs and not self._appliance.active_program
+        return super().available \
+            and self._appliance.available_programs \
+            and not self._appliance.active_program \
+            and  (
+                "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
+                self._appliance.status["BSH.Common.Status.RemoteControlActive"]
+            )
 
     @property
     def options(self) -> list[str]:
@@ -110,7 +116,12 @@ class OptionSelect(EntityBase, SelectEntity):
             and self._appliance.available_programs \
             and (self._appliance.selected_program.key in self._appliance.available_programs) \
             and (self._key in  self._appliance.available_programs[self._appliance.selected_program.key].options) \
-            and super().available
+            and super().available \
+            and  (
+                "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
+                self._appliance.status["BSH.Common.Status.RemoteControlActive"]
+            )
+
 
     @property
     def options(self) -> list[str]:
@@ -150,6 +161,14 @@ class SettingsSelect(EntityBase, SelectEntity):
     @property
     def icon(self) -> str:
         return self._conf.get('icon', 'mdi:tune')
+
+    @property
+    def available(self) -> bool:
+        return super().available \
+        and (
+            "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
+            self._appliance.status["BSH.Common.Status.RemoteControlActive"]
+        )
 
     @property
     def options(self) -> list[str]:

@@ -47,6 +47,14 @@ class StartButton(EntityBase, ButtonEntity):
         return f"{self._appliance.brand} {self._appliance.type} - Start"
 
     @property
+    def available(self) -> bool:
+        return super().available \
+        and (
+            "BSH.Common.Status.RemoteControlStartAllowed" not in self._appliance.status or
+            self._appliance.status["BSH.Common.Status.RemoteControlStartAllowed"]
+        )
+
+    @property
     def icon(self) -> str:
         if self._key in DEVICE_ICON_MAP:
             return DEVICE_ICON_MAP[self._key]

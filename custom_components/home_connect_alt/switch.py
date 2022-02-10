@@ -58,7 +58,12 @@ class OptionSwitch(EntityBase, SwitchEntity):
 
     @property
     def available(self) -> bool:
-        return self._key in self._appliance.selected_program.options and super().available
+        return self._key in self._appliance.selected_program.options \
+        and super().available \
+        and (
+            "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
+            self._appliance.status["BSH.Common.Status.RemoteControlActive"]
+        )
 
     @property
     def is_on(self) -> bool:
@@ -93,6 +98,15 @@ class SettingsSwitch(EntityBase, SwitchEntity):
     @property
     def icon(self) -> str:
         return self._conf.get('icon', 'mdi:tune')
+
+    @property
+    def available(self) -> bool:
+        return self._key in self._appliance.settings \
+        and super().available \
+        and (
+            "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
+            self._appliance.status["BSH.Common.Status.RemoteControlActive"]
+        )
 
     @property
     def is_on(self) -> bool:
