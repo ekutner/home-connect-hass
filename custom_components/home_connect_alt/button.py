@@ -1,4 +1,4 @@
-from home_connect_async import Appliance, HomeConnect, HomeConnectError
+from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
 from homeassistant.components.button import ButtonEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
@@ -30,8 +30,8 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     async_add_entities([HomeConnectRefreshButton(homeconnect)])
 
     # Subscribe for events and register existing appliances
-    homeconnect.register_callback(add_appliance, "PAIRED")
-    homeconnect.register_callback(remove_appliance, "DEPAIRED")
+    homeconnect.register_callback(add_appliance, Events.PAIRED)
+    homeconnect.register_callback(remove_appliance, Events.DEPAIRED)
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
 

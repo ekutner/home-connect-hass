@@ -6,7 +6,7 @@ import logging
 from datetime import datetime
 
 import voluptuous as vol
-from home_connect_async import Appliance, HomeConnect, HomeConnectError
+from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_CLIENT_ID, CONF_CLIENT_SECRET, Platform
 from homeassistant.core import Event, HomeAssistant, HomeAssistantError
@@ -108,8 +108,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     async def on_data_loaded(homeconnect:HomeConnect):
         # Save the state of the HomeConnect object to cache
         await async_save_to_cache(hass, homeconnect)
-        homeconnect.register_callback(on_device_removed, "DEPAIRED")
-        homeconnect.register_callback(on_device_added, "PAIRED")
+        homeconnect.register_callback(on_device_removed, Events.DEPAIRED)
+        homeconnect.register_callback(on_device_added, Events.PAIRED)
         homeconnect.subscribe_for_updates()
 
     async def on_data_load_error(homeconnect:HomeConnect, ex:Exception):
@@ -246,7 +246,7 @@ def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect):
             appliance.register_callback(async_handle_event, event)
 
 
-    homeconnect.register_callback(register_appliance, ["PAIRED", "CONNECTED"])
+    homeconnect.register_callback(register_appliance, [Events.PAIRED, Events.CONNECTED])
     for appliance in homeconnect.appliances.values():
         register_appliance(appliance)
 

@@ -1,5 +1,5 @@
 
-from home_connect_async import Appliance, HomeConnect
+from home_connect_async import Appliance, HomeConnect, Events
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -43,8 +43,8 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
-    homeconnect.register_callback(add_appliance, "PAIRED")
-    homeconnect.register_callback(remove_appliance, "DEPAIRED")
+    homeconnect.register_callback(add_appliance, Events.PAIRED)
+    homeconnect.register_callback(remove_appliance, Events.DEPAIRED)
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
 

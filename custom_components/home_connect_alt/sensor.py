@@ -1,7 +1,7 @@
 """ Implement the Sensor entities of this implementation """
 from __future__ import annotations
 from datetime import datetime, timedelta
-from home_connect_async import Appliance, HomeConnect
+from home_connect_async import Appliance, HomeConnect, Events
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -60,8 +60,8 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     async_add_entities([HomeConnectStatusSensor(homeconnect)])
 
     # Subscribe for events and register the existing appliances
-    homeconnect.register_callback(add_appliance, "PAIRED")
-    homeconnect.register_callback(remove_appliance, "DEPAIRED")
+    homeconnect.register_callback(add_appliance, Events.PAIRED)
+    homeconnect.register_callback(remove_appliance, Events.DEPAIRED)
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
 

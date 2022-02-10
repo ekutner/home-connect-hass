@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from home_connect_async import Appliance, HomeConnect, HomeConnectError
+from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
@@ -40,8 +40,8 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
-    homeconnect.register_callback(add_appliance, "PAIRED")
-    homeconnect.register_callback(remove_appliance, "DEPAIRED")
+    homeconnect.register_callback(add_appliance, Events.PAIRED)
+    homeconnect.register_callback(remove_appliance, Events.DEPAIRED)
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
 

@@ -2,7 +2,7 @@ import re
 from abc import ABC, abstractmethod
 from typing import Sequence
 
-from home_connect_async import Appliance, EVENT_DATA_REFRESHED, EVENT_CONNECTION_CHANGED
+from home_connect_async import Appliance, Events
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
@@ -65,14 +65,14 @@ class EntityBase(ABC):
 
     async def async_added_to_hass(self):
         """Run when this Entity has been added to HA."""
-        events = [EVENT_CONNECTION_CHANGED, EVENT_DATA_REFRESHED]
+        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED]
         if self._key:
             events.append(self._key)
         self._appliance.register_callback(self.async_on_update, events)
 
     async def async_will_remove_from_hass(self):
         """Entity being removed from hass."""
-        events = [EVENT_CONNECTION_CHANGED, EVENT_DATA_REFRESHED]
+        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED]
         if self._key:
             events.append(self._key)
         self._appliance.deregister_callback(self.async_on_update, events)
