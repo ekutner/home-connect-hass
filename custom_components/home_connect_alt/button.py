@@ -42,9 +42,15 @@ class StartButton(EntityBase, ButtonEntity):
     def unique_id(self) -> str:
         return f'{self.haId}_start'
 
+    # @property
+    # def name(self) -> str:
+    #     appliance_name = self._appliance.name if self._appliance.name else self._appliance.type
+    #     return f"{self._appliance.brand} {appliance_name} - Start"
+
     @property
-    def name(self) -> str:
-        return f"{self._appliance.brand} {self._appliance.type} - Start"
+    def name_ext(self) -> str:
+        return "Start"
+
 
     @property
     def available(self) -> bool:

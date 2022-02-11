@@ -82,9 +82,14 @@ class SelectedProgramSensor(EntityBase, SensorEntity):
     def unique_id(self) -> str:
         return f'{self.haId}_selected_program'
 
+    # @property
+    # def name(self) -> str:
+    #     appliance_name = self._appliance.name if self._appliance.name else self._appliance.type
+    #     return f"{self._appliance.brand} {appliance_name} - Selected Program"
+
     @property
-    def name(self) -> str:
-        return f"{self._appliance.brand} {self._appliance.type} - Selected Program"
+    def name_ext(self) -> str:
+        return "Selected Program"
 
     @property
     def icon(self) -> str:
@@ -123,13 +128,21 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
     def icon(self) -> str:
         return self._conf.get('icon', 'mdi:office-building-cog')
 
+    # @property
+    # def name(self) -> str:
+    #     appliance_name = self._appliance.name if self._appliance.name else self._appliance.type
+    #     if self._appliance.selected_program and (self._key in self._appliance.selected_program.options):
+    #         name = self._appliance.selected_program.options[self._key].name
+    #         if name:
+    #             return f"{self._appliance.brand} {appliance_name} - {name}"
+    #     return super().name
+
     @property
-    def name(self) -> str:
+    def name_ext(self) -> str:
         if self._appliance.selected_program and (self._key in self._appliance.selected_program.options):
             name = self._appliance.selected_program.options[self._key].name
-            if name:
-                return f"{self._appliance.brand} {self._appliance.type} - {name}"
-        return super().name
+            return name
+        return None
 
     @property
     def available(self) -> bool:

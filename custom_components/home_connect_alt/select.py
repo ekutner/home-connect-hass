@@ -59,9 +59,14 @@ class ProgramSelect(EntityBase, SelectEntity):
     def unique_id(self) -> str:
         return f'{self.haId}_programs'
 
+    # @property
+    # def name(self) -> str:
+    #     appliance_name = self._appliance.name if self._appliance.name else self._appliance.type
+    #     return f"{self._appliance.brand} {appliance_name} - Programs"
+
     @property
-    def name(self) -> str:
-        return f"{self._appliance.brand} {self._appliance.type} - Programs"
+    def name_ext(self) -> str:
+        return "Programs"
 
     @property
     def icon(self) -> str:

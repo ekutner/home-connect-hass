@@ -1,12 +1,16 @@
+from __future__ import annotations
+import logging
 import re
 from abc import ABC, abstractmethod
 from typing import Sequence
 
 from home_connect_async import Appliance, Events
+from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 
+_LOGGER = logging.getLogger(__name__)
 
 class EntityBase(ABC):
     """Base class with common methods for all the entities """
@@ -51,9 +55,15 @@ class EntityBase(ABC):
         return f"{self.haId}_{self._key.lower().replace('.','_')}"
 
     @property
+    def name_ext(self) -> str|None:
+        return None
+
+    @property
     def name(self) -> str:
         """" The name of the entity """
-        return f"{self._appliance.brand} {self._appliance.type} - {self.pretty_enum(self._key)}"
+        appliance_name = self._appliance.name if self._appliance.name else self._appliance.type
+        name = self.name_ext if self.name_ext else self.pretty_enum(self._key)
+        return f"{self._appliance.brand} {appliance_name} - {name}"
 
     # This property is important to let HA know if this entity is online or not.
     # If an entity is offline (return False), the UI will refelect this.
@@ -101,7 +111,7 @@ class EntityManager():
         self._existing_ids = set()
         self._entity_appliance_map = {}
 
-    def register_entities(self, entities:Sequence, async_add_entities:AddEntitiesCallback):
+    def register_entities(self, entities:Sequence[Entity], async_add_entities:AddEntitiesCallback):
         """ Register new entities making sure they are only added once """
         ids = set([ ent.unique_id for ent in entities])
         for entity in entities:
@@ -110,6 +120,8 @@ class EntityManager():
             self._entity_appliance_map[entity.haId].add(entity.unique_id)
         new_ids = ids - (ids & self._existing_ids)
         new_entities = [ entity for entity in entities if entity.unique_id in new_ids ]
+        for e in new_entities:
+            _LOGGER.debug("New entity: %s (%s)", e.name, e.unique_id)
         async_add_entities(new_entities)
         self._existing_ids |= new_ids
 
