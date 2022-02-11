@@ -3,7 +3,7 @@
 # Install from workspace folder
 if [ -d "/config/custom_components" ]
 then
-    rm -f /config/custom_components/*
+    rm -rf /config/custom_components/*
 else
     mkdir -p /config/custom_components
 fi

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Create proxy python files under custom_components so debugging works as expected in vscode
 for folder in /workspaces/*
 do
     if [ -d "$folder/custom_components" ]

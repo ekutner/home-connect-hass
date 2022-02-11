@@ -1,5 +1,6 @@
 """ Implement the Select entities of this implementation """
 
+import logging
 from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
 from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
@@ -10,6 +11,7 @@ from homeassistant.helpers.typing import ConfigType
 from .common import EntityBase, EntityManager
 from .const import DEVICE_ICON_MAP, DOMAIN
 
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
     """Add Selects for passed config_entry in HA."""
@@ -48,6 +50,11 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
 
 class ProgramSelect(EntityBase, SelectEntity):
     """ Selection of available programs """
+
+    def __init__(self, appliance: Appliance, key: str = None, conf: dict = None) -> None:
+        super().__init__(appliance, key, conf)
+        self._extra_programs = []
+
     @property
     def unique_id(self) -> str:
         return f'{self.haId}_programs'
@@ -79,13 +86,18 @@ class ProgramSelect(EntityBase, SelectEntity):
     @property
     def options(self) -> list[str]:
         """Return a set of selectable options."""
-        return list(self._appliance.available_programs.keys())
+        if self._appliance.selected_program.key not in self._appliance.available_programs:
+            # The API sometimes returns programs which are not one of the avilable programs so we ignore it
+            _LOGGER.debug("The selected program (%s) is not in the list of available programs, adding it to the select box", self._appliance.selected_program.key)
+            self._extra_programs.append(self._appliance.selected_program.key)
+        return list(self._appliance.available_programs.keys()) + self._extra_programs
 
     @property
     def current_option(self) -> str:
         """Return the selected entity option to represent the entity state."""
         if self._appliance.selected_program.key not in self._appliance.available_programs:
             # The API sometimes returns programs which are not one of the avilable programs so we ignore it
+            _LOGGER.debug("The selected program (%s) is not in the list of available programs", self._appliance.selected_program.key)
             return None
         return self._appliance.selected_program.key
 
@@ -115,6 +127,7 @@ class OptionSelect(EntityBase, SelectEntity):
             and (self._key in self._appliance.selected_program.options) \
             and self._appliance.available_programs \
             and (self._appliance.selected_program.key in self._appliance.available_programs) \
+            and not self._appliance.active_program \
             and (self._key in  self._appliance.available_programs[self._appliance.selected_program.key].options) \
             and super().available \
             and  (

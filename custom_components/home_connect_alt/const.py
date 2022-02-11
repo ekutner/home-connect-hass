@@ -8,6 +8,7 @@ ENDPOINT_AUTHORIZE = "/security/oauth/authorize"
 ENDPOINT_TOKEN = "/security/oauth/token"
 SCOPES = "IdentifyAppliance Monitor Control Settings"
 CONF_SIMULATE = "simulate"
+CONF_LANG = "language"
 
 HOME_CONNECT_DEVICE = {
     "identifiers": {(DOMAIN, "homeconnect")},
@@ -20,7 +21,9 @@ SPECIAL_ENTITIES = {
         "BSH.Common.Status.DoorState": { "type": "binary_sensor", "class": "door", "on_state": "BSH.Common.EnumType.DoorState.Open" },
     },
     "options": {
-        "BSH.Common.Option.FinishInRelative": { "unit": None, "class": f"{DOMAIN}__timespan"}
+        "BSH.Common.Option.FinishInRelative": { "unit": None, "class": f"{DOMAIN}__timespan"},
+        "BSH.Common.Option.ElapsedProgramTime": { "unit": None, "class": f"{DOMAIN}__timespan"},
+        "BSH.Common.Option.RemainingProgramTime": {"class": "timestamp" }
     },
     "activity_options": {
         "BSH.Common.Option.ElapsedProgramTime": {
@@ -29,6 +32,10 @@ SPECIAL_ENTITIES = {
         },
         "BSH.Common.Option.RemainingProgramTime": {
             "type": "sensor", "unit": "seconds", "class": "timestamp",
+            "appliances": ["CoffeeMachine", "Hood", "Oven", "Dishwasher", "Dryer", "Washer", "WasherDryer"]
+        },
+        "BSH.Common.Option.RemainingProgramTimeIsEstimated": {
+            "type": "binary_sensor",
             "appliances": ["CoffeeMachine", "Hood", "Oven", "Dishwasher", "Dryer", "Washer", "WasherDryer"]
         },
         "BSH.Common.Option.ProgramProgress": {

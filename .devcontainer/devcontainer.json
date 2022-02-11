@@ -10,6 +10,7 @@
 		"context": ".."
 	},
 	"containerEnv": {
+    "TZ": "Asia/Jerusalem",
 		"INTEGRATION_PATH": "${containerWorkspaceFolder}",
     "GIT_EDITOR": "code"
 	},

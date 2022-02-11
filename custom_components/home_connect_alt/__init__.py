@@ -29,7 +29,8 @@ CONFIG_SCHEMA = vol.Schema(
             {
                 vol.Required(CONF_CLIENT_ID): cv.string,
                 vol.Required(CONF_CLIENT_SECRET): cv.string,
-                vol.Optional(CONF_SIMULATE, default=False): cv.boolean
+                vol.Optional(CONF_SIMULATE, default=False): cv.boolean,
+                vol.Optional(CONF_LANG, default=""): cv.string
             }
         )
     },
@@ -79,6 +80,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     conf = hass.data[DOMAIN]
     simulate = conf[CONF_SIMULATE]
+    lang = conf[CONF_LANG] if conf[CONF_LANG] != "" else None
     host = SIM_HOST if simulate else API_HOST
 
     # If using an aiohttp-based API lib
@@ -86,13 +88,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         aiohttp_client.async_get_clientsession(hass), session, host
     )
 
-    homeconnect:HomeConnect = await async_load_from_cache(hass, auth)
+    homeconnect:HomeConnect = await async_load_from_cache(hass, auth, lang)
     if not homeconnect:
         # Create normally if failed to create from cache
         try:
-            homeconnect = await HomeConnect.async_create(auth, delayed_load=True)
+            homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang)
         except HomeConnectError as ex:
-            _LOGGER.debug("Failed to create the HomeConnect object", exc_info=ex)
+            _LOGGER.warning("Failed to create the HomeConnect object", exc_info=ex)
             return False
 
 
@@ -154,7 +156,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     return unload_ok
 
-async def async_load_from_cache(hass:HomeAssistant, auth:api.AsyncConfigEntryAuth) -> HomeConnect | None:
+async def async_load_from_cache(hass:HomeAssistant, auth:api.AsyncConfigEntryAuth, lang:str|None) -> HomeConnect | None:
     """ Helper function to load cached Home Connect data for storage """
     cache = storage.Store(hass, version=1, key=f"{DOMAIN}_cache", private=True)
     try:
@@ -172,7 +174,7 @@ async def async_load_from_cache(hass:HomeAssistant, auth:api.AsyncConfigEntryAut
             elif delta < 3600*24*30:
                 refresh = HomeConnect.RefreshMode.DYNAMIC_ONLY
 
-        homeconnect:HomeConnect = await HomeConnect.async_create(auth, json_data=json_data, refresh=refresh, delayed_load=True)
+        homeconnect:HomeConnect = await HomeConnect.async_create(auth, json_data=json_data, refresh=refresh, delayed_load=True, lang=lang)
         return homeconnect
     except Exception as ex:
         # If there is any exception when creating the object from cache just create it normally
