@@ -8,7 +8,7 @@
         "type": "python",
         "request": "launch",
         "justMyCode": false,
-        "preLaunchTask": "Setup proxy custom_components for debugging",
+        "preLaunchTask": "Pre-launch",
         "module": "homeassistant",
         "args": ["--debug", "-c", "/config"] //, "--skip-pip"]
       },

@@ -5,15 +5,6 @@
         "label": "Setup proxy custom_components for debugging",
         "type": "shell",
         "command": "$INTEGRATION_PATH/.devcontainer/scripts/proxy.sh",
-        "presentation": {
-          "echo": false,
-          "reveal": "silent",
-          "close": true,
-          "focus": false,
-          "panel": "new",
-          "showReuseMessage": false,
-          "clear": false
-        }
       },
       {
           "label": "Upgrade Home Assistant to latest dev",
@@ -27,6 +18,20 @@
           "command": "$INTEGRATION_PATH/.devcontainer/scripts/install-ha.sh",
           "args": [ "${input:hassVer}" ],
           "problemMatcher": []
+      },
+      {
+        "label": "Pre-launch",
+        "type": "shell",
+        "command": "$INTEGRATION_PATH/.devcontainer/scripts/pre-launch.sh",
+        "presentation": {
+          "echo": true,
+          "reveal": "silent",
+          "close": true,
+          "focus": false,
+          "panel": "new",
+          "showReuseMessage": false,
+          "clear": false
+        }
       }
     ],
     "inputs": [

@@ -22,9 +22,12 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
         new_entities = []
 
         if appliance.selected_program:
-            selected_program = appliance.selected_program
-            for key in appliance.available_programs[selected_program.key].options:
-                option = appliance.available_programs[selected_program.key].options[key]
+            selected_program_key = appliance.selected_program.key
+            if selected_program_key.count('.') > 3:
+                # Fix undocumented program keys that have sub-programs
+                selected_program_key = '.'.join(selected_program_key.split('.')[:4])
+            for key in appliance.available_programs[selected_program_key].options:
+                option = appliance.available_programs[selected_program_key].options[key]
                 if option.type == "Boolean":
                     device = OptionSwitch(appliance, key, {"opt": option})
                     new_entities.append(device)

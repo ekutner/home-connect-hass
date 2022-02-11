@@ -21,8 +21,8 @@
     "source=${localWorkspaceFolderBasename}_config,target=/config,type=volume",  // create a persistent named volume for the configuration folder
 		"source=${localWorkspaceFolder}/../home-connect-async,target=${containerWorkspaceFolder}/../home-connect-async,type=bind,consistency=consistent"
 	],
-	"postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/postcreate.sh",
-  "postStartCommand":  "${containerWorkspaceFolder}/.devcontainer/scripts/poststart.sh",
+	"postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-create.sh",
+  "postStartCommand":  "${containerWorkspaceFolder}/.devcontainer/scripts/post-start.sh",
 	"extensions": [
 		"github.vscode-pull-request-github",
 		"ryanluker.vscode-coverage-gutters",
