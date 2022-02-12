@@ -24,33 +24,34 @@ SPECIAL_ENTITIES = {
         "BSH.Common.Option.FinishInRelative": { "unit": None, "class": f"{DOMAIN}__timespan"},
         "BSH.Common.Option.ElapsedProgramTime": { "unit": None, "class": f"{DOMAIN}__timespan"},
         "BSH.Common.Option.RemainingProgramTime": {"class": "timestamp" }
-    },
-    "activity_options": {
-        "BSH.Common.Option.ElapsedProgramTime": {
-            "type": "sensor", "unit": "seconds", "class": f"{DOMAIN}__timespan",
-            "appliances": ["Hood", "Oven", "WarmingDrawer"]
-        },
-        "BSH.Common.Option.RemainingProgramTime": {
-            "type": "sensor", "unit": "seconds", "class": "timestamp",
-            "appliances": ["CoffeeMachine", "Hood", "Oven", "Dishwasher", "Dryer", "Washer", "WasherDryer"]
-        },
-        "BSH.Common.Option.RemainingProgramTimeIsEstimated": {
-            "type": "binary_sensor",
-            "appliances": ["CoffeeMachine", "Hood", "Oven", "Dishwasher", "Dryer", "Washer", "WasherDryer"]
-        },
-        "BSH.Common.Option.ProgramProgress": {
-            "type": "sensor", "unit": "%",
-            "appliances": ["CoffeeMachine", "Hood", "Oven", "WarmingDrawer", "Dishwasher", "Dryer", "Washer", "WasherDryer"]
-        },
-        "ConsumerProducts.CleaningRobot.Option.ProcessPhase": {
-            "type": "Sensor",
-            "appliances": ["CleaningRobot"]
-        },
-        "BSH.Common.Option.Duration": {
-            "type": "sensor",
-            "appliances": ["Hood", "Oven", "Dryer"]
-        },
     }
+    # ,
+    # "activity_options": {
+    #     "BSH.Common.Option.ElapsedProgramTime": {
+    #         "type": "sensor", "unit": "seconds", "class": f"{DOMAIN}__timespan",
+    #         "appliances": ["Hood", "Oven", "WarmingDrawer"]
+    #     },
+    #     "BSH.Common.Option.RemainingProgramTime": {
+    #         "type": "sensor", "unit": "seconds", "class": "timestamp",
+    #         "appliances": ["CoffeeMachine", "Hood", "Oven", "Dishwasher", "Dryer", "Washer", "WasherDryer"]
+    #     },
+    #     "BSH.Common.Option.RemainingProgramTimeIsEstimated": {
+    #         "type": "binary_sensor",
+    #         "appliances": ["CoffeeMachine", "Hood", "Oven", "Dishwasher", "Dryer", "Washer", "WasherDryer"]
+    #     },
+    #     "BSH.Common.Option.ProgramProgress": {
+    #         "type": "sensor", "unit": "%",
+    #         "appliances": ["CoffeeMachine", "Hood", "Oven", "WarmingDrawer", "Dishwasher", "Dryer", "Washer", "WasherDryer"]
+    #     },
+    #     "ConsumerProducts.CleaningRobot.Option.ProcessPhase": {
+    #         "type": "Sensor",
+    #         "appliances": ["CleaningRobot"]
+    #     },
+    #     "BSH.Common.Option.Duration": {
+    #         "type": "sensor",
+    #         "appliances": ["Hood", "Oven", "Dryer"]
+    #     },
+    # }
 
 }
 

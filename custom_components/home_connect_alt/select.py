@@ -26,9 +26,6 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
 
         if appliance.selected_program:
             selected_program_key = appliance.selected_program.key
-            if selected_program_key.count('.') > 3:
-                # Fix undocumented program keys that have sub-programs
-                selected_program_key = '.'.join(selected_program_key.split('.')[:4])
             for key in appliance.available_programs[selected_program_key].options:
                 option = appliance.available_programs[selected_program_key].options[key]
                 if option.allowedvalues:
@@ -54,18 +51,9 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
 class ProgramSelect(EntityBase, SelectEntity):
     """ Selection of available programs """
 
-    def __init__(self, appliance: Appliance, key: str = None, conf: dict = None) -> None:
-        super().__init__(appliance, key, conf)
-        self._extra_programs = []
-
     @property
     def unique_id(self) -> str:
         return f'{self.haId}_programs'
-
-    # @property
-    # def name(self) -> str:
-    #     appliance_name = self._appliance.name if self._appliance.name else self._appliance.type
-    #     return f"{self._appliance.brand} {appliance_name} - Programs"
 
     @property
     def name_ext(self) -> str:
@@ -94,20 +82,18 @@ class ProgramSelect(EntityBase, SelectEntity):
     @property
     def options(self) -> list[str]:
         """Return a set of selectable options."""
-        if self._appliance.selected_program.key not in self._appliance.available_programs:
-            # The API sometimes returns programs which are not one of the avilable programs so we ignore it
-            _LOGGER.debug("The selected program (%s) is not in the list of available programs, adding it to the select box", self._appliance.selected_program.key)
-            self._extra_programs.append(self._appliance.selected_program.key)
-        return list(self._appliance.available_programs.keys()) + self._extra_programs
+        return list(self._appliance.available_programs.keys())
 
     @property
     def current_option(self) -> str:
         """Return the selected entity option to represent the entity state."""
-        if self._appliance.selected_program.key not in self._appliance.available_programs:
+        key = self._appliance.selected_program.key
+        if key not in self._appliance.available_programs:
             # The API sometimes returns programs which are not one of the avilable programs so we ignore it
-            _LOGGER.debug("The selected program (%s) is not in the list of available programs", self._appliance.selected_program.key)
-            return None
-        return self._appliance.selected_program.key
+            subkey = self._appliance.available_programs.contained_subkey(key)
+            _LOGGER.debug("The selected program (%s) is not in the list of available programs, using (%s) instaed", key, subkey)
+            return subkey
+        return key
 
     async def async_select_option(self, option: str) -> None:
         try:

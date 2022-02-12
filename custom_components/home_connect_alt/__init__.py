@@ -175,10 +175,11 @@ async def async_load_from_cache(hass:HomeAssistant, auth:api.AsyncConfigEntryAut
                 refresh = HomeConnect.RefreshMode.DYNAMIC_ONLY
 
         homeconnect:HomeConnect = await HomeConnect.async_create(auth, json_data=json_data, refresh=refresh, delayed_load=True, lang=lang)
+        _LOGGER.debug("Loaded HomeConnect from cache")
         return homeconnect
     except Exception as ex:
         # If there is any exception when creating the object from cache just create it normally
-        _LOGGER.debug("Exception while reading cached data", exc_info=ex)
+        _LOGGER.debug("Exception while loading HomeConnect from cache", exc_info=ex)
         return None
 
 async def async_save_to_cache(hass:HomeAssistant, homeconnect:HomeConnect, cache:storage.Store=None) -> None:
@@ -194,8 +195,9 @@ async def async_save_to_cache(hass:HomeAssistant, homeconnect:HomeConnect, cache
             await cache.async_save(cached_data)
         else:
             await cache.async_remove()
+        _LOGGER.debug("Saved HomeConnect to cache")
     except Exception as ex:
-        _LOGGER.warning("Exception when saving to cache", exc_info=ex)
+        _LOGGER.debug("Exception when saving HomeConnect to cache", exc_info=ex)
 
 
 def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
@@ -241,6 +243,7 @@ def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect):
             "value": value
         }
         hass.bus.async_fire(f"{DOMAIN}_event", event_data)
+        _LOGGER.debug("Published event to Home Assistant event bus: %s = %s", key, str(value))
 
 
     def register_appliance(appliance:Appliance):

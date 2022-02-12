@@ -174,7 +174,8 @@
       "BSH.Common.Option.ElapsedProgramTime": "Elapsed Program Time",
       "BSH.Common.Option.RemainingProgramTime": "Remaining Program Time",
       "BSH.Common.Option.ProgramProgress": "Program Progress",
-      "ConsumerProducts.CleaningRobot.Option.ProcessPhase": "Process Phase"
+      "ConsumerProducts.CleaningRobot.Option.ProcessPhase": "Process Phase",
+      "LaundryCare.Washer.EnumType.ProcessPhase.Undefined": "Undefined"
     },
     "home_connect_alt__status": {
       "BSH.Common.EnumType.OperationState.Ready": "Ready",
