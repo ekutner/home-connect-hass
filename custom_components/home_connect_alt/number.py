@@ -98,7 +98,10 @@ class OptionNumber(EntityBase, NumberEntity):
         try:
             await self._appliance.async_set_option(self._key, value)
         except HomeConnectError as ex:
-            raise HomeAssistantError(f"Failed to set option value ({ex.code})") from ex
+            if ex.error_description:
+                raise HomeAssistantError(f"Failed to set the option value: {ex.error_description} ({ex.code})")
+            else:
+                raise HomeAssistantError(f"Failed to set the option value: ({ex.code})")
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
@@ -144,7 +147,10 @@ class SettingsNumber(EntityBase, NumberEntity):
         try:
             await self._appliance.async_apply_setting(self._key, value)
         except HomeConnectError as ex:
-            raise HomeAssistantError(f"Failed to apply setting value ({ex.code})") from ex
+            if ex.error_description:
+                raise HomeAssistantError(f"Failed to apply the setting value: {ex.error_description} ({ex.code})")
+            else:
+                raise HomeAssistantError(f"Failed to apply the setting value: ({ex.code})")
 
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:

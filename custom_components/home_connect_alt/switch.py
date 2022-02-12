@@ -77,8 +77,10 @@ class OptionSwitch(EntityBase, SwitchEntity):
         try:
             await self._appliance.async_set_option(self._key, True)
         except HomeConnectError as ex:
-            raise HomeAssistantError(f"Failed to set option ({ex.code})")
-
+            if ex.error_description:
+                raise HomeAssistantError(f"Failed to set the option: {ex.error_description} ({ex.code})")
+            else:
+                raise HomeAssistantError(f"Failed to set the option: ({ex.code})")
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the entity off."""
@@ -119,7 +121,10 @@ class SettingsSwitch(EntityBase, SwitchEntity):
         try:
             await self._appliance.async_apply_setting(self._key, True)
         except HomeConnectError as ex:
-            raise HomeAssistantError(f"Failed to apply setting ({ex.code})")
+            if ex.error_description:
+                raise HomeAssistantError(f"Failed to apply the setting: {ex.error_description} ({ex.code})")
+            else:
+                raise HomeAssistantError(f"Failed to apply the setting: ({ex.code})")
 
 
     async def async_turn_off(self, **kwargs: Any) -> None:

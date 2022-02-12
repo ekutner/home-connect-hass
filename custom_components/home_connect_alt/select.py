@@ -99,7 +99,10 @@ class ProgramSelect(EntityBase, SelectEntity):
         try:
             await self._appliance.async_select_program(key=option)
         except HomeConnectError as ex:
-            raise HomeAssistantError(f"Failed to set selected program ({ex.code})")
+            if ex.error_description:
+                raise HomeAssistantError(f"Failed to set the selected program: {ex.error_description} ({ex.code})")
+            else:
+                raise HomeAssistantError(f"Failed to set the selected program ({ex.code})")
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
@@ -151,9 +154,9 @@ class OptionSelect(EntityBase, SelectEntity):
             await self._appliance.async_set_option(key=self._key, value=option)
         except HomeConnectError as ex:
             if ex.error_description:
-                raise HomeAssistantError(f"{ex.error_description} ({ex.code})")
+                raise HomeAssistantError(f"Failed to set the selected option: {ex.error_description} ({ex.code})")
             else:
-                raise HomeAssistantError(f"Failed to set selected option ({ex.code})")
+                raise HomeAssistantError(f"Failed to set the selected option: ({ex.code})")
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
@@ -195,7 +198,11 @@ class SettingsSelect(EntityBase, SelectEntity):
         try:
             await self._appliance.async_apply_setting(key=self._key, value=option)
         except HomeConnectError as ex:
-            raise HomeAssistantError(f"Failed to set selected setting ({ex.code})")
+            if ex.error_description:
+                raise HomeAssistantError(f"Failed to apply the setting: {ex.error_description} ({ex.code})")
+            else:
+                raise HomeAssistantError(f"Failed to apply the setting: ({ex.code})")
+
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()

@@ -111,7 +111,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Save the state of the HomeConnect object to cache
         await async_save_to_cache(hass, homeconnect)
         homeconnect.register_callback(on_device_removed, Events.DEPAIRED)
-        homeconnect.register_callback(on_device_added, Events.PAIRED)
+        homeconnect.register_callback(on_device_added, [Events.PAIRED, Events.DATA_CHANGED] )
         homeconnect.subscribe_for_updates()
 
     async def on_data_load_error(homeconnect:HomeConnect, ex:Exception):
