@@ -22,7 +22,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             device = StartButton(appliance)
             entity_manager.add(device)
         entity_manager.register()
-        
+
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
@@ -151,4 +151,4 @@ class HomeConnecDebugButton(ButtonEntity):
             js=self._homeconnect.to_json(indent=2)
             _LOGGER.error(js)
         except Exception as ex:
-            raise HomeAssistantError("Failed to serialize to JSON", exc_info=ex)
+            raise HomeAssistantError("Failed to serialize to JSON")
