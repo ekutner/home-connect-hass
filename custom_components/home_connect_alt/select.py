@@ -109,9 +109,9 @@ class ProgramSelect(EntityBase, SelectEntity):
             await self._appliance.async_select_program(key=option)
         except HomeConnectError as ex:
             if ex.error_description:
-                raise HomeAssistantError(f"Failed to set the selected program: {ex.error_description} ({ex.code})")
+                raise HomeAssistantError(f"Failed to set the selected program: {ex.error_description} ({ex.code} - {self._key}={option})")
             else:
-                raise HomeAssistantError(f"Failed to set the selected program ({ex.code})")
+                raise HomeAssistantError(f"Failed to set the selected program ({ex.code} - {self._key}={option})")
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
