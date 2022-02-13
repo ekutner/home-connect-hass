@@ -1,3 +1,5 @@
+import logging
+from sys import exc_info
 from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
 from homeassistant.components.button import ButtonEntity
 from homeassistant.core import HomeAssistant
@@ -8,6 +10,7 @@ from homeassistant.helpers.typing import ConfigType
 from .common import EntityBase, EntityManager
 from .const import DEVICE_ICON_MAP, DOMAIN, HOME_CONNECT_DEVICE
 
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
     """ Add buttons for passed config_entry in HA """
@@ -27,7 +30,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
         entity_manager.remove_appliance(appliance)
 
     # First add the integration button
-    async_add_entities([HomeConnectRefreshButton(homeconnect)])
+    async_add_entities([HomeConnectRefreshButton(homeconnect), HomeConnecDebugButton(homeconnect)])
 
     # Subscribe for events and register existing appliances
     homeconnect.register_callback(add_appliance, Events.PAIRED)
@@ -118,4 +121,37 @@ class HomeConnectRefreshButton(ButtonEntity):
                 raise HomeAssistantError(f"Failed to refresh the Home Connect data ({ex.code})")
 
 
+class HomeConnecDebugButton(ButtonEntity):
+    """ Class for a button to trigger a global refresh of Home Connect data  """
 
+    def __init__(self, homeconnect:HomeConnect) -> None:
+        self._homeconnect = homeconnect
+
+    @property
+    def device_info(self):
+        """Return information to link this entity with the correct device."""
+        return HOME_CONNECT_DEVICE
+
+    @property
+    def unique_id(self) -> str:
+        return 'homeconnect_debug'
+
+    @property
+    def name(self) -> str:
+        return "Home Connect Debug Info"
+
+    @property
+    def icon(self) -> str:
+        return "mdi:bug-check"
+
+    @property
+    def available(self) -> bool:
+        return True
+
+    async def async_press(self) -> None:
+        """ Handle button press """
+        try:
+            js=self._homeconnect.to_json(indent=2)
+            _LOGGER.error(js)
+        except Exception as ex:
+            raise HomeAssistantError("Failed to serialize to JSON", exc_info=ex)

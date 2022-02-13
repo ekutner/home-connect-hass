@@ -73,7 +73,7 @@ class ProgramOptionBinarySensor(EntityBase, BinarySensorEntity):
 
     @property
     def available(self) -> bool:
-        return self._key in self._appliance.selected_program.options and super().available
+        return self._appliance.selected_program and (self._key in self._appliance.selected_program.options) and super().available
 
     @property
     def is_on(self):

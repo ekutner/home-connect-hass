@@ -82,18 +82,27 @@ class ProgramSelect(EntityBase, SelectEntity):
     @property
     def options(self) -> list[str]:
         """Return a set of selectable options."""
-        return list(self._appliance.available_programs.keys())
+        if self._appliance.available_programs:
+            return list(self._appliance.available_programs.keys())
+        return None
 
     @property
     def current_option(self) -> str:
         """Return the selected entity option to represent the entity state."""
-        key = self._appliance.selected_program.key
-        if key not in self._appliance.available_programs:
-            # The API sometimes returns programs which are not one of the avilable programs so we ignore it
-            subkey = self._appliance.available_programs.contained_subkey(key)
-            _LOGGER.debug("The selected program (%s) is not in the list of available programs, using (%s) instaed", key, subkey)
-            return subkey
-        return key
+        if self._appliance.selected_program:
+            key = self._appliance.selected_program.key
+            if key not in self._appliance.available_programs:
+                # The API sometimes returns programs which are not one of the avilable programs so we ignore it
+                subkey = self._appliance.available_programs.contained_subkey(key)
+                _LOGGER.debug("The selected program (%s) is not in the list of available programs, using (%s) instaed", key, subkey)
+                return subkey
+            return key
+        else:
+            # There is no selected program so just pick the first option
+            options = self.options
+            if options:
+                return options[0]
+            return None
 
     async def async_select_option(self, option: str) -> None:
         try:
