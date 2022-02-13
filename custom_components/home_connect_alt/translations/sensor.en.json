@@ -206,6 +206,7 @@
       "ConsumerProducts.CoffeeMaker.Option.CoffeeTemperature": "Coffee Temperature",
       "ConsumerProducts.CoffeeMaker.Option.BeanContainerSelection": "Bean Container Selection",
       "ConsumerProducts.CoffeeMaker.Option.FlowRate": "Flow Rate",
+      "ConsumerProducts.CoffeeMaker.Option.MultipleBeverages": "Multiple Beverages",
       "Cooking.Common.Option.Hood.VentingLevel": "Hood",
       "Cooking.Common.Option.Hood.IntensiveLevel": "Hood",
       "ConsumerProducts.CleaningRobot.Option.ReferenceMapId": "Reference Map Id",
