@@ -30,6 +30,7 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Required(CONF_CLIENT_ID): cv.string,
                 vol.Required(CONF_CLIENT_SECRET): cv.string,
                 vol.Optional(CONF_SIMULATE, default=False): cv.boolean,
+                vol.Optional(CONF_CACHE, default=True): cv.boolean,
                 vol.Optional(CONF_LANG, default=""): cv.string
             }
         )
@@ -82,17 +83,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     simulate = conf[CONF_SIMULATE]
     lang = conf[CONF_LANG] if conf[CONF_LANG] != "" else None
     host = SIM_HOST if simulate else API_HOST
+    use_cache = conf[CONF_CACHE]
 
     # If using an aiohttp-based API lib
     auth = api.AsyncConfigEntryAuth(
         aiohttp_client.async_get_clientsession(hass), session, host
     )
 
-    homeconnect:HomeConnect = await async_load_from_cache(hass, auth, lang)
+    homeconnect:HomeConnect = None
+    if use_cache:
+        homeconnect = await async_load_from_cache(hass, auth, lang)
     if not homeconnect:
         # Create normally if failed to create from cache
         try:
             homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang)
+            _LOGGER.debug("The HomeConnect object was created from scratch (without cache)")
         except HomeConnectError as ex:
             _LOGGER.warning("Failed to create the HomeConnect object", exc_info=ex)
             return False
@@ -109,7 +114,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     async def on_data_loaded(homeconnect:HomeConnect):
         # Save the state of the HomeConnect object to cache
-        await async_save_to_cache(hass, homeconnect)
+        if use_cache:
+            await async_save_to_cache(hass, homeconnect)
+        else:
+            _LOGGER.debug("Not saving to cache, it is disabled")
         homeconnect.register_callback(on_device_removed, Events.DEPAIRED)
         homeconnect.register_callback(on_device_added, [Events.PAIRED, Events.DATA_CHANGED] )
         homeconnect.subscribe_for_updates()
@@ -118,7 +126,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         _LOGGER.error("Failed to load data for the HomeConnect object", exc_info=ex)
 
     async def on_device_added(appliance:Appliance, event:str):
-        await async_save_to_cache(hass, homeconnect)
+        if use_cache:
+            await async_save_to_cache(hass, homeconnect)
+        else:
+            _LOGGER.debug("Not saving to cache, it is disabled")
 
     async def on_device_removed(appliance:Appliance, event:str):
         devreg = dr.async_get(hass)

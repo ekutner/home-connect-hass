@@ -9,6 +9,7 @@ ENDPOINT_TOKEN = "/security/oauth/token"
 SCOPES = "IdentifyAppliance Monitor Control Settings"
 CONF_SIMULATE = "simulate"
 CONF_LANG = "language"
+CONF_CACHE = "cache"
 
 HOME_CONNECT_DEVICE = {
     "identifiers": {(DOMAIN, "homeconnect")},
