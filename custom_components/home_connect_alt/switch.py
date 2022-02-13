@@ -16,26 +16,32 @@ from .const import DOMAIN
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
     """Add sensors for passed config_entry in HA."""
     homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
-    entity_manager = EntityManager()
+    entity_manager = EntityManager(async_add_entities)
 
     def add_appliance(appliance:Appliance) -> None:
-        new_entities = []
+        # if appliance.selected_program:
+        #     selected_program_key = appliance.selected_program.key
+        #     for key in appliance.available_programs[selected_program_key].options:
+        #         option = appliance.available_programs[selected_program_key].options[key]
+        #         if option.type == "Boolean":
+        #             device = OptionSwitch(appliance, key, {"opt": option})
+        #             entity_manager.add(device)
 
-        if appliance.selected_program:
-            selected_program_key = appliance.selected_program.key
-            for key in appliance.available_programs[selected_program_key].options:
-                option = appliance.available_programs[selected_program_key].options[key]
-                if option.type == "Boolean":
-                    device = OptionSwitch(appliance, key, {"opt": option})
-                    new_entities.append(device)
+        if appliance.available_programs:
+            for program in appliance.available_programs.values():
+                if program.options:
+                    for option in program.options.values():
+                        if option.type == "Boolean" or isinstance(option.value, bool):
+                            device = OptionSwitch(appliance, option.key)
+                            entity_manager.add(device)
 
         for setting in appliance.settings.values():
-            if setting.type == "Boolean":
+            if setting.type == "Boolean" or isinstance(option.value, bool):
                 device = SettingsSwitch(appliance, setting.key, {"opt": setting})
-                new_entities.append(device)
+                entity_manager.add(device)
 
-        if len(new_entities)>0:
-            entity_manager.register_entities(new_entities, async_add_entities)
+        entity_manager.register()
+
 
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)

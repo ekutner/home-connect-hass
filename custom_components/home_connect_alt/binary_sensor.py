@@ -16,10 +16,9 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     """Add sensors for passed config_entry in HA."""
     #auth = hass.data[DOMAIN][config_entry.entry_id]
     homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
-    entity_manager = EntityManager()
+    entity_manager = EntityManager(async_add_entities)
 
     def add_appliance(appliance:Appliance) -> None:
-        new_entities = []
         for (key, value) in appliance.status.items():
             device = None
             if key in SPECIAL_ENTITIES['status']:
@@ -29,29 +28,30 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             else:
                 if isinstance(value, bool): # should be a binary sensor if it has a boolean value
                     device = StatusBinarySensor(appliance, key)
-            if device:
-                new_entities.append(device)
+            entity_manager.add(device)
 
         if appliance.selected_program:
             for option in appliance.selected_program.options.values():
                 if isinstance(option.value, bool):
                     device = ProgramOptionBinarySensor(appliance, option.key)
-                    new_entities.append(device)
+                    entity_manager.add(device)
             if appliance.active_program:
                 for option in appliance.active_program.options.values():
                     if option.key not in appliance.selected_program.options and isinstance(option.value, bool):
                         device = ActivityOptionBinarySensor(appliance, option.key, SPECIAL_ENTITIES['options'].get(option.key, {}))
-                        new_entities.append(device)
+                        entity_manager.add(device)
 
         # for (key, conf) in SPECIAL_ENTITIES['activity_options'].items():
         #     if appliance.type in conf['appliances'] and conf['type']=='binary_sensor':
         #         device = ActivityOptionBinarySensor(appliance, key, conf)
         #         new_entities.append(device)
 
-        new_entities.append(ConnectionBinarySensor(appliance, "Connected"))
+        # new_entities.append(ConnectionBinarySensor(appliance, "Connected"))
+        entity_manager.add(ConnectionBinarySensor(appliance, "Connected"))
 
-        if len(new_entities)>0:
-            entity_manager.register_entities(new_entities, async_add_entities)
+        # if len(new_entities)>0:
+        #     entity_manager.register_entities(new_entities, async_add_entities)
+        entity_manager.register()
 
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)

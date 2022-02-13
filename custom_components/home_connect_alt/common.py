@@ -107,23 +107,42 @@ class EntityManager():
     This class prevents that from happening
 
     """
-    def __init__(self):
+    def __init__(self, async_add_entities:AddEntitiesCallback):
         self._existing_ids = set()
+        self._pending_entities:dict[str, Entity] = {}
         self._entity_appliance_map = {}
+        self._async_add_entities = async_add_entities
 
-    def register_entities(self, entities:Sequence[Entity], async_add_entities:AddEntitiesCallback):
-        """ Register new entities making sure they are only added once """
-        ids = set([ ent.unique_id for ent in entities])
-        for entity in entities:
+    def add(self, entity:Entity) -> None:
+        """ Add a new entiity unless it already esists """
+        if entity and (entity.unique_id not in self._existing_ids) and (entity.unique_id not in self._pending_entities):
+            self._pending_entities[entity.unique_id] = entity
+
+    def register(self) -> None:
+        """ register the pending entities with Home Assistant """
+        new_ids = set(self._pending_entities.keys())
+        new_entities = list(self._pending_entities.values())
+        for entity in new_entities:
             if entity.haId not in self._entity_appliance_map:
                 self._entity_appliance_map[entity.haId] = set()
             self._entity_appliance_map[entity.haId].add(entity.unique_id)
-        new_ids = ids - (ids & self._existing_ids)
-        new_entities = [ entity for entity in entities if entity.unique_id in new_ids ]
-        for e in new_entities:
-            _LOGGER.debug("New entity: %s (%s)", e.name, e.unique_id)
-        async_add_entities(new_entities)
+        self._async_add_entities(new_entities)
         self._existing_ids |= new_ids
+        self._pending_entities = {}
+
+    # def register_entities(self, entities:Sequence[Entity], async_add_entities:AddEntitiesCallback):
+    #     """ Register new entities making sure they are only added once """
+    #     ids = set([ ent.unique_id for ent in entities])
+    #     for entity in entities:
+    #         if entity.haId not in self._entity_appliance_map:
+    #             self._entity_appliance_map[entity.haId] = set()
+    #         self._entity_appliance_map[entity.haId].add(entity.unique_id)
+    #     new_ids = ids - (ids & self._existing_ids)
+    #     new_entities = [ entity for entity in entities if entity.unique_id in new_ids ]
+    #     for e in new_entities:
+    #         _LOGGER.debug("New entity: %s (%s)", e.name, e.unique_id)
+    #     async_add_entities(new_entities)
+    #     self._existing_ids |= new_ids
 
     def remove_appliance(self, appliance:Appliance):
         """ Remove an appliance and all its registered entities """

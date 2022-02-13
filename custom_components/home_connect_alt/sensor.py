@@ -18,25 +18,24 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     """ Add sensors for passed config_entry in HA """
     #auth = hass.data[DOMAIN][config_entry.entry_id]
     homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
-    entity_manager = EntityManager()
+    entity_manager = EntityManager(async_add_entities)
 
     def add_appliance(appliance:Appliance) -> None:
-        new_entities = []
         if appliance.available_programs and appliance.selected_program:
             device = SelectedProgramSensor(appliance)
-            new_entities.append(device)
+            entity_manager.add(device)
 
         if appliance.selected_program:
             for option in appliance.selected_program.options.values():
                 if not isinstance(option.value, bool):
                     device = ProgramOptionSensor(appliance, option.key, SPECIAL_ENTITIES['options'].get(option.key, {}))
-                    new_entities.append(device)
+                    entity_manager.add(device)
 
             if appliance.active_program:
                 for option in appliance.active_program.options.values():
                     if option.key not in appliance.selected_program.options and not isinstance(option.value, bool):
                         device = ActivityOptionSensor(appliance, option.key, SPECIAL_ENTITIES['options'].get(option.key, {}))
-                        new_entities.append(device)
+                        entity_manager.add(device)
 
         for (key, value) in appliance.status.items():
             device = None
@@ -50,17 +49,16 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
                     if 'temperature' in key.lower():
                         conf['class'] = 'temperature'
                     device = StatusSensor(appliance, key, conf)
-            if device:
-                new_entities.append(device)
+            entity_manager.add(device)
 
         # for (key, conf) in SPECIAL_ENTITIES['activity_options'].items():
         #     if appliance.type in conf['appliances'] and conf['type']=='sensor':
         #         device = ActivityOptionSensor(appliance, key, conf)
         #         new_entities.append(device)
 
-        if len(new_entities)>0:
-            entity_manager.register_entities(new_entities, async_add_entities)
+        entity_manager.register()
 
+        
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
