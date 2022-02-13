@@ -36,7 +36,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
                             entity_manager.add(device)
 
         for setting in appliance.settings.values():
-            if setting.type == "Boolean" or isinstance(option.value, bool):
+            if setting.type == "Boolean" or isinstance(setting.value, bool):
                 device = SettingsSwitch(appliance, setting.key, {"opt": setting})
                 entity_manager.add(device)
 
