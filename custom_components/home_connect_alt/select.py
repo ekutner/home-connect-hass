@@ -124,12 +124,13 @@ class OptionSelect(EntityBase, SelectEntity):
     @property
     def options(self) -> list[str]:
         """Return a set of selectable options."""
-        selected_program_key = self._appliance.selected_program.key
-        available_program = self._appliance.available_programs.get(selected_program_key)
-        if available_program:
-            option = available_program.options.get(self._key)
-            if option:
-                return option.allowedvalues
+        if self.program_option_available:
+            selected_program_key = self._appliance.selected_program.key
+            available_program = self._appliance.available_programs.get(selected_program_key)
+            if available_program:
+                option = available_program.options.get(self._key)
+                if option:
+                    return option.allowedvalues
         return None
 
     @property
