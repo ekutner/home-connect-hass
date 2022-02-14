@@ -30,7 +30,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if option.type in ["Int", "Float", "Double"] or (isinstance(option.value, numbers.Number) and not isinstance(option.value, bool)):
+                        if option.type in ["Int", "Float", "Double"]: # or (isinstance(option.value, numbers.Number) and not isinstance(option.value, bool)):
                             device = OptionNumber(appliance, option.key, {"opt": option})
                             entity_manager.add(device)
 
@@ -63,12 +63,7 @@ class OptionNumber(EntityBase, NumberEntity):
 
     @property
     def available(self) -> bool:
-        return self._key in self._appliance.selected_program.options \
-        and super().available \
-        and (
-            "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
-            self._appliance.status["BSH.Common.Status.RemoteControlActive"]
-        )
+        return self.program_option_available
 
     @property
     def min_value(self) -> float:

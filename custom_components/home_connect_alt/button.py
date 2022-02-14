@@ -42,11 +42,6 @@ class StartButton(EntityBase, ButtonEntity):
     def unique_id(self) -> str:
         return f'{self.haId}_start'
 
-    # @property
-    # def name(self) -> str:
-    #     appliance_name = self._appliance.name if self._appliance.name else self._appliance.type
-    #     return f"{self._appliance.brand} {appliance_name} - Start"
-
     @property
     def name_ext(self) -> str:
         return "Start"
@@ -58,6 +53,11 @@ class StartButton(EntityBase, ButtonEntity):
         and (
             "BSH.Common.Status.RemoteControlStartAllowed" not in self._appliance.status or
             self._appliance.status["BSH.Common.Status.RemoteControlStartAllowed"]
+        ) \
+        and (
+            self._appliance.selected_program and self._appliance.available_programs and
+            #self._appliance.available_programs.contains(self._appliance.selected_program.key, exact=True)
+            self._appliance.selected_program.key in self._appliance.available_programs
         )
 
     @property
@@ -72,12 +72,23 @@ class StartButton(EntityBase, ButtonEntity):
             await self._appliance.async_start_program()
         except HomeConnectError as ex:
             if ex.error_description:
-                raise HomeAssistantError(f"Failed to start the current program: {ex.error_description} ({ex.code})")
+                raise HomeAssistantError(f"Failed to start the selected program: {ex.error_description} ({ex.code})")
             else:
-                raise HomeAssistantError(f"Failed to start the current program ({ex.code})")
+                raise HomeAssistantError(f"Failed to start the selected program ({ex.code})")
+
+    async def async_added_to_hass(self):
+        """Run when this Entity has been added to HA."""
+        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, "BSH.Common.Status.RemoteControlStartAllowed"]
+        self._appliance.register_callback(self.async_on_update, events)
+
+    async def async_will_remove_from_hass(self):
+        """Entity being removed from hass."""
+        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, "BSH.Common.Status.RemoteControlStartAllowed"]
+        self._appliance.deregister_callback(self.async_on_update, events)
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
+
 
 
 class HomeConnectRefreshButton(ButtonEntity):

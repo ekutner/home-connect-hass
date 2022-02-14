@@ -23,14 +23,6 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             device = ProgramSelect(appliance)
             entity_manager.add(device)
 
-        # if appliance.selected_program:
-        #     selected_program_key = appliance.selected_program.key
-        #     for key in appliance.available_programs[selected_program_key].options:
-        #         option = appliance.available_programs[selected_program_key].options[key]
-        #         if option.allowedvalues:
-        #             device = OptionSelect(appliance, key)
-        #             new_entities.append(device)
-
         if appliance.available_programs:
             for program in appliance.available_programs.values():
                 if program.options:
@@ -97,18 +89,10 @@ class ProgramSelect(EntityBase, SelectEntity):
         """Return the selected entity option to represent the entity state."""
         if self._appliance.selected_program:
             key = self._appliance.selected_program.key
-            if key not in self._appliance.available_programs:
+            if  key in self._appliance.available_programs: # self._appliance.available_programs.contains(key, exact=True):
                 # The API sometimes returns programs which are not one of the avilable programs so we ignore it
-                subkey = self._appliance.available_programs.contained_subkey(key)
-                _LOGGER.debug("The selected program (%s) is not in the list of available programs, using (%s) instaed", key, subkey)
-                return subkey
-            return key
-        else:
-            # There is no selected program so just pick the first option
-            options = self.options
-            if options:
-                return options[0]
-            return None
+                return key
+        return None
 
     async def async_select_option(self, option: str) -> None:
         try:
@@ -135,18 +119,7 @@ class OptionSelect(EntityBase, SelectEntity):
 
     @property
     def available(self) -> bool:
-        return self._appliance.selected_program \
-            and (self._key in self._appliance.selected_program.options) \
-            and self._appliance.available_programs \
-            and (self._appliance.selected_program.key in self._appliance.available_programs) \
-            and not self._appliance.active_program \
-            and (self._key in  self._appliance.available_programs[self._appliance.selected_program.key].options) \
-            and super().available \
-            and  (
-                "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
-                self._appliance.status["BSH.Common.Status.RemoteControlActive"]
-            )
-
+        return self.program_option_available
 
     @property
     def options(self) -> list[str]:

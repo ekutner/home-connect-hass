@@ -72,6 +72,21 @@ class EntityBase(ABC):
         """ Avilability of the enity """
         return self._appliance.connected
 
+    @property
+    def program_option_available(self) -> bool:
+        """ Helper to be used for program options controls """
+        return self._appliance.connected \
+            and self._appliance.selected_program \
+            and (self._key in self._appliance.selected_program.options) \
+            and self._appliance.available_programs \
+            and (self._appliance.selected_program.key in self._appliance.available_programs) \
+            and not self._appliance.active_program \
+            and (self._key in  self._appliance.available_programs[self._appliance.selected_program.key].options) \
+            and  (
+                "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
+                self._appliance.status["BSH.Common.Status.RemoteControlActive"]
+            )
+
 
     async def async_added_to_hass(self):
         """Run when this Entity has been added to HA."""
