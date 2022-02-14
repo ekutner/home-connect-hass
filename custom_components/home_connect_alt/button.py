@@ -19,8 +19,8 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
 
     def add_appliance(appliance:Appliance) -> None:
         if appliance.available_programs:
-            device = StartButton(appliance)
-            entity_manager.add(device)
+            entity_manager.add(StartButton(appliance))
+            entity_manager.add(StopButton(appliance))
         entity_manager.register()
 
     def remove_appliance(appliance:Appliance) -> None:
@@ -44,32 +44,60 @@ class StartButton(EntityBase, ButtonEntity):
 
     @property
     def name_ext(self) -> str:
+        state = self._appliance.status.get("BSH.Common.Status.OperationState")
+        if state == "BSH.Common.EnumType.OperationState.Run" \
+            and  "BSH.Common.Command.PauseProgram" in self._appliance.commands:
+            return "Pause"
+        if state == "BSH.Common.EnumType.OperationState.Pause" \
+            and "BSH.Common.Command.ResumeProgram" in self._appliance.commands:
+            return "Resume"
         return "Start"
 
 
     @property
     def available(self) -> bool:
-        return super().available \
-        and (
-            "BSH.Common.Status.RemoteControlStartAllowed" not in self._appliance.status or
-            self._appliance.status["BSH.Common.Status.RemoteControlStartAllowed"]
-        ) \
-        and (
-            self._appliance.selected_program and self._appliance.available_programs and
-            #self._appliance.available_programs.contains(self._appliance.selected_program.key, exact=True)
-            self._appliance.selected_program.key in self._appliance.available_programs
-        )
+        state = self._appliance.status.get("BSH.Common.Status.OperationState")
+        return super().available and \
+            (
+                (
+                    state == "BSH.Common.EnumType.OperationState.Ready"
+                    and (
+                        "BSH.Common.Status.RemoteControlStartAllowed" not in self._appliance.status or
+                        self._appliance.status["BSH.Common.Status.RemoteControlStartAllowed"]
+                    )
+                    and (
+                        self._appliance.selected_program and self._appliance.available_programs and
+                        self._appliance.selected_program.key in self._appliance.available_programs
+                    )
+                )
+                or (
+                    state == "BSH.Common.EnumType.OperationState.Run"
+                    and  "BSH.Common.Command.PauseProgram" in self._appliance.commands
+                )
+                or (
+                    state == "BSH.Common.EnumType.OperationState.Pause"
+                    and  "BSH.Common.Command.ResumeProgram" in self._appliance.commands
+                )
+            )
+
 
     @property
     def icon(self) -> str:
-        if self._key in DEVICE_ICON_MAP:
-            return DEVICE_ICON_MAP[self._key]
-        return None
+        if "BSH.Common.Command.PauseProgram" in self._appliance.commands \
+            and self._appliance.status.get("BSH.Common.Status.OperationState") == "BSH.Common.EnumType.OperationState.Run":
+            return "mdi:pause"
+        return "mdi:play"
 
     async def async_press(self) -> None:
         """ Handle button press """
         try:
-            await self._appliance.async_start_program()
+            state = self._appliance.status.get("BSH.Common.Status.OperationState")
+            if state == "BSH.Common.EnumType.OperationState.Ready":
+                await self._appliance.async_start_program()
+            elif state == "BSH.Common.EnumType.OperationState.Run":
+                await self._appliance.async_pause_active_program()
+            elif state == "BSH.Common.EnumType.OperationState.Pause":
+                await self._appliance.async_resume_paused_program()
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to start the selected program: {ex.error_description} ({ex.code})")
@@ -89,6 +117,52 @@ class StartButton(EntityBase, ButtonEntity):
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
 
+class StopButton(EntityBase, ButtonEntity):
+    """ Class for buttons that start the selected program """
+    @property
+    def unique_id(self) -> str:
+        return f'{self.haId}_stop'
+
+    @property
+    def name_ext(self) -> str:
+        return "Stop"
+
+
+    @property
+    def available(self) -> bool:
+        return super().available \
+        and self._appliance.active_program \
+        and (
+            "BSH.Common.Status.RemoteControlStartAllowed" not in self._appliance.status or
+            self._appliance.status["BSH.Common.Status.RemoteControlStartAllowed"]
+        )
+
+    @property
+    def icon(self) -> str:
+        return "mdi:stop"
+
+    async def async_press(self) -> None:
+        """ Handle button press """
+        try:
+            await self._appliance.async_stop_active_program()
+        except HomeConnectError as ex:
+            if ex.error_description:
+                raise HomeAssistantError(f"Failed to stop the selected program: {ex.error_description} ({ex.code})")
+            else:
+                raise HomeAssistantError(f"Failed to stop the selected program ({ex.code})")
+
+    async def async_added_to_hass(self):
+        """Run when this Entity has been added to HA."""
+        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, "BSH.Common.Status.RemoteControlStartAllowed"]
+        self._appliance.register_callback(self.async_on_update, events)
+
+    async def async_will_remove_from_hass(self):
+        """Entity being removed from hass."""
+        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, "BSH.Common.Status.RemoteControlStartAllowed"]
+        self._appliance.deregister_callback(self.async_on_update, events)
+
+    async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
+        self.async_write_ha_state()
 
 
 class HomeConnectRefreshButton(ButtonEntity):

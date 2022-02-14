@@ -89,7 +89,7 @@ class ProgramSelect(EntityBase, SelectEntity):
         """Return the selected entity option to represent the entity state."""
         if self._appliance.selected_program:
             key = self._appliance.selected_program.key
-            if  key in self._appliance.available_programs: # self._appliance.available_programs.contains(key, exact=True):
+            if  key in self._appliance.available_programs:
                 # The API sometimes returns programs which are not one of the avilable programs so we ignore it
                 return key
         return None
