@@ -50,6 +50,12 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
                     device = StatusSensor(appliance, key, conf)
             entity_manager.add(device)
 
+        for setting in appliance.settings.values():
+            if setting.type != "Boolean" and not isinstance(setting.value, bool):
+                device = SettingsSensor(appliance, setting.key)
+                entity_manager.add(device)
+
+
         entity_manager.register()
 
 
@@ -212,6 +218,38 @@ class StatusSensor(EntityBase, SensorEntity):
             if status.displayvalue:
                 return status.displayvalue
             return status.value
+        return None
+
+    async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
+        self.async_write_ha_state()
+
+
+class SettingsSensor(EntityBase, SensorEntity):
+    """ Status sensor """
+    @property
+    def device_class(self) -> str:
+        return f"{DOMAIN}__settings"
+
+    @property
+    def name_ext(self) -> str:
+        if self._key in self._appliance.settings:
+            setting = self._appliance.settings[self._key]
+            if setting:
+                return setting.name
+        return None
+
+    @property
+    def icon(self) -> str:
+        return self._conf.get('icon', 'mdi:tune')
+
+    @property
+    def native_value(self):
+        """Return the state of the sensor."""
+        setting = self._appliance.settings.get(self._key)
+        if setting:
+            if setting.displayvalue:
+                return setting.displayvalue
+            return setting.value
         return None
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:

@@ -119,6 +119,12 @@ class SettingsNumber(EntityBase, NumberEntity):
         return f"{DOMAIN}__settings"
 
     @property
+    def name_ext(self) -> str|None:
+        if self._key in self._appliance.settings and self._appliance.settings[self._key].name:
+            return self._appliance.settings[self._key].name
+        return None
+
+    @property
     def icon(self) -> str:
         return self._conf.get('icon', 'mdi:tune')
 
