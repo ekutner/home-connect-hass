@@ -1,5 +1,6 @@
 """ Implement the Switch entities of this implementation """
 
+from __future__ import annotations
 from typing import Any
 
 from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
@@ -10,7 +11,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
 from .common import EntityBase, EntityManager
-from .const import DOMAIN
+from .const import DOMAIN, SPECIAL_ENTITIES
 
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
@@ -19,24 +20,16 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     entity_manager = EntityManager(async_add_entities)
 
     def add_appliance(appliance:Appliance) -> None:
-        # if appliance.selected_program:
-        #     selected_program_key = appliance.selected_program.key
-        #     for key in appliance.available_programs[selected_program_key].options:
-        #         option = appliance.available_programs[selected_program_key].options[key]
-        #         if option.type == "Boolean":
-        #             device = OptionSwitch(appliance, key, {"opt": option})
-        #             entity_manager.add(device)
-
         if appliance.available_programs:
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if option.type == "Boolean" or isinstance(option.value, bool):
+                        if option.key not in SPECIAL_ENTITIES['ignore'] and (option.type == "Boolean" or isinstance(option.value, bool)):
                             device = OptionSwitch(appliance, option.key)
                             entity_manager.add(device)
 
         for setting in appliance.settings.values():
-            if setting.type == "Boolean" or isinstance(setting.value, bool):
+            if setting.key not in SPECIAL_ENTITIES['ignore'] and (setting.type == "Boolean" or isinstance(setting.value, bool)):
                 device = SettingsSwitch(appliance, setting.key, {"opt": setting})
                 entity_manager.add(device)
 
@@ -57,6 +50,14 @@ class OptionSwitch(EntityBase, SwitchEntity):
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__options"
+
+    @property
+    def name_ext(self) -> str|None:
+        if self._appliance.available_programs:
+            for program in self._appliance.available_programs.values():
+                if self._key in program.options and program.options[self._key].name:
+                    return program.options[self._key].name
+        return None
 
     @property
     def icon(self) -> str:

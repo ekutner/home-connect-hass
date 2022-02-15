@@ -189,8 +189,9 @@ async def async_load_from_cache(hass:HomeAssistant, auth:api.AsyncConfigEntryAut
         _LOGGER.debug("Loaded HomeConnect from cache")
         return homeconnect
     except Exception as ex:
-        # If there is any exception when creating the object from cache just create it normally
-        _LOGGER.debug("Exception while loading HomeConnect from cache", exc_info=ex)
+        # If there is any exception when creating the object from cache then clear the cache and continue
+        await cache.async_remove()
+        _LOGGER.debug("Exception while loading HomeConnect from cache, clearing cache and contiuing", exc_info=ex)
         return None
 
 async def async_save_to_cache(hass:HomeAssistant, homeconnect:HomeConnect, cache:storage.Store=None) -> None:
@@ -204,9 +205,11 @@ async def async_save_to_cache(hass:HomeAssistant, homeconnect:HomeConnect, cache
                 'json_data': homeconnect.to_json()
             }
             await cache.async_save(cached_data)
+            _LOGGER.debug("Saved HomeConnect to cache")
         else:
             await cache.async_remove()
-        _LOGGER.debug("Saved HomeConnect to cache")
+            _LOGGER.debug("Cleared HomeConnect from cache")
+
     except Exception as ex:
         _LOGGER.debug("Exception when saving HomeConnect to cache", exc_info=ex)
 

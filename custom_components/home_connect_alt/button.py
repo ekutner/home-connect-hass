@@ -43,11 +43,11 @@ class StartButton(EntityBase, ButtonEntity):
 
     @property
     def name_ext(self) -> str:
-        state = self._appliance.status.get("BSH.Common.Status.OperationState")
-        if state == "BSH.Common.EnumType.OperationState.Run" \
+        op_state = self._appliance.status.get("BSH.Common.Status.OperationState")
+        if op_state and op_state.value == "BSH.Common.EnumType.OperationState.Run" \
             and  "BSH.Common.Command.PauseProgram" in self._appliance.commands:
             return "Pause"
-        if state == "BSH.Common.EnumType.OperationState.Pause" \
+        if op_state and op_state.value == "BSH.Common.EnumType.OperationState.Pause" \
             and "BSH.Common.Command.ResumeProgram" in self._appliance.commands:
             return "Resume"
         return "Start"
@@ -55,14 +55,14 @@ class StartButton(EntityBase, ButtonEntity):
 
     @property
     def available(self) -> bool:
-        state = self._appliance.status.get("BSH.Common.Status.OperationState")
-        return super().available and \
+        op_state = self._appliance.status.get("BSH.Common.Status.OperationState")
+        return super().available and op_state and \
             (
                 (
-                    state == "BSH.Common.EnumType.OperationState.Ready"
+                    op_state.value == "BSH.Common.EnumType.OperationState.Ready"
                     and (
                         "BSH.Common.Status.RemoteControlStartAllowed" not in self._appliance.status or
-                        self._appliance.status["BSH.Common.Status.RemoteControlStartAllowed"]
+                        self._appliance.status["BSH.Common.Status.RemoteControlStartAllowed"].value
                     )
                     and (
                         self._appliance.selected_program and self._appliance.available_programs and
@@ -70,11 +70,11 @@ class StartButton(EntityBase, ButtonEntity):
                     )
                 )
                 or (
-                    state == "BSH.Common.EnumType.OperationState.Run"
+                    op_state.value == "BSH.Common.EnumType.OperationState.Run"
                     and  "BSH.Common.Command.PauseProgram" in self._appliance.commands
                 )
                 or (
-                    state == "BSH.Common.EnumType.OperationState.Pause"
+                    op_state.value == "BSH.Common.EnumType.OperationState.Pause"
                     and  "BSH.Common.Command.ResumeProgram" in self._appliance.commands
                 )
             )
@@ -83,19 +83,20 @@ class StartButton(EntityBase, ButtonEntity):
     @property
     def icon(self) -> str:
         if "BSH.Common.Command.PauseProgram" in self._appliance.commands \
-            and self._appliance.status.get("BSH.Common.Status.OperationState") == "BSH.Common.EnumType.OperationState.Run":
+            and "BSH.Common.Status.OperationState" in self._appliance.status \
+            and self._appliance.status["BSH.Common.Status.OperationState"].value == "BSH.Common.EnumType.OperationState.Run":
             return "mdi:pause"
         return "mdi:play"
 
     async def async_press(self) -> None:
         """ Handle button press """
         try:
-            state = self._appliance.status.get("BSH.Common.Status.OperationState")
-            if state == "BSH.Common.EnumType.OperationState.Ready":
+            op_state = self._appliance.status.get("BSH.Common.Status.OperationState")
+            if op_state and op_state.value == "BSH.Common.EnumType.OperationState.Ready":
                 await self._appliance.async_start_program()
-            elif state == "BSH.Common.EnumType.OperationState.Run":
+            elif op_state and op_state.value == "BSH.Common.EnumType.OperationState.Run":
                 await self._appliance.async_pause_active_program()
-            elif state == "BSH.Common.EnumType.OperationState.Pause":
+            elif op_state and op_state.value == "BSH.Common.EnumType.OperationState.Pause":
                 await self._appliance.async_resume_paused_program()
         except HomeConnectError as ex:
             if ex.error_description:

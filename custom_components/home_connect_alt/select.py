@@ -1,5 +1,5 @@
 """ Implement the Select entities of this implementation """
-
+from __future__ import annotations
 import logging
 from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
 from homeassistant.components.select import SelectEntity
@@ -9,7 +9,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
 from .common import EntityBase, EntityManager
-from .const import DEVICE_ICON_MAP, DOMAIN
+from .const import DEVICE_ICON_MAP, DOMAIN, SPECIAL_ENTITIES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,12 +27,12 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if option.allowedvalues:
+                        if option.key not in SPECIAL_ENTITIES['ignore'] and option.allowedvalues:
                             device = OptionSelect(appliance, option.key)
                             entity_manager.add(device)
 
         for setting in appliance.settings.values():
-            if setting.allowedvalues:
+            if setting.key not in SPECIAL_ENTITIES['ignore'] and setting.allowedvalues:
                 device = SettingsSelect(appliance, setting.key)
                 entity_manager.add(device)
 
@@ -112,6 +112,14 @@ class OptionSelect(EntityBase, SelectEntity):
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__options"
+
+    @property
+    def name_ext(self) -> str|None:
+        if self._appliance.available_programs:
+            for program in self._appliance.available_programs.values():
+                if self._key in program.options and program.options[self._key].name:
+                    return program.options[self._key].name
+        return None
 
     @property
     def icon(self) -> str:

@@ -16,7 +16,6 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
     """ Add sensors for passed config_entry in HA """
-    #auth = hass.data[DOMAIN][config_entry.entry_id]
     homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
     entity_manager = EntityManager(async_add_entities)
 
@@ -45,20 +44,15 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
                     device = StatusSensor(appliance, key, conf)
             else:
                 conf = {}
-                if not isinstance(value, bool): # should be a binary sensor if it has a boolean value
+                if not isinstance(value.value, bool): # should be a binary sensor if it has a boolean value
                     if 'temperature' in key.lower():
                         conf['class'] = 'temperature'
                     device = StatusSensor(appliance, key, conf)
             entity_manager.add(device)
 
-        # for (key, conf) in SPECIAL_ENTITIES['activity_options'].items():
-        #     if appliance.type in conf['appliances'] and conf['type']=='sensor':
-        #         device = ActivityOptionSensor(appliance, key, conf)
-        #         new_entities.append(device)
-
         entity_manager.register()
 
-        
+
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
@@ -124,8 +118,7 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
     @property
     def name_ext(self) -> str:
         if self._appliance.selected_program and (self._key in self._appliance.selected_program.options):
-            name = self._appliance.selected_program.options[self._key].name
-            return name
+            return self._appliance.selected_program.options[self._key].name
         return None
 
     @property
@@ -200,13 +193,26 @@ class StatusSensor(EntityBase, SensorEntity):
         return f"{DOMAIN}__status"
 
     @property
+    def name_ext(self) -> str:
+        if self._key in self._appliance.status:
+            status = self._appliance.status[self._key]
+            if status:
+                return status.name
+        return None
+
+    @property
     def icon(self) -> str:
         return self._conf.get('icon', 'mdi:gauge-full')
 
     @property
     def native_value(self):
         """Return the state of the sensor."""
-        return self._appliance.status.get(self._key)
+        status = self._appliance.status.get(self._key)
+        if status:
+            if status.displayvalue:
+                return status.displayvalue
+            return status.value
+        return None
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()

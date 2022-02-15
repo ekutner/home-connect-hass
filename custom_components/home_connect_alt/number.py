@@ -1,6 +1,5 @@
 """ Implement the Number entities of this implementation """
-
-import numbers
+from __future__ import annotations
 from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
 from homeassistant.components.number import NumberEntity
 from homeassistant.core import HomeAssistant
@@ -9,7 +8,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
 from .common import EntityBase, EntityManager
-from .const import DOMAIN
+from .const import DOMAIN, SPECIAL_ENTITIES
 
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
@@ -19,23 +18,16 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     entity_manager = EntityManager(async_add_entities)
 
     def add_appliance(appliance:Appliance) -> None:
-        # if appliance.selected_program:
-        #     selected_program_key = appliance.selected_program.key
-        #     for key in appliance.available_programs[selected_program_key].options:
-        #         option = appliance.available_programs[selected_program_key].options[key]
-        #         if option.type in ["Int", "Float", "Double"]:
-        #             device = OptionNumber(appliance, key, {"opt": option})
-        #             entity_manager.add(device)
         if appliance.available_programs:
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if option.type in ["Int", "Float", "Double"]: # or (isinstance(option.value, numbers.Number) and not isinstance(option.value, bool)):
+                        if option.key not in SPECIAL_ENTITIES['ignore'] and option.type in ["Int", "Float", "Double"]:
                             device = OptionNumber(appliance, option.key, {"opt": option})
                             entity_manager.add(device)
 
         for setting in appliance.settings.values():
-            if setting.type in ["Int", "Float", "Double"] or isinstance(setting.value, numbers.Number):
+            if setting.key not in SPECIAL_ENTITIES['ignore'] and setting.type in ["Int", "Float", "Double"]:
                 device = SettingsNumber(appliance, setting.key, {"opt": setting})
                 entity_manager.add(device)
 
@@ -56,6 +48,15 @@ class OptionNumber(EntityBase, NumberEntity):
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__options"
+
+    @property
+    def name_ext(self) -> str|None:
+        if self._appliance.available_programs:
+            for program in self._appliance.available_programs.values():
+                if self._key in program.options and program.options[self._key].name:
+                    return program.options[self._key].name
+        return None
+
 
     @property
     def icon(self) -> str:
@@ -98,6 +99,8 @@ class OptionNumber(EntityBase, NumberEntity):
     async def async_set_value(self, value: float) -> None:
         """Set new value."""
         try:
+            if self._conf['opt'].type == 'Int':
+                value = int(value)
             await self._appliance.async_set_option(self._key, value)
         except HomeConnectError as ex:
             if ex.error_description:

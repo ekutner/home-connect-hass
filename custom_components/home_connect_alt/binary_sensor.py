@@ -19,14 +19,14 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     entity_manager = EntityManager(async_add_entities)
 
     def add_appliance(appliance:Appliance) -> None:
-        for (key, value) in appliance.status.items():
+        for (key, status) in appliance.status.items():
             device = None
             if key in SPECIAL_ENTITIES['status']:
                 conf = SPECIAL_ENTITIES['status'][key]
                 if conf['type'] == 'binary_sensor':
                     device = StatusBinarySensor(appliance, key, conf)
             else:
-                if isinstance(value, bool): # should be a binary sensor if it has a boolean value
+                if isinstance(status.value, bool): # should be a binary sensor if it has a boolean value
                     device = StatusBinarySensor(appliance, key)
             entity_manager.add(device)
 
@@ -41,12 +41,6 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
                         device = ActivityOptionBinarySensor(appliance, option.key, SPECIAL_ENTITIES['options'].get(option.key, {}))
                         entity_manager.add(device)
 
-        # for (key, conf) in SPECIAL_ENTITIES['activity_options'].items():
-        #     if appliance.type in conf['appliances'] and conf['type']=='binary_sensor':
-        #         device = ActivityOptionBinarySensor(appliance, key, conf)
-        #         new_entities.append(device)
-
-        # new_entities.append(ConnectionBinarySensor(appliance, "Connected"))
         entity_manager.add(ConnectionBinarySensor(appliance, "Connected"))
 
         # if len(new_entities)>0:
@@ -107,12 +101,22 @@ class StatusBinarySensor(EntityBase, BinarySensorEntity):
         return self._conf.get('icon', 'mdi:gauge-full')
 
     @property
-    def is_on(self) -> bool:
-        if 'on_state' in self._conf:
-            return self._appliance.status[self._key] == self._conf['on_state']
-        else:
-            return self._appliance.status[self._key]
+    def name_ext(self) -> str:
+        if self._key in self._appliance.status:
+            status = self._appliance.status[self._key]
+            if status:
+                return status.name
+        return None
 
+    @property
+    def is_on(self) -> bool:
+        if self._key in self._appliance.status:
+            if 'on_state' in self._conf:
+                return self._appliance.status[self._key].value == self._conf['on_state']
+            else:
+                return self._appliance.status[self._key].value
+        return None
+        
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
 
