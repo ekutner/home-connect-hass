@@ -40,7 +40,7 @@ class StartButton(EntityBase, ButtonEntity):
     """ Class for buttons that start the selected program """
     @property
     def unique_id(self) -> str:
-        return f'{self.haId}_start'
+        return f'{self.haId}_start_pause'
 
     @property
     def name_ext(self) -> str:
@@ -153,12 +153,12 @@ class StopButton(EntityBase, ButtonEntity):
 
     async def async_added_to_hass(self):
         """Run when this Entity has been added to HA."""
-        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, "BSH.Common.Status.RemoteControlStartAllowed"]
+        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, "BSH.Common.Status.*"]
         self._appliance.register_callback(self.async_on_update, events)
 
     async def async_will_remove_from_hass(self):
         """Entity being removed from hass."""
-        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, "BSH.Common.Status.RemoteControlStartAllowed"]
+        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, "BSH.Common.Status.*"]
         self._appliance.deregister_callback(self.async_on_update, events)
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:

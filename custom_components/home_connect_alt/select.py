@@ -140,7 +140,7 @@ class OptionSelect(EntityBase, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         try:
-            await self._appliance.async_set_option(key=self._key, value=option)
+            await self._appliance.async_set_option(self._key, option)
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to set the selected option: {ex.error_description} ({ex.code})")
@@ -185,7 +185,7 @@ class SettingsSelect(EntityBase, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         try:
-            await self._appliance.async_apply_setting(key=self._key, value=option)
+            await self._appliance.async_apply_setting(self._key, option)
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to apply the setting: {ex.error_description} ({ex.code})")
