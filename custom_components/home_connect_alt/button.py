@@ -1,5 +1,4 @@
 import logging
-from sys import exc_info
 from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
 from homeassistant.components.button import ButtonEntity
 from homeassistant.core import HomeAssistant
