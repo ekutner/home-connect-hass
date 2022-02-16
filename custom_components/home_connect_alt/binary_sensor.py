@@ -105,6 +105,13 @@ class ActivityOptionBinarySensor(ProgramOptionBinarySensor):
     def available(self) -> bool:
         return self._appliance.active_program and self._key in self._appliance.active_program.options
 
+    @property
+    def name_ext(self) -> str:
+        if self._appliance.active_program and (self._key in self._appliance.active_program.options):
+            return self._appliance.active_program.options[self._key].name
+        return None
+
+
 class StatusBinarySensor(EntityBase, BinarySensorEntity):
     """ Status binary sensor """
     @property
