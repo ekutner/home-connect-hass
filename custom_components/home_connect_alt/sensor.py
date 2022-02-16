@@ -193,8 +193,8 @@ class ActivityOptionSensor(ProgramOptionSensor):
 
     @property
     def name_ext(self) -> str:
-        if self._appliance.available_programs and (self._key in self._appliance.available_programs.options):
-            return self._appliance.available_programs.options[self._key].name
+        if self._appliance.active_program and (self._key in self._appliance.active_program.options):
+            return self._appliance.active_program.options[self._key].name
         return None
 
 
