@@ -56,6 +56,7 @@ class EntityBase(ABC):
 
     @property
     def name_ext(self) -> str|None:
+        """ Provide the suffix of the name, can be be overriden by sub-classes to provide a custom or translated display name """
         return None
 
     @property
@@ -145,19 +146,6 @@ class EntityManager():
         self._existing_ids |= new_ids
         self._pending_entities = {}
 
-    # def register_entities(self, entities:Sequence[Entity], async_add_entities:AddEntitiesCallback):
-    #     """ Register new entities making sure they are only added once """
-    #     ids = set([ ent.unique_id for ent in entities])
-    #     for entity in entities:
-    #         if entity.haId not in self._entity_appliance_map:
-    #             self._entity_appliance_map[entity.haId] = set()
-    #         self._entity_appliance_map[entity.haId].add(entity.unique_id)
-    #     new_ids = ids - (ids & self._existing_ids)
-    #     new_entities = [ entity for entity in entities if entity.unique_id in new_ids ]
-    #     for e in new_entities:
-    #         _LOGGER.debug("New entity: %s (%s)", e.name, e.unique_id)
-    #     async_add_entities(new_entities)
-    #     self._existing_ids |= new_ids
 
     def remove_appliance(self, appliance:Appliance):
         """ Remove an appliance and all its registered entities """
@@ -165,12 +153,5 @@ class EntityManager():
             self._existing_ids -= self._entity_appliance_map[appliance.haId]
             del self._entity_appliance_map[appliance.haId]
 
-
-
-# def clean_existing_entities(hass:HomeAssistant, entities:Sequence) -> Sequence :
-#     """ Helper function to make sure the same entioty is not added twice """
-#     ids = [ ent.unique_id for ent in entities]
-#     ent_reg = er.async_get(hass)
-#     resolved = er.async_resolve_entity_ids(ent_reg, ids)
 
 
