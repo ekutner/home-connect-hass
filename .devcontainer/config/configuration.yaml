@@ -11,7 +11,7 @@ tts:
 
 # Dev config starts here
 logger:
-  default: info
+  default: warn
   logs:
     home_connect_async: debug
     home_connect_alt: debug

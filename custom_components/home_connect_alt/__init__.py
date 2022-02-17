@@ -180,7 +180,7 @@ async def async_load_from_cache(hass:HomeAssistant, auth:api.AsyncConfigEntryAut
 
             last_update = datetime.fromisoformat(cached_data['last_update'])
             delta = (datetime.now()-last_update).total_seconds()
-            if delta < 120:
+            if delta < 60:
                 refresh = HomeConnect.RefreshMode.NOTHING
             elif delta < 3600*24*30:
                 refresh = HomeConnect.RefreshMode.DYNAMIC_ONLY
@@ -234,13 +234,28 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
     )
     hass.services.async_register(DOMAIN, "select_program", services.async_select_program, schema=select_program_scema)
 
-    start_stop_program_schema = vol.Schema(
+    start_program_scema = vol.Schema(
+        {
+            vol.Required('device_id'): cv.string,
+            vol.Optional('program_key'): cv.string,
+            vol.Optional('options'): vol.Schema(
+                [
+                    {
+                        vol.Required('key'): cv.string,
+                        vol.Required('value'): cv.string
+                    }
+                ]
+            )
+        }
+    )
+    hass.services.async_register(DOMAIN, "start_program", services.async_start_program, schema=start_program_scema)
+
+    stop_program_schema = vol.Schema(
         {
             vol.Required('device_id'): cv.string
         }
     )
-    hass.services.async_register(DOMAIN, "start_program", services.async_start_program, schema=start_stop_program_schema)
-    hass.services.async_register(DOMAIN, "stop_program", services.async_stop_program, schema=start_stop_program_schema)
+    hass.services.async_register(DOMAIN, "stop_program", services.async_stop_program, schema=stop_program_schema)
 
     return services
 

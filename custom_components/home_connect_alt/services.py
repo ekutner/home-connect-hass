@@ -26,7 +26,9 @@ class Services():
         data = call.data
         appliance = self.get_appliance_from_device_id(data['device_id'])
         if appliance:
-            await appliance.async_start_program()
+            program_key = data['program_key']
+            options = data.get('options')
+            await appliance.async_start_program(program_key, options)
 
     async def async_stop_program(self, call) -> None:
         """ Service for stopping the currently active program """
