@@ -30,7 +30,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
 
         for setting in appliance.settings.values():
             if setting.key not in SPECIAL_ENTITIES['ignore'] and (setting.type == "Boolean" or isinstance(setting.value, bool)):
-                device = SettingsSwitch(appliance, setting.key, {"opt": setting})
+                device = SettingsSwitch(appliance, setting.key)
                 entity_manager.add(device)
 
         entity_manager.register()
