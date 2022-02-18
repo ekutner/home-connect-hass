@@ -226,7 +226,8 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
                 [
                     {
                         vol.Required('key'): cv.string,
-                        vol.Required('value'): cv.string
+                        vol.Required('value'): vol.Any(str, int, float, bool),
+                        vol.Optional('unit'): vol.Any(str, int, float, bool)
                     }
                 ]
             )
@@ -242,7 +243,8 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
                 [
                     {
                         vol.Required('key'): cv.string,
-                        vol.Required('value'): cv.string
+                        vol.Required('value'): vol.Any(str, int, float, bool),
+                        vol.Optional('unit'): vol.Any(str, int, float, bool)
                     }
                 ]
             )

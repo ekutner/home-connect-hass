@@ -1,6 +1,7 @@
 """ Implement the services of this implementation """
-from home_connect_async import HomeConnect
+from home_connect_async import HomeConnect, HomeConnectError
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import device_registry as dr
 
 
@@ -18,24 +19,34 @@ class Services():
         if appliance:
             program_key = data['program_key']
             options = data.get('options')
-
-            await appliance.async_select_program(key=program_key, options=options )
+            try:
+                await appliance.async_select_program(program_key, options)
+            except HomeConnectError as ex:
+                raise HomeAssistantError(ex.error_description if ex.error_description else ex.msg)
 
     async def async_start_program(self, call) -> None:
         """ Service for starting the currently selected program """
         data = call.data
         appliance = self.get_appliance_from_device_id(data['device_id'])
         if appliance:
-            program_key = data['program_key']
+            program_key = data.get('program_key')
             options = data.get('options')
-            await appliance.async_start_program(program_key, options)
+            try:
+                await appliance.async_start_program(program_key, options)
+            except HomeConnectError as ex:
+                raise HomeAssistantError(ex.error_description if ex.error_description else ex.msg)
+
 
     async def async_stop_program(self, call) -> None:
         """ Service for stopping the currently active program """
         data = call.data
         appliance = self.get_appliance_from_device_id(data['device_id'])
         if appliance:
-            await appliance.async_stop_active_program()
+            try:
+                await appliance.async_stop_active_program()
+            except HomeConnectError as ex:
+                raise HomeAssistantError(ex.error_description if ex.error_description else ex.msg)
+
 
     def get_appliance_from_device_id(self, device_id):
         """ Helper function to get an appliance from the Home Assistant device_id """
