@@ -82,7 +82,7 @@ class ProgramSelect(EntityBase, SelectEntity):
         """Return a set of selectable options."""
         if self._appliance.available_programs:
             return list(self._appliance.available_programs.keys())
-        return None
+        return []
 
     @property
     def current_option(self) -> str:
@@ -117,7 +117,7 @@ class OptionSelect(EntityBase, SelectEntity):
     def name_ext(self) -> str|None:
         if self._appliance.available_programs:
             for program in self._appliance.available_programs.values():
-                if self._key in program.options and program.options[self._key].name:
+                if program.options and self._key in program.options and program.options[self._key].name:
                     return program.options[self._key].name
         return None
 
@@ -139,7 +139,7 @@ class OptionSelect(EntityBase, SelectEntity):
                 option = available_program.options.get(self._key)
                 if option:
                     return option.allowedvalues
-        return None
+        return []
 
     @property
     def current_option(self) -> str:
