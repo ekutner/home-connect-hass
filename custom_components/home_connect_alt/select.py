@@ -27,12 +27,12 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if option.key not in SPECIAL_ENTITIES['ignore'] and option.allowedvalues:
+                        if option.key not in SPECIAL_ENTITIES['ignore'] and option.allowedvalues and len(option.allowedvalues)>1:
                             device = OptionSelect(appliance, option.key)
                             entity_manager.add(device)
 
         for setting in appliance.settings.values():
-            if setting.key not in SPECIAL_ENTITIES['ignore'] and setting.allowedvalues:
+            if setting.key not in SPECIAL_ENTITIES['ignore'] and setting.allowedvalues and len(setting.allowedvalues)>1:
                 device = SettingsSelect(appliance, setting.key)
                 entity_manager.add(device)
 
@@ -41,7 +41,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
-    homeconnect.register_callback(add_appliance, Events.PAIRED)
+    homeconnect.register_callback(add_appliance, [Events.PAIRED, Events.PROGRAM_SELECTED])
     homeconnect.register_callback(remove_appliance, Events.DEPAIRED)
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
@@ -82,7 +82,7 @@ class ProgramSelect(EntityBase, SelectEntity):
         """Return a set of selectable options."""
         if self._appliance.available_programs:
             return list(self._appliance.available_programs.keys())
-        return None
+        return []
 
     @property
     def current_option(self) -> str:
@@ -117,7 +117,7 @@ class OptionSelect(EntityBase, SelectEntity):
     def name_ext(self) -> str|None:
         if self._appliance.available_programs:
             for program in self._appliance.available_programs.values():
-                if self._key in program.options and program.options[self._key].name:
+                if program.options and self._key in program.options and program.options[self._key].name:
                     return program.options[self._key].name
         return None
 
@@ -138,13 +138,26 @@ class OptionSelect(EntityBase, SelectEntity):
             if available_program:
                 option = available_program.options.get(self._key)
                 if option:
-                    return option.allowedvalues
-        return None
+                    #_LOGGER.info("Allowed values for %s : %s", self._key, str(option.allowedvalues))
+                    vals = option.allowedvalues.copy()
+                    vals.append('')
+                    return vals
+        #_LOGGER.info("Allowed values for %s : %s", self._key, None)
+        return []
 
     @property
     def current_option(self) -> str:
         """Return the selected entity option to represent the entity state."""
-        return self._appliance.selected_program.options[self._key].value
+        # if self._appliance.selected_program.options[self._key].value not in self.options:
+        #     _LOGGER.debug("The current option is not in the list of available options")
+        if self.program_option_available:
+            if self._appliance.selected_program.options[self._key].value == '':
+                _LOGGER.error("Returning empty option value for %s", self._key)
+            #_LOGGER.info("Current value for %s : %s", self._key, self._appliance.selected_program.options[self._key].value)
+            return self._appliance.selected_program.options[self._key].value
+        else:
+            #_LOGGER.info("Current value for %s : %s", self._key, None)
+            return None
 
     async def async_select_option(self, option: str) -> None:
         try:

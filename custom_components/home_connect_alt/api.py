@@ -12,7 +12,7 @@ from homeassistant.helpers import config_entry_oauth2_flow
 class AsyncConfigEntryAuth(home_connect_async.AbstractAuth):
     """Provide Home Connect New authentication tied to an OAuth2 based config entry."""
 
-    def __init__(
+    def __init__( 
         self,
         websession: ClientSession,
         oauth_session: config_entry_oauth2_flow.OAuth2Session,

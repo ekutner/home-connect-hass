@@ -37,7 +37,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
-    homeconnect.register_callback(add_appliance, Events.PAIRED)
+    homeconnect.register_callback(add_appliance, [Events.PAIRED, Events.PROGRAM_SELECTED])
     homeconnect.register_callback(remove_appliance, Events.DEPAIRED)
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
@@ -53,7 +53,7 @@ class OptionNumber(EntityBase, NumberEntity):
     def name_ext(self) -> str|None:
         if self._appliance.available_programs:
             for program in self._appliance.available_programs.values():
-                if self._key in program.options and program.options[self._key].name:
+                if program.options and self._key in program.options and program.options[self._key].name:
                     return program.options[self._key].name
         return None
 

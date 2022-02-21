@@ -9,7 +9,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
 from .common import EntityBase, EntityManager
-from .const import DEVICE_ICON_MAP, DOMAIN, SPECIAL_ENTITIES, HOME_CONNECT_DEVICE
+from .const import DEVICE_ICON_MAP, DOMAIN, SPECIAL_ENTITIES, HOME_CONNECT_DEVICE, CONF_LANG
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,13 +27,15 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
         if appliance.selected_program:
             for option in appliance.selected_program.options.values():
                 if not isinstance(option.value, bool):
-                    device = ProgramOptionSensor(appliance, option.key, SPECIAL_ENTITIES['options'].get(option.key, {}))
+                    conf = SPECIAL_ENTITIES['options'].get(option.key, {})
+                    device = ProgramOptionSensor(appliance, option.key, conf)
                     entity_manager.add(device)
 
             if appliance.active_program:
                 for option in appliance.active_program.options.values():
                     if option.key not in appliance.selected_program.options and not isinstance(option.value, bool):
-                        device = ActivityOptionSensor(appliance, option.key, SPECIAL_ENTITIES['options'].get(option.key, {}))
+                        conf = SPECIAL_ENTITIES['options'].get(option.key, {})
+                        device = ActivityOptionSensor(appliance, option.key, conf)
                         entity_manager.add(device)
 
         for (key, value) in appliance.status.items():
@@ -97,7 +99,12 @@ class SelectedProgramSensor(EntityBase, SensorEntity):
     @property
     def native_value(self):
         """Return the state of the sensor."""
-        return self._appliance.selected_program.key if self._appliance.selected_program else None
+        if self._appliance.selected_program:
+            if self._appliance.selected_program.name:
+                return self._appliance.selected_program.name
+            else:
+                return self._appliance.selected_program.key
+        return None
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
@@ -129,7 +136,11 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
 
     @property
     def available(self) -> bool:
-        return self._appliance.selected_program and (self._key in self._appliance.selected_program.options) and super().available
+        return \
+        (
+            (self._appliance.selected_program and (self._key in self._appliance.selected_program.options) )
+            or (self._appliance.active_program and (self._key in self._appliance.active_program.options) )
+        ) and super().available
 
     @property
     def internal_unit(self) -> str | None:
@@ -186,10 +197,6 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
 
 class ActivityOptionSensor(ProgramOptionSensor):
     """ Special active program sensor """
-
-    @property
-    def available(self) -> bool:
-        return self._appliance.active_program and self._key in self._appliance.active_program.options
 
     @property
     def name_ext(self) -> str:

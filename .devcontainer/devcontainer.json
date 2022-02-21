@@ -25,7 +25,6 @@
   "postStartCommand":  "${containerWorkspaceFolder}/.devcontainer/scripts/post-start.sh",
 	"extensions": [
 		"github.vscode-pull-request-github",
-		"ryanluker.vscode-coverage-gutters",
 		"ms-python.vscode-pylance",
     "visualstudioexptteam.vscodeintellicode",
     "redhat.vscode-yaml",
@@ -33,7 +32,11 @@
     "eamodio.gitlens"
 	],
   "settings": {
-    "python.pythonPath": "/usr/local/bin/python",
+    "python.defaultInterpreterPath": "/usr/local/bin/python",
+    "python.autoComplete.extraPaths": [
+      "${containerWorkspaceFolder}",
+      "${containerWorkspaceFolder}/../home-connect-async"
+    ],
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
     "python.formatting.provider": "black",

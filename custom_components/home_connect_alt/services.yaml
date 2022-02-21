@@ -22,9 +22,9 @@ select_program:
     options:
       name: Options
       description: >
-        A list of dictionaries with options for the program (unit is optional):
+        A list of dictionaries with options for the program:
         [
-          { "key": "... option key ...", "value": "... option value ... ", "unit": "..."}
+          { "key": "... option key ...", "value": "... option value ... "}
         ]
       example: >
         [
@@ -60,9 +60,9 @@ start_program:
     options:
       name: Options
       description: >
-        A list of dictionaries with options for the program (unit is optional):
+        A list of dictionaries with options for the program:
         [
-          { "key": "... option key ...", "value": "... option value ... ", "unit": "..."}
+          { "key": "... option key ...", "value": "... option value ... "}
         ]
       example: >
         [

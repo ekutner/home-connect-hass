@@ -31,7 +31,7 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Required(CONF_CLIENT_SECRET): cv.string,
                 vol.Optional(CONF_SIMULATE, default=False): cv.boolean,
                 vol.Optional(CONF_CACHE, default=True): cv.boolean,
-                vol.Optional(CONF_LANG, default=""): cv.string
+                vol.Optional(CONF_LANG, default=None): vol.Any(str, None)
             }
         )
     },
@@ -81,7 +81,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     conf = hass.data[DOMAIN]
     simulate = conf[CONF_SIMULATE]
-    lang = conf[CONF_LANG] if conf[CONF_LANG] != "" else None
+    lang = conf[CONF_LANG] # if conf[CONF_LANG] != "" else None
     host = SIM_HOST if simulate else API_HOST
     use_cache = conf[CONF_CACHE]
 
@@ -90,55 +90,55 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         aiohttp_client.async_get_clientsession(hass), session, host
     )
 
-    homeconnect:HomeConnect = None
-    if use_cache:
-        homeconnect = await async_load_from_cache(hass, auth, lang)
-    if not homeconnect:
-        # Create normally if failed to create from cache
-        try:
-            homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang)
-            _LOGGER.debug("The HomeConnect object was created from scratch (without cache)")
-        except HomeConnectError as ex:
-            _LOGGER.warning("Failed to create the HomeConnect object", exc_info=ex)
-            return False
-
+    # homeconnect:HomeConnect = None
+    # if use_cache:
+    #     homeconnect = await async_load_from_cache(hass, auth, lang)
+    # if not homeconnect:
+    #     # Create normally if failed to create from cache
+    #     try:
+    #         homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang)
+    #         _LOGGER.debug("The HomeConnect object was created from scratch (without cache)")
+    #     except HomeConnectError as ex:
+    #         _LOGGER.warning("Failed to create the HomeConnect object", exc_info=ex)
+    #         return False
+    homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang)
 
     conf[entry.entry_id] = auth
     conf['homeconnect'] = homeconnect
     conf['services'] = register_services(hass, homeconnect)
 
     #region internal event hadlers
-    async def async_delayed_update_cache(delay:float = 0):
-        asyncio.sleep(delay)
-        await async_save_to_cache(hass, homeconnect)
+    # async def async_delayed_update_cache(delay:float = 0):
+    #     asyncio.sleep(delay)
+    #     await async_save_to_cache(hass, homeconnect)
 
     async def on_data_loaded(homeconnect:HomeConnect):
         # Save the state of the HomeConnect object to cache
-        if use_cache:
-            await async_save_to_cache(hass, homeconnect)
-        else:
-            _LOGGER.debug("Not saving to cache, it is disabled")
+        # if use_cache:
+        #     await async_save_to_cache(hass, homeconnect)
+        # else:
+        #     _LOGGER.debug("Not saving to cache, it is disabled")
         homeconnect.register_callback(on_device_removed, Events.DEPAIRED)
-        homeconnect.register_callback(on_device_added, [Events.PAIRED, Events.DATA_CHANGED] )
+        #homeconnect.register_callback(on_device_added, [Events.PAIRED, Events.DATA_CHANGED] )
         homeconnect.subscribe_for_updates()
 
     async def on_data_load_error(homeconnect:HomeConnect, ex:Exception):
         _LOGGER.error("Failed to load data for the HomeConnect object", exc_info=ex)
 
-    async def on_device_added(appliance:Appliance, event:str):
-        if use_cache:
-            await async_save_to_cache(hass, homeconnect)
-        else:
-            _LOGGER.debug("Not saving to cache, it is disabled")
+    # async def on_device_added(appliance:Appliance, event:str):
+    #     if use_cache:
+    #         await async_save_to_cache(hass, homeconnect)
+    #     else:
+    #         _LOGGER.debug("Not saving to cache, it is disabled")
 
-    async def on_device_removed(appliance:Appliance, event:str):
+    async def on_device_removed(appliance:Appliance):
         devreg = dr.async_get(hass)
         device = devreg.async_get_device({(DOMAIN, appliance.haId.lower().replace('-','_'))})
         devreg.async_remove_device(device.id)
 
         # We need to wait for the appliance to be removed from the HomeConnect data
         # this is not 100% fail-safe but good enough for a cache
-        asyncio.create_task(async_delayed_update_cache(30))
+        # asyncio.create_task(async_delayed_update_cache(30))
 
     #endregion
 
@@ -159,7 +159,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     homeconnect:HomeConnect = conf['homeconnect']
     homeconnect.close()
 
-    await async_save_to_cache(hass, None)
+    # await async_save_to_cache(hass, None)
 
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unload_ok:
@@ -226,8 +226,7 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
                 [
                     {
                         vol.Required('key'): cv.string,
-                        vol.Required('value'): vol.Any(str, int, float, bool),
-                        vol.Optional('unit'): vol.Any(str, int, float, bool)
+                        vol.Required('value'): vol.Any(str, int, float, bool)
                     }
                 ]
             )
@@ -243,8 +242,7 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
                 [
                     {
                         vol.Required('key'): cv.string,
-                        vol.Required('value'): vol.Any(str, int, float, bool),
-                        vol.Optional('unit'): vol.Any(str, int, float, bool)
+                        vol.Required('value'): vol.Any(str, int, float, bool)
                     }
                 ]
             )

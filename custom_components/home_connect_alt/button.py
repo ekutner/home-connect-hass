@@ -7,7 +7,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
 from .common import EntityBase, EntityManager
-from .const import DEVICE_ICON_MAP, DOMAIN, HOME_CONNECT_DEVICE
+from .const import DOMAIN, HOME_CONNECT_DEVICE
 
 _LOGGER = logging.getLogger(__name__)
 

@@ -33,9 +33,12 @@ This integration requires the same configuration process and similar settings in
 home_connect_alt:
   client_id: < Your Client ID >
   client_secret: < You Client Secret >
+  language: < Optional - Supported langage code >
 ```
 
-After the integration is configured READ THE DAQ then add it from the Home-Assistant UI.  
+The *language* parameter is optoinal and if set it will provide translations for **sensor** values directly from the Home Connect service, bypassing the Home Assistant translation mechanism. It will not translate selection box values and if specified it must be one of the languages [supported by Home Connect](https://api-docs.home-connect.com/general?#supported-languages).
+
+After the integration is configured READ THE FAQ then add it from the Home-Assistant UI.  
 
 </br>
 
@@ -62,7 +65,20 @@ After the integration is configured READ THE DAQ then add it from the Home-Assis
 * **The *Start* button is disabled**  
   Make sure that *Remote Control Start* is allowed on the appliance, it's disabled by default. 
 
+</br>
 
+# Reporting issues / bugs
+This integration is in early beta and not stable yet. If you are going to be testing this integration please add this to your configuration.yaml file then restart HA:
+```
+logger:
+  default: warn
+  logs:
+    home_connect_async: debug
+    home_connect_alt: debug
+    custom_components.home_connect_alt: debug
+```
+
+When reporting an issue press the **Home Connect Debug** button and attach the HA log file to your issue report.
 
 </br>
 
