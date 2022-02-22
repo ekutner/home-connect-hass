@@ -29,7 +29,8 @@
     "visualstudioexptteam.vscodeintellicode",
     "redhat.vscode-yaml",
     "esbenp.prettier-vscode",
-    "eamodio.gitlens"
+    "eamodio.gitlens",
+    "mhutchie.git-graph"
 	],
   "settings": {
     "python.defaultInterpreterPath": "/usr/local/bin/python",
