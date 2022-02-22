@@ -37,7 +37,7 @@
       "Dishcare.Dishwasher.Program.Auto3": "Auto 3",
       "Dishcare.Dishwasher.Program.Eco50": "Eco 50",
       "Dishcare.Dishwasher.Program.Quick45": "Quick 45",
-      "Dishcare.Dishwasher.Program.Intensiv70": "Intensive 70",
+      "Dishcare.Dishwasher.Program.Intensiv70": "Intensiv 70",
       "Dishcare.Dishwasher.Program.Normal65": "Normal 65",
       "Dishcare.Dishwasher.Program.Glas40": "Glas 40",
       "Dishcare.Dishwasher.Program.GlassCare": "Glass Care",
@@ -66,7 +66,7 @@
       "LaundryCare.Dryer.Program.BusinessShirts": "Dry: Business Shirts",
       "LaundryCare.Dryer.Program.DownFeathers": "Dry: Down Feathers",
       "LaundryCare.Dryer.Program.Hygiene": "Dry: Hygiene",
-      "LaundryCare.Dryer.Program.TimeWarm": "Dry: Timed Programme Warm",
+      "LaundryCare.Dryer.Program.TimeWarm": "Dry: Timed Program Warm",
       "LaundryCare.Dryer.Program.Jeans": "Dry: Jeans",
       "LaundryCare.Dryer.Program.Outdoor": "Dry: Outdoor",
       "LaundryCare.Dryer.Program.SyntheticRefresh": "Dry: Synthetic Refresh",
@@ -95,6 +95,7 @@
       "Cooking.Oven.Program.HeatingMode.Proof": "Proof",
       "Cooking.Oven.Program.HeatingMode.WarmingDrawer": "Warming Drawer",
       "LaundryCare.Washer.Program.Cotton": "Wash: Cotton",
+      "LaundryCare.Washer.Program.Cotton.CottonEco": "Wash: Cotton Eco",
       "LaundryCare.Washer.Program.Cotton.Eco4060": "Wash: Eco 40-60",
       "LaundryCare.Washer.Program.EasyCare": "Wash: Easy Care",
       "LaundryCare.Washer.Program.Mix": "Wash: Mix",
@@ -120,6 +121,7 @@
       "LaundryCare.Washer.Program.SportFitness": "Wash: Sport Fitness",
       "LaundryCare.Washer.Program.Towels": "Wash: Towels",
       "LaundryCare.Washer.Program.WaterProof": "Wash: Water Proof",
+      "LaundryCare.Washer.Program.Super153045.Super1530": "Wash: Super 15-30",
       "LaundryCare.Washer.Program.MyTime": "Wash: My Time",
       "LaundryCare.WasherDryer.Program.Cotton": "Wash&Dry: Cotton",
       "LaundryCare.WasherDryer.Program.Cotton.Eco4060": "Wash&Dry: Eco 40-60",
@@ -163,6 +165,8 @@
       "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.DoubleShot": "Double Shot",
       "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.DoubleShotPlus": "Double Shot +",
       "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.DoubleShotPlusPlus": "Double Shot + +",
+      "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.TripleShot": "Triple Shot",
+      "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.TripleShotPlus": "Triple Shot +",
       "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.CoffeeGround": "Coffee Ground",
       "ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Left": "Left",
       "ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Right": "Right",
@@ -178,6 +182,12 @@
       "LaundryCare.Washer.EnumType.Temperature.GC70": "GC70",
       "LaundryCare.Washer.EnumType.Temperature.GC80": "GC80",
       "LaundryCare.Washer.EnumType.Temperature.GC90": "GC90",
+      "LaundryCare.Washer.EnumType.Temperature.UlCold": "Cold",
+      "LaundryCare.Washer.EnumType.Temperature.UlWarm": "Warm",
+      "LaundryCare.Washer.EnumType.Temperature.UlHot": "Hot",
+      "LaundryCare.Washer.EnumType.Temperature.UlExtraHot": "Extra Hot",
+      "LaundryCare.Washer.EnumType.Temperature.Auto": "Auto",
+      "LaundryCare.Washer.EnumType.Temperature.Max": "Max",
       "LaundryCare.Washer.EnumType.SpinSpeed.Off": "Off",
       "LaundryCare.Washer.EnumType.SpinSpeed.RPM400": "RPM400",
       "LaundryCare.Washer.EnumType.SpinSpeed.RPM600": "RPM600",
@@ -199,6 +209,8 @@
       "LaundryCare.Washer.Option.Temperature": "Temperature",
       "LaundryCare.Washer.Option.SpinSpeed": "Spin Speed",
       "LaundryCare.Dryer.Option.DryingTarget": "Drying Target",
+      "LaundryCare.Washer.EnumType.SpinSpeed.Auto": "Auto",
+      "LaundryCare.Washer.EnumType.SpinSpeed.Max": "Max",
       "BSH.Common.Root.SelectedProgram": "Selected Program",
       "BSH.Common.Root.ActiveProgram": "Active Program",
       "BSH.Common.Option.StartInRelative": "Start In Relative",
@@ -207,7 +219,7 @@
       "Cooking.Oven.Option.SetpointTemperature": "Setpoint Temperature",
       "Cooking.Oven.Option.FastPreHeat": "Fast Pre Heat",
       "Cooking.Oven.Option.WarmingLevel": "Warming Level",
-      "Dishcare.Dishwasher.Option.IntensivZone": "Intensive Zone",
+      "Dishcare.Dishwasher.Option.IntensivZone": "Intensiv Zone",
       "Dishcare.Dishwasher.Option.BrillianceDry": "Brilliance Dry",
       "Dishcare.Dishwasher.Option.VarioSpeedPlus": "Vario Speed Plus",
       "Dishcare.Dishwasher.Option.SilenceOnDemand": "Silence On Demand",
@@ -221,7 +233,8 @@
       "BSH.Common.Option.ElapsedProgramTime": "Elapsed Program Time",
       "BSH.Common.Option.RemainingProgramTime": "Remaining Program Time",
       "BSH.Common.Option.ProgramProgress": "Program Progress",
-      "ConsumerProducts.CleaningRobot.Option.ProcessPhase": "Process Phase"
+      "ConsumerProducts.CleaningRobot.Option.ProcessPhase": "Process Phase",
+      "LaundryCare.Washer.EnumType.ProcessPhase.Undefined": "Undefined"
     },
     "home_connect_alt__settings": {
       "BSH.Common.EnumType.PowerState.Off": "Off",
@@ -267,5 +280,3 @@
     }
   }
 }
-
-
