@@ -27,7 +27,10 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if option.key not in SPECIAL_ENTITIES['ignore'] and option.allowedvalues and len(option.allowedvalues)>1:
+                        if option.key in SPECIAL_ENTITIES['delayed_start']:
+                            device = DelayedStartSelect(appliance, option.key)
+                            entity_manager.add(device)
+                        elif option.key not in SPECIAL_ENTITIES['ignore'] and option.allowedvalues and len(option.allowedvalues)>1:
                             device = OptionSelect(appliance, option.key)
                             entity_manager.add(device)
 
@@ -142,6 +145,7 @@ class OptionSelect(EntityBase, SelectEntity):
                     vals = option.allowedvalues.copy()
                     vals.append('')
                     return vals
+                    # return option.allowedvalues
         #_LOGGER.info("Allowed values for %s : %s", self._key, None)
         return []
 
@@ -160,6 +164,9 @@ class OptionSelect(EntityBase, SelectEntity):
             return None
 
     async def async_select_option(self, option: str) -> None:
+        if option == '':
+            _LOGGER.debug('Tried to set an empty option')
+            return
         try:
             await self._appliance.async_set_option(self._key, option)
         except HomeConnectError as ex:
@@ -221,4 +228,55 @@ class SettingsSelect(EntityBase, SelectEntity):
 
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
+        self.async_write_ha_state()
+
+
+class DelayedStartSelect(EntityBase, SelectEntity):
+    """ Class for delayed start select box """
+    def __init__(self, appliance: Appliance, key: str = None, conf: dict = None) -> None:
+        super().__init__(appliance, key, conf)
+        self._current = '0:00'
+
+    @property
+    def icon(self) -> str:
+        return self._conf.get('icon', 'mdi:clock-outline')
+
+    @property
+    def available(self) -> bool:
+        available = super().program_option_available
+        if not available:
+            self._current = '0:00'
+            self._appliance.clear_start_option(self._key)
+        return available
+
+    @property
+    def options(self) -> list[str]:
+        options = [ "0:00" ]
+
+        start = 1
+        if self._appliance.selected_program and self._appliance.selected_program.options and self._key in self._appliance.selected_program.options:
+            selected_program_time = self._appliance.selected_program.options[self._key].value
+            start = int(selected_program_time/1800) + (selected_program_time % 1800 > 0)
+            #end = self._appliance.available_programs[self._appliance.selected_program.key].options[self._key].max
+            end = 49
+        for t in range(start, end):
+            options.append(f"{int(t/2)}:{(t%2)*30:02}")
+        return options
+
+    @property
+    def current_option(self) -> str | None:
+        return self._current
+
+    async def async_select_option(self, option: str) -> None:
+        self._current = option
+        if option == '0:00':
+            self._appliance.clear_start_option(self._key)
+            return
+        parts = option.split(':')
+        delay = int(parts[0])*3600 + int(parts[1])*60
+        self._appliance.set_start_option(self._key, delay)
+
+    async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
+        if key == Events.PROGRAM_FINISHED:
+            self._current = '0:00'
         self.async_write_ha_state()

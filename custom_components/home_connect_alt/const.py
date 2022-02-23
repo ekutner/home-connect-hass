@@ -22,11 +22,15 @@ SPECIAL_ENTITIES = {
         "BSH.Common.Option.FinishInRelative"
     ],
     "status": {
-        "BSH.Common.Status.DoorState": { "type": "binary_sensor", "class": "door", "on_state": "BSH.Common.EnumType.DoorState.Open" },
+        "BSH.Common.Status.DoorState": { "type": "binary_sensor", "class": "door", "icon": None, "on_state": "BSH.Common.EnumType.DoorState.Open" },
     },
+    "delayed_start": [
+        "BSH.Common.Option.FinishInRelative"
+    ],
     "options": {
         "BSH.Common.Option.FinishInRelative": { "unit": None, "class": f"{DOMAIN}__timespan"},
         "BSH.Common.Option.ElapsedProgramTime": { "unit": None, "class": f"{DOMAIN}__timespan"},
+        "BSH.Common.Option.EstimatedTotalProgramTime": { "unit": None, "class": f"{DOMAIN}__timespan"},
         "BSH.Common.Option.RemainingProgramTime": {"class": "timestamp" }
    }
 }

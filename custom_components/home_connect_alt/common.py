@@ -79,14 +79,14 @@ class EntityBase(ABC):
         return self._appliance.connected \
             and self._appliance.selected_program \
             and self._key in self._appliance.selected_program.options \
-            and self._appliance.selected_program.key in self._appliance.available_programs \
             and not self._appliance.active_program \
             and self._appliance.available_programs \
+            and self._appliance.selected_program.key in self._appliance.available_programs \
             and self._appliance.available_programs[self._appliance.selected_program.key].options \
             and self._key in self._appliance.available_programs[self._appliance.selected_program.key].options \
             and  (
                 "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
-                self._appliance.status["BSH.Common.Status.RemoteControlActive"]
+                self._appliance.status["BSH.Common.Status.RemoteControlActive"].value
             )
 
 
