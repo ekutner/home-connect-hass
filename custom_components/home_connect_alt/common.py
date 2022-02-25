@@ -114,7 +114,18 @@ class EntityBase(ABC):
         parts = re.findall('[A-Z0-9]+[^A-Z]*', name)
         return' '.join(parts)
 
+class InteractiveEntityBase(EntityBase):
+    """ Base class for interactive entities (select, switch and number) """
 
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        if self._key != "BSH.Common.Status.RemoteControlActive":
+            self._appliance.register_callback(self.async_on_update, "BSH.Common.Status.RemoteControlActive")
+
+    async def async_will_remove_from_hass(self):
+        await super().async_will_remove_from_hass()
+        if self._key != "BSH.Common.Status.RemoteControlActive":
+            self._appliance.deregister_callback(self.async_on_update, "BSH.Common.Status.RemoteControlActive")
 
 class EntityManager():
     """ Helper class for managing entity registration

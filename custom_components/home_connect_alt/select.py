@@ -8,7 +8,7 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
-from .common import EntityBase, EntityManager
+from .common import InteractiveEntityBase, EntityManager
 from .const import DEVICE_ICON_MAP, DOMAIN, SPECIAL_ENTITIES
 
 _LOGGER = logging.getLogger(__name__)
@@ -49,7 +49,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
 
-class ProgramSelect(EntityBase, SelectEntity):
+class ProgramSelect(InteractiveEntityBase, SelectEntity):
     """ Selection of available programs """
 
     @property
@@ -110,7 +110,7 @@ class ProgramSelect(EntityBase, SelectEntity):
         self.async_write_ha_state()
 
 
-class OptionSelect(EntityBase, SelectEntity):
+class OptionSelect(InteractiveEntityBase, SelectEntity):
     """ Selection of program options """
     @property
     def device_class(self) -> str:
@@ -179,7 +179,7 @@ class OptionSelect(EntityBase, SelectEntity):
         self.async_write_ha_state()
 
 
-class SettingsSelect(EntityBase, SelectEntity):
+class SettingsSelect(InteractiveEntityBase, SelectEntity):
     """ Selection of settings """
     @property
     def device_class(self) -> str:
@@ -231,7 +231,7 @@ class SettingsSelect(EntityBase, SelectEntity):
         self.async_write_ha_state()
 
 
-class DelayedStartSelect(EntityBase, SelectEntity):
+class DelayedStartSelect(InteractiveEntityBase, SelectEntity):
     """ Class for delayed start select box """
     def __init__(self, appliance: Appliance, key: str = None, conf: dict = None) -> None:
         super().__init__(appliance, key, conf)

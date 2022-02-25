@@ -7,7 +7,7 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
-from .common import EntityBase, EntityManager
+from .common import InteractiveEntityBase, EntityManager
 from .const import DOMAIN, SPECIAL_ENTITIES
 
 
@@ -43,7 +43,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
         add_appliance(appliance)
 
 
-class OptionNumber(EntityBase, NumberEntity):
+class OptionNumber(InteractiveEntityBase, NumberEntity):
     """ Class for numeric options """
     @property
     def device_class(self) -> str:
@@ -112,7 +112,7 @@ class OptionNumber(EntityBase, NumberEntity):
         self.async_write_ha_state()
 
 
-class SettingsNumber(EntityBase, NumberEntity):
+class SettingsNumber(InteractiveEntityBase, NumberEntity):
     """ Class for numeric settings """
     @property
     def device_class(self) -> str:
