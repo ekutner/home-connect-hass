@@ -263,16 +263,21 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
 def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect):
     """ Register for publishing events that are offered by this integration """
     device_reg = dr.async_get(hass)
+    last_events = {}    # Used to filter out duplicate events
 
     async def async_handle_event(appliance:Appliance, key:str, value:str):
-        device = device_reg.async_get_device({(DOMAIN, appliance.haId.lower().replace('-','_'))})
-        event_data = {
-            "device_id": device.id,
-            "key": key,
-            "value": value
-        }
-        hass.bus.async_fire(f"{DOMAIN}_event", event_data)
-        _LOGGER.debug("Published event to Home Assistant event bus: %s = %s", key, str(value))
+        if value is None or key not in last_events or last_events[key] != value:
+            last_events[key] = value
+            device = device_reg.async_get_device({(DOMAIN, appliance.haId.lower().replace('-','_'))})
+            event_data = {
+                "device_id": device.id,
+                "key": key,
+                "value": value
+            }
+            hass.bus.async_fire(f"{DOMAIN}_event", event_data)
+            _LOGGER.debug("Published event to Home Assistant event bus: %s = %s", key, str(value))
+        else:
+            _LOGGER.debug("Skipped published of duplicate event to Home Assistant event bus: %s = %s", key, str(value))
 
 
     def register_appliance(appliance:Appliance):
