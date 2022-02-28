@@ -263,11 +263,13 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
 def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect):
     """ Register for publishing events that are offered by this integration """
     device_reg = dr.async_get(hass)
-    last_events = {}    # Used to filter out duplicate events
+    last_event_key = None    # Used to filter out duplicate events
+    last_event_value = None
 
     async def async_handle_event(appliance:Appliance, key:str, value:str):
-        if value is None or key not in last_events or last_events[key] != value:
-            last_events[key] = value
+        if key != last_event_key or value != last_event_value:
+            last_event_key = key
+            last_event_value = value
             device = device_reg.async_get_device({(DOMAIN, appliance.haId.lower().replace('-','_'))})
             event_data = {
                 "device_id": device.id,
