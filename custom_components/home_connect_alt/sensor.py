@@ -244,9 +244,7 @@ class ActivityOptionSensor(ProgramOptionSensor):
 class StatusSensor(EntityBase, SensorEntity):
     """Status sensor."""
 
-    @property
-    def device_class(self) -> str:
-        return f"{DOMAIN}__status"
+    attr_device_class = f"{DOMAIN}__status"
 
     @property
     def name_ext(self) -> str:
@@ -277,9 +275,7 @@ class StatusSensor(EntityBase, SensorEntity):
 class SettingsSensor(EntityBase, SensorEntity):
     """Status sensor."""
 
-    @property
-    def device_class(self) -> str:
-        return f"{DOMAIN}__settings"
+    attr_device_class = f"{DOMAIN}__settings"
 
     @property
     def name_ext(self) -> str:
