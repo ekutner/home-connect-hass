@@ -1,4 +1,4 @@
-""" Implement the Sensor entities of this implementation """
+"""Implement the Sensor entities of this integration."""
 from __future__ import annotations
 
 import logging
