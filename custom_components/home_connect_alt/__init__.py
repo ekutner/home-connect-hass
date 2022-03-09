@@ -17,7 +17,17 @@ from homeassistant.helpers import storage
 from homeassistant.helpers.typing import ConfigType
 
 from . import api, config_flow
-from .const import *
+from .const import (
+    DOMAIN,
+    CONF_CACHE,
+    CONF_LANG,
+    CONF_SIMULATE,
+    ENDPOINT_AUTHORIZE,
+    ENDPOINT_TOKEN,
+    API_HOST,
+    SIM_HOST,
+    PUBLISHED_EVENTS,
+)
 from .services import Services
 
 _LOGGER = logging.getLogger(__name__)
@@ -37,7 +47,6 @@ CONFIG_SCHEMA = vol.Schema(
     extra=vol.ALLOW_EXTRA,
 )
 
-# For your initial PR, limit it to 1 platform.
 PLATFORMS = [
     Platform.SENSOR,
     Platform.BINARY_SENSOR,
@@ -86,7 +95,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     conf = hass.data[DOMAIN]
     simulate = conf[CONF_SIMULATE]
-    lang = conf[CONF_LANG]  # if conf[CONF_LANG] != "" else None
+    lang = conf[CONF_LANG]
     host = SIM_HOST if simulate else API_HOST
     use_cache = conf[CONF_CACHE]
 
