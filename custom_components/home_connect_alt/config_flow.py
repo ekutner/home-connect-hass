@@ -28,6 +28,7 @@ from .const import *
 #     extra=vol.ALLOW_EXTRA,
 # )
 
+
 class OAuth2FlowHandler(
     config_entry_oauth2_flow.AbstractOAuth2FlowHandler, domain=DOMAIN
 ):
@@ -45,9 +46,6 @@ class OAuth2FlowHandler(
     def extra_authorize_data(self) -> dict:
         """Extra data that needs to be appended to the authorize url."""
         return {"scope": SCOPES}
-
-    
-
 
     # async def async_step_user(self, user_input=None):
     #         # Specify items in the order they are to be displayed in the UI
@@ -84,7 +82,6 @@ class OAuth2FlowHandler(
     #             # res = await self.async_step_auth(user_input)
     #             # return res
     #             # #return self.async_create_entry(title='Home Connect New', data=user_input )
-
 
     # # async def async_step_user(self, user_input=None):
     # #     """Handle a flow start."""
