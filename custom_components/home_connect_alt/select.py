@@ -1,24 +1,31 @@
 """ Implement the Select entities of this implementation """
 from __future__ import annotations
+
 import logging
-from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
+
+from home_connect_async import Appliance, Events, HomeConnect, HomeConnectError
 from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
-from .common import InteractiveEntityBase, EntityManager
+from .common import EntityManager, InteractiveEntityBase
 from .const import DEVICE_ICON_MAP, DOMAIN, SPECIAL_ENTITIES
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
+
+async def async_setup_entry(
+    hass: HomeAssistant,
+    config_entry: ConfigType,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
     """Add Selects for passed config_entry in HA."""
-    homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
+    homeconnect: HomeConnect = hass.data[DOMAIN]["homeconnect"]
     entity_manager = EntityManager(async_add_entities)
 
-    def add_appliance(appliance:Appliance) -> None:
+    def add_appliance(appliance: Appliance) -> None:
         if appliance.available_programs:
             device = ProgramSelect(appliance)
             entity_manager.add(device)
@@ -27,34 +34,47 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if option.key in SPECIAL_ENTITIES['delayed_start']:
+                        if option.key in SPECIAL_ENTITIES["delayed_start"]:
                             device = DelayedStartSelect(appliance, option.key)
                             entity_manager.add(device)
-                        elif option.key not in SPECIAL_ENTITIES['ignore'] and option.allowedvalues and len(option.allowedvalues)>1:
+                        elif (
+                            option.key not in SPECIAL_ENTITIES["ignore"]
+                            and option.allowedvalues
+                            and len(option.allowedvalues) > 1
+                        ):
                             device = OptionSelect(appliance, option.key)
                             entity_manager.add(device)
 
         for setting in appliance.settings.values():
-            if setting.key not in SPECIAL_ENTITIES['ignore'] and setting.allowedvalues and len(setting.allowedvalues)>1:
+            if (
+                setting.key not in SPECIAL_ENTITIES["ignore"]
+                and setting.allowedvalues
+                and len(setting.allowedvalues) > 1
+            ):
                 device = SettingsSelect(appliance, setting.key)
                 entity_manager.add(device)
 
         entity_manager.register()
 
-    def remove_appliance(appliance:Appliance) -> None:
+    def remove_appliance(appliance: Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
-    homeconnect.register_callback(add_appliance, [Events.PAIRED, Events.PROGRAM_SELECTED])
+    homeconnect.register_callback(
+        add_appliance, [Events.PAIRED, Events.PROGRAM_SELECTED]
+    )
     homeconnect.register_callback(remove_appliance, Events.DEPAIRED)
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
 
+
 class ProgramSelect(InteractiveEntityBase, SelectEntity):
-    """ Selection of available programs """
+    """Selection of available programs."""
+
+    attr_device_class = f"{DOMAIN}__programs"
 
     @property
     def unique_id(self) -> str:
-        return f'{self.haId}_programs'
+        return f"{self.haId}_programs"
 
     @property
     def name_ext(self) -> str:
@@ -67,18 +87,16 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
         return None
 
     @property
-    def device_class(self) -> str:
-        return f"{DOMAIN}__programs"
-
-    @property
     def available(self) -> bool:
-        return super().available \
-            and self._appliance.available_programs \
-            and not self._appliance.active_program \
-            and  (
-                "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
-                self._appliance.status["BSH.Common.Status.RemoteControlActive"]
+        return (
+            super().available
+            and self._appliance.available_programs
+            and not self._appliance.active_program
+            and (
+                "BSH.Common.Status.RemoteControlActive" not in self._appliance.status
+                or self._appliance.status["BSH.Common.Status.RemoteControlActive"]
             )
+        )
 
     @property
     def options(self) -> list[str]:
@@ -92,7 +110,7 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
         """Return the selected entity option to represent the entity state."""
         if self._appliance.selected_program:
             key = self._appliance.selected_program.key
-            if  key in self._appliance.available_programs:
+            if key in self._appliance.available_programs:
                 # The API sometimes returns programs which are not one of the avilable programs so we ignore it
                 return key
         return None
@@ -102,31 +120,38 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
             await self._appliance.async_select_program(key=option)
         except HomeConnectError as ex:
             if ex.error_description:
-                raise HomeAssistantError(f"Failed to set the selected program: {ex.error_description} ({ex.code} - {self._key}={option})")
+                raise HomeAssistantError(
+                    f"Failed to set the selected program: {ex.error_description} ({ex.code} - {self._key}={option})"
+                )
             else:
-                raise HomeAssistantError(f"Failed to set the selected program ({ex.code} - {self._key}={option})")
+                raise HomeAssistantError(
+                    f"Failed to set the selected program ({ex.code} - {self._key}={option})"
+                )
 
-    async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
+    async def async_on_update(self, appliance: Appliance, key: str, value) -> None:
         self.async_write_ha_state()
 
 
 class OptionSelect(InteractiveEntityBase, SelectEntity):
-    """ Selection of program options """
-    @property
-    def device_class(self) -> str:
-        return f"{DOMAIN}__options"
+    """Selection of program options."""
+
+    attr_device_class = f"{DOMAIN}__options"
 
     @property
-    def name_ext(self) -> str|None:
+    def name_ext(self) -> str | None:
         if self._appliance.available_programs:
             for program in self._appliance.available_programs.values():
-                if program.options and self._key in program.options and program.options[self._key].name:
+                if (
+                    program.options
+                    and self._key in program.options
+                    and program.options[self._key].name
+                ):
                     return program.options[self._key].name
         return None
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:office-building-cog')
+        return self._conf.get("icon", "mdi:office-building-cog")
 
     @property
     def available(self) -> bool:
@@ -137,16 +162,18 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
         """Return a set of selectable options."""
         if self.program_option_available:
             selected_program_key = self._appliance.selected_program.key
-            available_program = self._appliance.available_programs.get(selected_program_key)
+            available_program = self._appliance.available_programs.get(
+                selected_program_key
+            )
             if available_program:
                 option = available_program.options.get(self._key)
                 if option:
-                    #_LOGGER.info("Allowed values for %s : %s", self._key, str(option.allowedvalues))
+                    # _LOGGER.info("Allowed values for %s : %s", self._key, str(option.allowedvalues))
                     vals = option.allowedvalues.copy()
-                    vals.append('')
+                    vals.append("")
                     return vals
                     # return option.allowedvalues
-        #_LOGGER.info("Allowed values for %s : %s", self._key, None)
+        # _LOGGER.info("Allowed values for %s : %s", self._key, None)
         return []
 
     @property
@@ -155,52 +182,57 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
         # if self._appliance.selected_program.options[self._key].value not in self.options:
         #     _LOGGER.debug("The current option is not in the list of available options")
         if self.program_option_available:
-            if self._appliance.selected_program.options[self._key].value == '':
+            if self._appliance.selected_program.options[self._key].value == "":
                 _LOGGER.error("Returning empty option value for %s", self._key)
-            #_LOGGER.info("Current value for %s : %s", self._key, self._appliance.selected_program.options[self._key].value)
+            # _LOGGER.info("Current value for %s : %s", self._key, self._appliance.selected_program.options[self._key].value)
             return self._appliance.selected_program.options[self._key].value
         else:
-            #_LOGGER.info("Current value for %s : %s", self._key, None)
+            # _LOGGER.info("Current value for %s : %s", self._key, None)
             return None
 
     async def async_select_option(self, option: str) -> None:
-        if option == '':
-            _LOGGER.debug('Tried to set an empty option')
+        if option == "":
+            _LOGGER.debug("Tried to set an empty option")
             return
         try:
             await self._appliance.async_set_option(self._key, option)
         except HomeConnectError as ex:
             if ex.error_description:
-                raise HomeAssistantError(f"Failed to set the selected option: {ex.error_description} ({ex.code})")
+                raise HomeAssistantError(
+                    f"Failed to set the selected option: {ex.error_description} ({ex.code})"
+                )
             else:
-                raise HomeAssistantError(f"Failed to set the selected option: ({ex.code})")
+                raise HomeAssistantError(
+                    f"Failed to set the selected option: ({ex.code})"
+                )
 
-    async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
+    async def async_on_update(self, appliance: Appliance, key: str, value) -> None:
         self.async_write_ha_state()
 
 
 class SettingsSelect(InteractiveEntityBase, SelectEntity):
-    """ Selection of settings """
-    @property
-    def device_class(self) -> str:
-        return f"{DOMAIN}__settings"
+    """Selection of settings."""
+
+    attr_device_class = f"{DOMAIN}__settings"
 
     @property
-    def name_ext(self) -> str|None:
-        if self._key in self._appliance.settings and self._appliance.settings[self._key].name:
+    def name_ext(self) -> str | None:
+        if (
+            self._key in self._appliance.settings
+            and self._appliance.settings[self._key].name
+        ):
             return self._appliance.settings[self._key].name
         return None
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:tune')
+        return self._conf.get("icon", "mdi:tune")
 
     @property
     def available(self) -> bool:
-        return super().available \
-        and (
-            "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
-            self._appliance.status["BSH.Common.Status.RemoteControlActive"]
+        return super().available and (
+            "BSH.Common.Status.RemoteControlActive" not in self._appliance.status
+            or self._appliance.status["BSH.Common.Status.RemoteControlActive"]
         )
 
     @property
@@ -222,42 +254,54 @@ class SettingsSelect(InteractiveEntityBase, SelectEntity):
             await self._appliance.async_apply_setting(self._key, option)
         except HomeConnectError as ex:
             if ex.error_description:
-                raise HomeAssistantError(f"Failed to apply the setting: {ex.error_description} ({ex.code})")
+                raise HomeAssistantError(
+                    f"Failed to apply the setting: {ex.error_description} ({ex.code})"
+                )
             else:
                 raise HomeAssistantError(f"Failed to apply the setting: ({ex.code})")
 
-
-    async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
+    async def async_on_update(self, appliance: Appliance, key: str, value) -> None:
         self.async_write_ha_state()
 
 
 class DelayedStartSelect(InteractiveEntityBase, SelectEntity):
-    """ Class for delayed start select box """
-    def __init__(self, appliance: Appliance, key: str = None, conf: dict = None) -> None:
+    """Class for delayed start select box"""
+
+    def __init__(
+        self, appliance: Appliance, key: str = None, conf: dict = None
+    ) -> None:
         super().__init__(appliance, key, conf)
-        self._current = '0:00'
+        self._current = "0:00"
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:clock-outline')
+        return self._conf.get("icon", "mdi:clock-outline")
 
     @property
     def available(self) -> bool:
         available = super().program_option_available
         if not available:
-            self._current = '0:00'
+            self._current = "0:00"
             self._appliance.clear_start_option(self._key)
         return available
 
     @property
     def options(self) -> list[str]:
-        options = [ "0:00" ]
+        options = ["0:00"]
 
         start = 1
-        if self._appliance.selected_program and self._appliance.selected_program.options and self._key in self._appliance.selected_program.options:
-            selected_program_time = self._appliance.selected_program.options[self._key].value
-            start = int(selected_program_time/1800) + (selected_program_time % 1800 > 0)
-            #end = self._appliance.available_programs[self._appliance.selected_program.key].options[self._key].max
+        if (
+            self._appliance.selected_program
+            and self._appliance.selected_program.options
+            and self._key in self._appliance.selected_program.options
+        ):
+            selected_program_time = self._appliance.selected_program.options[
+                self._key
+            ].value
+            start = int(selected_program_time / 1800) + (
+                selected_program_time % 1800 > 0
+            )
+            # end = self._appliance.available_programs[self._appliance.selected_program.key].options[self._key].max
             end = 49
         for t in range(start, end):
             options.append(f"{int(t/2)}:{(t%2)*30:02}")
@@ -269,14 +313,14 @@ class DelayedStartSelect(InteractiveEntityBase, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         self._current = option
-        if option == '0:00':
+        if option == "0:00":
             self._appliance.clear_start_option(self._key)
             return
-        parts = option.split(':')
-        delay = int(parts[0])*3600 + int(parts[1])*60
+        parts = option.split(":")
+        delay = int(parts[0]) * 3600 + int(parts[1]) * 60
         self._appliance.set_start_option(self._key, delay)
 
-    async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
+    async def async_on_update(self, appliance: Appliance, key: str, value) -> None:
         if key == Events.PROGRAM_FINISHED:
-            self._current = '0:00'
+            self._current = "0:00"
         self.async_write_ha_state()
