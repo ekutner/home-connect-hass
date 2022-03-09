@@ -1,4 +1,4 @@
-""" Implement the Select entities of this implementation """
+"""Implement the Select entities of this integration."""
 from __future__ import annotations
 
 import logging

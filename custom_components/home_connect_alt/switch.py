@@ -1,5 +1,4 @@
-""" Implement the Switch entities of this implementation """
-
+"""Implement the Switch entities of this integration."""
 from __future__ import annotations
 
 from typing import Any

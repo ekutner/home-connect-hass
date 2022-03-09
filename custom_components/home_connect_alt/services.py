@@ -1,4 +1,4 @@
-""" Implement the services of this implementation """
+"""Implement the Services of this integration."""
 from home_connect_async import HomeConnect, HomeConnectError
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError

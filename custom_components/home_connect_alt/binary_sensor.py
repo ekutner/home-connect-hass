@@ -1,3 +1,4 @@
+"""Implement the Binary Sensor entities of this integration."""
 import logging
 
 from home_connect_async import Appliance, Events, HomeConnect
@@ -79,9 +80,7 @@ async def async_setup_entry(
 class ProgramOptionBinarySensor(EntityBase, BinarySensorEntity):
     """Program option binary sensor."""
 
-    @property
-    def device_class(self) -> str:
-        return f"{DOMAIN}__options"
+    attr_device_class = f"{DOMAIN}__options"
 
     @property
     def name_ext(self) -> str:
@@ -176,9 +175,7 @@ class StatusBinarySensor(EntityBase, BinarySensorEntity):
 class SettingsBinarySensor(EntityBase, BinarySensorEntity):
     """Status sensor."""
 
-    @property
-    def device_class(self) -> str:
-        return f"{DOMAIN}__settings"
+    attr_device_class = f"{DOMAIN}__settings"
 
     @property
     def name_ext(self) -> str:
@@ -210,9 +207,7 @@ class SettingsBinarySensor(EntityBase, BinarySensorEntity):
 class ConnectionBinarySensor(EntityBase, BinarySensorEntity):
     """Appliance connected state binary sensor."""
 
-    @property
-    def available(self) -> bool:
-        return True
+    _attr_available = True
 
     @property
     def is_on(self) -> bool:

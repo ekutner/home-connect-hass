@@ -1,3 +1,4 @@
+"""Implement the Buttton entities of this integration."""
 import logging
 
 from home_connect_async import Appliance, Events, HomeConnect, HomeConnectError

@@ -1,4 +1,4 @@
-"""Provides device triggers for Home Connect New."""
+"""Implement the device triggers of this integration."""
 from __future__ import annotations
 
 from typing import Any

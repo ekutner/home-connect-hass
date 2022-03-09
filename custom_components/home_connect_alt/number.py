@@ -1,4 +1,4 @@
-""" Implement the Number entities of this implementation """
+"""Implement the Number entities of this integration."""
 from __future__ import annotations
 
 from home_connect_async import Appliance, Events, HomeConnect, HomeConnectError
