@@ -1,11 +1,11 @@
 {
   "domain": "home_connect_alt",
   "name": "Home Connect Alt",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "config_flow": true,
   "documentation": "https://github.com/ekutner/home-connect-hass",
   "issue_tracker": "https://github.com/ekutner/home-connect-hass/issues",
-  "requirements": ["home-connect-async==0.6.3"],
+  "requirements": ["home-connect-async==0.6.4"],
   "ssdp": [],
   "zeroconf": [],
   "homekit": {},
