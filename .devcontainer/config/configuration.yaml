@@ -25,7 +25,7 @@ home_connect_alt:
   client_secret: !secret home_connect_client_secret
   # cache: false
   # simulate: false
-  # language: de-DE
+  # language: es
 
 
 

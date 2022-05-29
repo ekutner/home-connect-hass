@@ -1,8 +1,5 @@
 {
   "name": "Home Connect Alt",
-  "domains": [
-    "sensor", "binary_sensor", "switch", "button", "select", "number"
-  ],
   "hacs": "1.6.0",
   "homeassistant": "2021.12.0b0"
 }
