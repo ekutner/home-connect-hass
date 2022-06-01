@@ -26,6 +26,6 @@ home_connect_alt:
   # cache: false
   # simulate: false
   # language: es
-
+  # sensor_value_translation: server
 
 

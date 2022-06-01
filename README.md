@@ -34,11 +34,17 @@ home_connect_alt:
   client_id: < Your Client ID >
   client_secret: < You Client Secret >
   language: < Optional - Supported langage code >
+  sensor_value_translation: <server | local>
 ```
+## Parameters:
+* *client_id* - The Client ID of your Home Connect app.
+* *client_secret* - The Client Secret of your Home Connect app.
+* *language* (optoinal - default = "en") - indicates the language to use for entity names. The translation is automatically loaded from the Home Connect service and must  be one of its [supported languages](https://api-docs.home-connect.com/general?#supported-languages).
+* *sensor_value_translation* (optional - default = "local") - indicates how sensor values shhould be translated to friendly names.  
+  When set to **"local"** (the default) the integration will use the raw ENUM values documented in the Home Connect documentation for sensors with string values. In that case the integration relies on the Home Assistant translation mechanism and translation files to translate these values into friendly names. The benefit of this approach is that sensor values used by the integration are language independent and match the values documented in the Home Connect API.  
+  When set to **"server"** sensor values are translated to friendly names using the Home Connect service. In this mode the internal values of string sensors will be translated and the translated values must be used in scripts referring to those sensors.  
 
-The *language* parameter is optoinal and preferably should not be set.  
-* When **not specified**  (the default and prefered approach) the integration will use the raw ENUM values documented in the Home Connect documentation for sensors and select boxes with string values. The integration then relies on the Home Assistant translation mechanism and translation files to translate these values into friendly names. The benefit of using this approach is that sensor values used by the integration are language independent and match the values documented in the Home Connect API.  
-* When this parameter **is specified** the internal values of string **sensors** alone (not select boxes) are translated to friendly names directly by the integration using translations provided by the Home Connect service. In this mode the internal values of string sensors will be translated and the translated values must be used in scripts referring to those sensors. If specified it must be one of the languages [supported by Home Connect](https://api-docs.home-connect.com/general?#supported-languages).
+  **_Note:_** Select box values are always translated localy so they require the trsnalation files to contain all the possible values.
 
 After the integration is configured READ THE FAQ then add it from the Home-Assistant UI.  
 
@@ -71,7 +77,7 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
   Make sure that *Remote Control Start* is allowed on the appliance, it's disabled by default. 
 
 * **Sensor values or select boxes have values like BSH.Common.EnumType.PowerState.Off**
-  Start by reading where these values are coming from in the explanation of the *language* config param above. You can also set that parameter as a workaround for missing translations in sensor values. 
+  Start by reading where these values are coming from in the explanation of the *sensor_value_translation* config param above. You can also set that parameter as a workaround for missing translations in sensor values. 
   Regardless if you decide to use the language parameter or not it would be great if you can report these values so they can be properly translated. Ideally, if you know how, please update the translation files directly (at least the English ones) and create a PR. If you don't know how then you can add them to issue [#26](https://github.com/ekutner/home-connect-hass/issues/26) and I will add them to the translation files.  
 
   **_Note:_** It is expected to see these values in sensor history data. This is currently a limitation/bug in Home Assistant which doesn't translate these values.

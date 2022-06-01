@@ -31,7 +31,8 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Required(CONF_CLIENT_SECRET): cv.string,
                 vol.Optional(CONF_SIMULATE, default=False): cv.boolean,
                 vol.Optional(CONF_CACHE, default=True): cv.boolean,
-                vol.Optional(CONF_LANG, default=None): vol.Any(str, None)
+                vol.Optional(CONF_LANG, default=None): vol.Any(str, None),
+                vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(str, None)
             }
         )
     },
