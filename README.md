@@ -36,7 +36,9 @@ home_connect_alt:
   language: < Optional - Supported langage code >
 ```
 
-The *language* parameter is optoinal and if set it will provide translations for **sensor** values directly from the Home Connect service, bypassing the Home Assistant translation mechanism. It will not translate selection box values and if specified it must be one of the languages [supported by Home Connect](https://api-docs.home-connect.com/general?#supported-languages).
+The *language* parameter is optoinal and preferably should not be set.  
+* When **not specified**  (the default and prefered approach) the integration will use the raw ENUM values documented in the Home Connect documentation for sensors and select boxes with string values. The integration then relies on the Home Assistant translation mechanism and translation files to translate these values into friendly names. The benefit of using this approach is that sensor values used by the integration are language independent and match the values documented in the Home Connect API.  
+* When this parameter **is specified** the internal values of string **sensors** alone (not select boxes) are translated to friendly names directly by the integration using translations provided by the Home Connect service. In this mode the internal values of string sensors will be translated and the translated values must be used in scripts referring to those sensors. If specified it must be one of the languages [supported by Home Connect](https://api-docs.home-connect.com/general?#supported-languages).
 
 After the integration is configured READ THE FAQ then add it from the Home-Assistant UI.  
 
@@ -44,8 +46,11 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
 
 # FAQ
 * **Some of my appliances are not showing up after I added the integration**  
-  Due to unreasonable rate limits set by BSH there is a limit of about 3 
-  appliances loaded per minute. If you have more expect the initial load to take longer. The integration will wait for the service to become available and continue loading the rest of the appliances. You may have to refresh your screen to see them in Home Assistant after they were added.
+  This is most commonly caused by two reasons:
+  1. The appliance must be powered on and connected to the Home Connect service to be dicovered. Once the missing devices are turned on and connected they will automatically be discovered and added by the integration.  
+  This can be verified in the Home Connect mobile app **but only while the wifi on the phone is turned OFF**. If the devices are active in the mobile app while the wifi of the phone is turned off then please open an issue with a debug log to report it.
+  2. Due to some unreasonable rate limits set by BSH there is a limit of about 3 
+  appliances loaded per minute. If you have more, expect the initial load to take longer. The integration will wait for the service to become available and continue loading the rest of the appliances. You may have to refresh your screen to see them in Home Assistant after they were added.
 
 * **I've restarted Home Assistant a few times and now all my appliances are unavilable**  
   This is, again, related to the Home Connect rate limits. Every time you restart Home Assistant the integration makes a few API calls to the service and if that happens too often it may block for up to 24 hours. The best way to fix this is to wait a day and restart Home Assistant again.
@@ -65,7 +70,17 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
 * **The *Start* button is disabled**  
   Make sure that *Remote Control Start* is allowed on the appliance, it's disabled by default. 
 
+* **Sensor values or select boxes have values like BSH.Common.EnumType.PowerState.Off**
+  Start by reading where these values are coming from in the explanation of the *language* config param above. You can also set that parameter as a workaround for missing translations in sensor values. 
+  Regardless if you decide to use the language parameter or not it would be great if you can report these values so they can be properly translated. Ideally, if you know how, please update the translation files directly (at least the English ones) and create a PR. If you don't know how then you can add them to issue [#26](https://github.com/ekutner/home-connect-hass/issues/26) and I will add them to the translation files.  
+
+  **_Note:_** It is expected to see these values in sensor history data. This is currently a limitation/bug in Home Assistant which doesn't translate these values.
+
 </br>
+
+# Known Issues
+* If you have more than 3 connected devices (or you just play a lot with settings) you may hit the daily API rate limit set by the Home Connect API. The limit is set to 1000 calls per day and when it is hit the API is blocked for 24h. During that time the integration will not get updated with new states and you won't be able to select and options or start a program.  
+If you hit this limit frequently please open an issue with a debug log and I'll try to see if there is a way to reduce some calls. Homwever, as of now there is nothing I can do about it and the Home Connect team was unwilling to increase this limit, which hurts their best customers so there is nothing I can do about it. 
 
 # Reporting issues / bugs
 This integration is in early beta and not stable yet. If you are going to be testing this integration please add this to your configuration.yaml file then restart HA:
