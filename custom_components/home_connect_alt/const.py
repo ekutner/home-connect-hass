@@ -10,7 +10,7 @@ SCOPES = "IdentifyAppliance Monitor Control Settings"
 CONF_SIMULATE = "simulate"
 CONF_LANG = "language"
 CONF_CACHE = "cache"
-CONF_SENSORS_TRANSLATION = "sensors_value_translation"
+CONF_SENSORS_TRANSLATION = "sensor_value_translation"
 
 HOME_CONNECT_DEVICE = {
     "identifiers": {(DOMAIN, "homeconnect")},
