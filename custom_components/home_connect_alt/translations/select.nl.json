@@ -139,12 +139,12 @@
       "LaundryCare.WasherDryer.Program.ShirtsBlouses.ShirtsBlouses": "Overhemden Bloezen"
     },
     "home_connect_alt__options": {
-      "BSH.Common.Root.SelectedProgram": "Geselecteerd Programma,
+      "BSH.Common.Root.SelectedProgram": "Geselecteerd Programma",
       "BSH.Common.Root.ActiveProgram": "Actief Programma",
       "BSH.Common.Option.StartInRelative": "Start In",
       "BSH.Common.Option.FinishInRelative": "Klaar In",
       "BSH.Common.Option.Duration": "Looptijd",
-      "BSH.Common.Option.ElapsedProgramTime": "Verstreken programmatijd,
+      "BSH.Common.Option.ElapsedProgramTime": "Verstreken programmatijd",
       "BSH.Common.Option.RemainingProgramTime": "Resterende programmatijd",
       "BSH.Common.Option.ProgramProgress": "Programmavoortgang",
       "LaundryCare.Dryer.EnumType.DryingTarget.IronDry": "Strijkdroog",
