@@ -1,5 +1,6 @@
 """ Implement the Select entities of this implementation """
 from __future__ import annotations
+from datetime import timedelta
 import logging
 from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
 from homeassistant.components.select import SelectEntity
@@ -90,11 +91,11 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
     @property
     def current_option(self) -> str:
         """Return the selected entity option to represent the entity state."""
-        if self._appliance.selected_program:
-            key = self._appliance.selected_program.key
-            if  key in self._appliance.available_programs:
-                # The API sometimes returns programs which are not one of the avilable programs so we ignore it
-                return key
+        apl = self._appliance
+        key = apl.startonly_program.key if apl.startonly_program else apl.selected_program.key if apl.selected_program else None
+        if key in self._appliance.available_programs:
+            # The API sometimes returns programs which are not one of the avilable programs so we ignore it
+            return key
         return None
 
     async def async_select_option(self, option: str) -> None:
@@ -135,18 +136,23 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
     @property
     def options(self) -> list[str]:
         """Return a set of selectable options."""
-        if self.program_option_available:
-            selected_program_key = self._appliance.selected_program.key
-            available_program = self._appliance.available_programs.get(selected_program_key)
-            if available_program:
-                option = available_program.options.get(self._key)
-                if option:
-                    #_LOGGER.info("Allowed values for %s : %s", self._key, str(option.allowedvalues))
-                    vals = option.allowedvalues.copy()
-                    vals.append('')
-                    return vals
-                    # return option.allowedvalues
-        #_LOGGER.info("Allowed values for %s : %s", self._key, None)
+        # if self.program_option_available:
+        #     selected_program_key = self._appliance.selected_program.key
+        #     available_program = self._appliance.available_programs.get(selected_program_key)
+        #     if available_program:
+        #         option = available_program.options.get(self._key)
+        #         if option:
+        #             #_LOGGER.info("Allowed values for %s : %s", self._key, str(option.allowedvalues))
+        #             vals = option.allowedvalues.copy()
+        #             vals.append('')
+        #             return vals
+        # #_LOGGER.info("Allowed values for %s : %s", self._key, None)
+        option = self._appliance.get_applied_program_available_option(self._key)
+        if option:
+            vals = option.allowedvalues.copy()
+            vals.append('')
+            return vals
+
         return []
 
     @property
@@ -256,7 +262,7 @@ class DelayedStartSelect(InteractiveEntityBase, SelectEntity):
         start = 1
         if self._appliance.selected_program and self._appliance.selected_program.options and self._key in self._appliance.selected_program.options:
             selected_program_time = self._appliance.selected_program.options[self._key].value
-            start = int(selected_program_time/1800) + (selected_program_time % 1800 > 0)
+            start = selected_program_time//1800 + (selected_program_time % 1800 > 0)
             #end = self._appliance.available_programs[self._appliance.selected_program.key].options[self._key].max
             end = 49
         for t in range(start, end):
