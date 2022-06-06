@@ -259,7 +259,7 @@
       "BSH.Common.EnumType.PowerState.MainsOff": "Net Uit",
       "BSH.Common.EnumType.OperationState.Ready": "Klaar",
       "BSH.Common.EnumType.OperationState.Inactive": "Inactief",
-      "BSH.Common.EnumType.OperationState.DelayedStart": "Vertraagde Start",
+      "BSH.Common.EnumType.OperationState.DelayedStart": "Uitgestelde Start",
       "BSH.Common.EnumType.OperationState.Run": "Uitvoeren",
       "BSH.Common.EnumType.OperationState.Pause": "Pause",
       "BSH.Common.EnumType.OperationState.ActionRequired": "Actie Vereist",
