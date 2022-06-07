@@ -30,16 +30,17 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
                     device = StatusBinarySensor(appliance, key)
             entity_manager.add(device)
 
-        if appliance.selected_program:
+        if appliance.selected_program and appliance.selected_program.options:
             for option in appliance.selected_program.options.values():
                 if isinstance(option.value, bool):
                     device = ProgramOptionBinarySensor(appliance, option.key)
                     entity_manager.add(device)
-            if appliance.active_program:
-                for option in appliance.active_program.options.values():
-                    if option.key not in appliance.selected_program.options and isinstance(option.value, bool):
-                        device = ActivityOptionBinarySensor(appliance, option.key, SPECIAL_ENTITIES['options'].get(option.key, {}))
-                        entity_manager.add(device)
+
+        if appliance.active_program and appliance.active_program.options:
+            for option in appliance.active_program.options.values():
+                if isinstance(option.value, bool):
+                    device = ProgramOptionBinarySensor(appliance, option.key, SPECIAL_ENTITIES['options'].get(option.key, {}))
+                    entity_manager.add(device)
 
         for setting in appliance.settings.values():
             if setting.type == "Boolean" or isinstance(setting.value, bool):
@@ -70,6 +71,8 @@ class ProgramOptionBinarySensor(EntityBase, BinarySensorEntity):
     def name_ext(self) -> str:
         if self._appliance.selected_program and (self._key in self._appliance.selected_program.options):
             return self._appliance.selected_program.options[self._key].name
+        elif self._appliance.active_program and (self._key in self._appliance.active_program.options):
+            return self._appliance.active_program.options[self._key].name
         return None
 
     @property
@@ -78,7 +81,10 @@ class ProgramOptionBinarySensor(EntityBase, BinarySensorEntity):
 
     @property
     def available(self) -> bool:
-        return self._appliance.selected_program and (self._key in self._appliance.selected_program.options) and super().available
+        return super().available and (
+            (self._appliance.selected_program and (self._key in self._appliance.selected_program.options))
+            or (self._appliance.active_program and (self._key in self._appliance.active_program.options))
+        )
 
     @property
     def is_on(self):
