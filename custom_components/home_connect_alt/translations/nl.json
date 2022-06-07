@@ -1,0 +1,26 @@
+{
+  "config": {
+    "step": {
+      "pick_implementation": {
+        "title": "[%key:common::config_flow::title::oauth2_Kies de verificatiemethode%]"
+      }
+    },
+    "abort": {
+      "already_configured": "[%key:common::config_flow::abort::Is al geconfigureerd%]",
+      "already_in_progress": "[%key:common::config_flow::abort::Is al in gebruik%]",
+      "oauth_error": "[%key:common::config_flow::abort::oauth2_fout%]",
+      "missing_configuration": "Het component is niet geconfigureerd. Volg de documentatie.",
+      "authorize_url_timeout": "[%key:common::config_flow::abort::oauth2_Time-out tijdens genereren autorisatie url.%]",
+      "no_url_available": "[%key:common::config_flow::abort::oauth2_Geen URL beschikbaar%]"
+    },
+    "create_entry": {
+      "default": "Succesvol geverifieerd"
+    }
+  },
+  "device_automation": {
+    "trigger_type": {
+      "program_started": "Programma is gestart",
+      "program_finished": "Programma is klaar"
+    }
+  }
+}
