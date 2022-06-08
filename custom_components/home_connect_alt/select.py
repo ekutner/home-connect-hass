@@ -1,6 +1,5 @@
 """ Implement the Select entities of this implementation """
 from __future__ import annotations
-from datetime import timedelta
 import logging
 from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
 from homeassistant.components.select import SelectEntity
@@ -75,7 +74,6 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
     def available(self) -> bool:
         return super().available \
             and self._appliance.available_programs \
-            and not self._appliance.active_program \
             and  (
                 "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
                 self._appliance.status["BSH.Common.Status.RemoteControlActive"]
@@ -259,14 +257,16 @@ class DelayedStartSelect(InteractiveEntityBase, SelectEntity):
     def options(self) -> list[str]:
         options = [ "0:00" ]
 
-        start = 1
         if self._appliance.selected_program and self._appliance.selected_program.options and self._key in self._appliance.selected_program.options:
             selected_program_time = self._appliance.selected_program.options[self._key].value
             start = selected_program_time//1800 + (selected_program_time % 1800 > 0)
             #end = self._appliance.available_programs[self._appliance.selected_program.key].options[self._key].max
             end = 49
-        for t in range(start, end):
-            options.append(f"{int(t/2)}:{(t%2)*30:02}")
+            for t in range(start, end):
+                options.append(f"{int(t/2)}:{(t%2)*30:02}")
+        else:
+            self._current = '0:00'
+            self._appliance.clear_start_option(self._key)
         return options
 
     @property

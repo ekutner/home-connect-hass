@@ -2,7 +2,7 @@
 from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 import logging
-from home_connect_async import Appliance, HomeConnect, Events
+from home_connect_async import Appliance, HomeConnect, Events, GlobalStatus
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -21,10 +21,11 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     sensors_translation = hass.data[DOMAIN][CONF_SENSORS_TRANSLATION] == 'server'
 
     def add_appliance(appliance:Appliance) -> None:
-        if appliance.available_programs and appliance.selected_program:
+        if appliance.selected_program:
             conf = { 'sensors_translation': sensors_translation, 'program_type': 'selected' }
             device = ProgramSensor(appliance,conf=conf)
             entity_manager.add(device)
+        if appliance.active_program:
             conf = { 'sensors_translation': sensors_translation, 'program_type': 'active' }
             device = ProgramSensor(appliance,conf=conf)
             entity_manager.add(device)
@@ -317,4 +318,5 @@ class HomeConnectStatusSensor(SensorEntity):
 
     @property
     def native_value(self):
-        return self._homeconnect.status.name
+        #return self._homeconnect.status.name
+        return GlobalStatus.get_status_str()
