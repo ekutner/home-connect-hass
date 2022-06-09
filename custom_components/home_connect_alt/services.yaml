@@ -84,3 +84,31 @@ stop_program:
       selector:
         device:
           integration: home_connect_alt
+
+set_program_option:
+  name: Set program option
+  description: Sets an option for the currently selected or active program
+  fields:
+    device_id:
+      description: The ID of the appliance to start the program on
+      name: device_id
+      required: true
+      selector:
+        device:
+          integration: home_connect_alt
+    key:
+      name: Option key
+      description: >
+        The ENUM key of an option which is available for the current program
+      example: ConsumerProducts.CoffeeMaker.Program.Beverage.Espresso
+      required: true
+      selector:
+        text:
+    value:
+      name: Option value
+      description: >
+        An allowed value for the specified option
+      example: ConsumerProducts.CoffeeMaker.Program.Beverage.Espresso
+      required: true
+      selector:
+        text:

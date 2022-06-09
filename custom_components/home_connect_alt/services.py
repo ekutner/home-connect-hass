@@ -48,6 +48,18 @@ class Services():
                 raise HomeAssistantError(ex.error_description if ex.error_description else ex.msg)
 
 
+    async def async_set_program_option(self, call) -> None:
+        """ Service for setting an option on the current program """
+        data = call.data
+        appliance = self.get_appliance_from_device_id(data['device_id'])
+        if appliance:
+            try:
+                await appliance.async_set_option(data['key'], data['value'])
+            except HomeConnectError as ex:
+                raise HomeAssistantError(ex.error_description if ex.error_description else ex.msg)
+            except ValueError as ex:
+                raise HomeAssistantError(str(ex))
+
     def get_appliance_from_device_id(self, device_id):
         """ Helper function to get an appliance from the Home Assistant device_id """
         device = self.dr.devices[device_id]
