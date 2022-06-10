@@ -110,6 +110,12 @@ When reporting an issue press the **Home Connect Debug** button and attach the H
 
 </br>
 
+# Beta Releases
+Major changes will be released in beta versions to reduce the impact on existing users. It is strongly advised not to install beta version unless you are a part of an issues that specifically calls for installing one and when you are, you should only install the specified version (as there may be several issues handled in separate beta versions at the same time).  
+To install a beta version go to the HACS dashboard in the Home Assistant UI, click on Integrations locat the "Home Connect Alt" integration. Click on the three dot menu for the integration and select "Redownload". In the popup dialog make sure "Show beta versions" is enabled and then select the version you need to install.
+
+<br>
+
 # Automation Notes
 * There is a special sensor called **Home Connect Status** which shows the status of the integration. It has the following values:
   * INIT - The integration is initializing
