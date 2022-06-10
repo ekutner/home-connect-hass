@@ -8,7 +8,7 @@ from home_connect_async import Appliance, Events
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN
+from .const import CONF_NAME_TEMPLATE, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ class EntityBase(ABC):
         """Initialize the sensor."""
         self._appliance = appliance
         self._key = key
-        self._conf = conf if conf else {}
+        self._conf = conf if conf else Configuration()
         self.entity_id = f'home_connect.{self.unique_id}'
 
     @property
@@ -62,9 +62,15 @@ class EntityBase(ABC):
     @property
     def name(self) -> str:
         """" The name of the entity """
+        if self._conf and CONF_NAME_TEMPLATE in self._conf and self._conf[CONF_NAME_TEMPLATE]:
+            template = self._conf[CONF_NAME_TEMPLATE]
+        else:
+            template = "$brand $appliance - $name"
+
         appliance_name = self._appliance.name if self._appliance.name else self._appliance.type
         name = self.name_ext if self.name_ext else self.pretty_enum(self._key)
-        return f"{self._appliance.brand} {appliance_name} - {name}"
+        return template.replace("$brand", self._appliance.brand).replace("$appliance", appliance_name).replace("$name", name)
+
 
     # This property is important to let HA know if this entity is online or not.
     # If an entity is offline (return False), the UI will refelect this.
@@ -161,4 +167,16 @@ class EntityManager():
             del self._entity_appliance_map[appliance.haId]
 
 
+class Configuration(dict):
+    """ A class to handle both global config coming from configuration.yaml and the local config of each entity """
+    _global_config:dict = None
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if Configuration._global_config:
+            self.update(Configuration._global_config)
+
+    @classmethod
+    def set_global_config(cls, global_config:dict):
+        """ Set the global config once as a static member that will be appende automatically to each config object """
+        cls._global_config = global_config

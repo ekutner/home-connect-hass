@@ -7,7 +7,7 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
-from .common import InteractiveEntityBase, EntityManager
+from .common import Configuration, InteractiveEntityBase, EntityManager
 from .const import DOMAIN, SPECIAL_ENTITIES
 
 
@@ -23,12 +23,12 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
                 if program.options:
                     for option in program.options.values():
                         if option.key not in SPECIAL_ENTITIES['ignore'] and option.type in ["Int", "Float", "Double"]:
-                            device = OptionNumber(appliance, option.key, {"opt": option})
+                            device = OptionNumber(appliance, option.key, Configuration({"opt": option}))
                             entity_manager.add(device)
 
         for setting in appliance.settings.values():
             if setting.key not in SPECIAL_ENTITIES['ignore'] and setting.type in ["Int", "Float", "Double"]:
-                device = SettingsNumber(appliance, setting.key, {"opt": setting})
+                device = SettingsNumber(appliance, setting.key, Configuration({"opt": setting}))
                 entity_manager.add(device)
 
         entity_manager.register()

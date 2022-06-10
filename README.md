@@ -33,14 +33,21 @@ This integration requires the same configuration process and similar settings in
 home_connect_alt:
   client_id: < Your Client ID >
   client_secret: < You Client Secret >
-  language: < Optional - Supported langage code >
-  sensor_value_translation: <server | local>
+  name_template: $brand $appliance - $name
+  language: < Supported langage code >  
+  sensor_value_translation: <server | local>  
 ```
 ## Parameters:
-* *client_id* - The Client ID of your Home Connect app.
-* *client_secret* - The Client Secret of your Home Connect app.
-* *language* (optoinal - default = "en") - indicates the language to use for entity names. The translation is automatically loaded from the Home Connect service and must  be one of its [supported languages](https://api-docs.home-connect.com/general?#supported-languages).
-* *sensor_value_translation* (optional - default = "local") - indicates how sensor values shhould be translated to friendly names.  
+* *client_id* (required) - The Client ID of your Home Connect app.
+* *client_secret* (required) - The Client Secret of your Home Connect app.
+* *name_template* (optional - default = "$brand $appliance - $name") - 
+  Defines the template used for rendering entity names. The following placeholders are supported and will be replaced dynamically when rendering the name:  
+  $brand - The brand name of the appliance ("Bosch", "Siemens", etc.)  
+  $appliance - The type of the appliance ("Washing machine", "Dishwasher", etc.)  
+  $name - The name of the entity
+* *language* (optoinal - default = "en") - 
+  Indicates the language to use for entity names. The translation is automatically loaded from the Home Connect service and must  be one of its [supported languages](https://api-docs.home-connect.com/general?#supported-languages).
+* *sensor_value_translation* (optional - default = "local") - Indicates how sensor values shhould be translated to friendly names.  
   When set to **"local"** (the default) the integration will use the raw ENUM values documented in the Home Connect documentation for sensors with string values. In that case the integration relies on the Home Assistant translation mechanism and translation files to translate these values into friendly names. The benefit of this approach is that sensor values used by the integration are language independent and match the values documented in the Home Connect API.  
   When set to **"server"** sensor values are translated to friendly names using the Home Connect service. In this mode the internal values of string sensors will be translated and the translated values must be used in scripts referring to those sensors.  
 
@@ -106,9 +113,10 @@ When reporting an issue press the **Home Connect Debug** button and attach the H
 # Automation Notes
 * There is a special sensor called **Home Connect Status** which shows the status of the integration. It has the following values:
   * INIT - The integration is initializing
-  * LOADING - The integration is loading data from the cloud service
-  * LOADED - The integration finished loading data
+  * RUNNING - The integration has started running 
+  * LOADED - The integration finished loading the initial data from the Home Connect service
   * READY - The integration has successfully subscribed to real time updates from the cloud service and is now fully functional. 
+  * BLOCKED - The Home Connect service has blockde additional API calls for a period of time due to exceeding the service rate limits 
   *It may take up to one minute to go from LOADED to READY*
 
 * The integration exposes the events fired by the service as Home Assistant events under the name: **"home_connect_alt_event"**

@@ -6,7 +6,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
-from .common import EntityBase, EntityManager
+from .common import Configuration, EntityBase, EntityManager
 from .const import DOMAIN, SPECIAL_ENTITIES
 
 _LOGGER = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
         for (key, status) in appliance.status.items():
             device = None
             if key in SPECIAL_ENTITIES['status']:
-                conf = SPECIAL_ENTITIES['status'][key]
+                conf = Configuration(SPECIAL_ENTITIES['status'][key])
                 if conf['type'] == 'binary_sensor':
                     device = StatusBinarySensor(appliance, key, conf)
             else:

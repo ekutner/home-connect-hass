@@ -8,8 +8,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
-from .common import EntityBase, EntityManager
-from .const import DEVICE_ICON_MAP, DOMAIN, CONF_SENSORS_TRANSLATION, HOME_CONNECT_DEVICE, SPECIAL_ENTITIES
+from .common import Configuration, EntityBase, EntityManager
+from .const import CONF_NAME_TEMPLATE, DEVICE_ICON_MAP, DOMAIN, CONF_SENSORS_TRANSLATION, HOME_CONNECT_DEVICE, SPECIAL_ENTITIES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -18,53 +18,39 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     """ Add sensors for passed config_entry in HA """
     homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
     entity_manager = EntityManager(async_add_entities)
-    sensors_translation = hass.data[DOMAIN][CONF_SENSORS_TRANSLATION] == 'server'
 
     def add_appliance(appliance:Appliance) -> None:
         if appliance.selected_program:
-            conf = { 'sensors_translation': sensors_translation, 'program_type': 'selected' }
+            conf = Configuration({ 'program_type': 'selected' })
             device = ProgramSensor(appliance,conf=conf)
             entity_manager.add(device)
         if appliance.active_program:
-            conf = { 'sensors_translation': sensors_translation, 'program_type': 'active' }
+            conf = Configuration({ 'program_type': 'active' })
             device = ProgramSensor(appliance,conf=conf)
             entity_manager.add(device)
 
         if appliance.selected_program and appliance.selected_program.options:
             for option in appliance.selected_program.options.values():
                 if not isinstance(option.value, bool):
-                    conf = SPECIAL_ENTITIES['options'].get(option.key, {})
-                    conf['sensors_translation'] = sensors_translation
+                    conf = Configuration(SPECIAL_ENTITIES['options'].get(option.key, {}))
                     device = ProgramOptionSensor(appliance, option.key, conf)
                     entity_manager.add(device)
 
         if appliance.active_program and appliance.active_program.options:
             for option in appliance.active_program.options.values():
                 if not isinstance(option.value, bool):
-                    conf = SPECIAL_ENTITIES['options'].get(option.key, {})
-                    conf['sensors_translation'] = sensors_translation
+                    conf = Configuration(SPECIAL_ENTITIES['options'].get(option.key, {}))
                     device = ProgramOptionSensor(appliance, option.key, conf)
                     entity_manager.add(device)
-
-        # if appliance.active_program and appliance.active_program.options:
-        #     selected_options = appliance.selected_program.options if appliance.selected_program else None
-        #     for option in appliance.active_program.options.values():
-        #         if ( (selected_options and option.key not in selected_options) or not selected_options ) \
-        #             and not isinstance(option.value, bool) :
-        #             conf = SPECIAL_ENTITIES['options'].get(option.key, {})
-        #             conf['sensors_translation'] = sensors_translation
-        #             device = ActivityOptionSensor(appliance, option.key, conf)
-        #             entity_manager.add(device)
 
         for (key, value) in appliance.status.items():
             device = None
             if key in SPECIAL_ENTITIES['status']:
-                conf = SPECIAL_ENTITIES['status'][key]
-                conf['sensors_translation'] = sensors_translation
+                conf = Configuration(SPECIAL_ENTITIES['status'][key])
                 if conf['type'] == 'sensor':
                     device = StatusSensor(appliance, key, conf)
             else:
-                conf = { 'sensors_translation': sensors_translation }
+                conf = Configuration()
                 if not isinstance(value.value, bool): # should be a binary sensor if it has a boolean value
                     if 'temperature' in key.lower():
                         conf['class'] = 'temperature'
@@ -72,7 +58,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             entity_manager.add(device)
 
         for setting in appliance.settings.values():
-            conf = { 'sensors_translation': sensors_translation }
+            conf = Configuration()
             if setting.type != "Boolean" and not isinstance(setting.value, bool):
                 device = SettingsSensor(appliance, setting.key, conf)
                 entity_manager.add(device)
@@ -121,7 +107,7 @@ class ProgramSensor(EntityBase, SensorEntity):
         """Return the state of the sensor."""
         prog = self._appliance.selected_program if self._conf['program_type'] == 'selected' else self._appliance.active_program
         if prog:
-            if prog.name and self._conf['sensors_translation']:
+            if prog.name and self._conf[CONF_SENSORS_TRANSLATION]:
                 return prog.name
             else:
                 return prog.key
@@ -205,9 +191,9 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
             return f"{h}:{m:02d}"
         if self.internal_unit=="gram":
             return round(option.value/1000, 1)
-        if option.displayvalue and  self._conf['sensors_translation']:
+        if option.displayvalue and  self._conf[CONF_SENSORS_TRANSLATION]:
             return option.displayvalue
-        if isinstance(option.value, str) and self._conf['sensors_translation']:
+        if isinstance(option.value, str) and self._conf[CONF_SENSORS_TRANSLATION]:
             if option.value.endswith(".Off"):
                 return "Off"
             if option.value.endswith(".On"):
@@ -216,16 +202,6 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
-
-
-# class ActivityOptionSensor(ProgramOptionSensor):
-#     """ Special active program sensor """
-
-#     @property
-#     def name_ext(self) -> str:
-#         if self._appliance.active_program and (self._key in self._appliance.active_program.options):
-#             return self._appliance.active_program.options[self._key].name
-#         return None
 
 
 class StatusSensor(EntityBase, SensorEntity):
@@ -251,7 +227,7 @@ class StatusSensor(EntityBase, SensorEntity):
         """Return the state of the sensor."""
         status = self._appliance.status.get(self._key)
         if status:
-            if status.displayvalue  and self._conf['sensors_translation']:
+            if status.displayvalue  and self._conf[CONF_SENSORS_TRANSLATION]:
                 return status.displayvalue
             return status.value
         return None
@@ -283,7 +259,7 @@ class SettingsSensor(EntityBase, SensorEntity):
         """Return the state of the sensor."""
         setting = self._appliance.settings.get(self._key)
         if setting:
-            if setting.displayvalue  and self._conf['sensors_translation']:
+            if setting.displayvalue  and self._conf[CONF_SENSORS_TRANSLATION]:
                 return setting.displayvalue
             return setting.value
         return None

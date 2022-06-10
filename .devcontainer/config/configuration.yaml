@@ -27,5 +27,6 @@ home_connect_alt:
   # simulate: false
   # language: es
   # sensor_value_translation: server
+  # name_template: $appliance $name ($brand)
 
 

@@ -18,6 +18,7 @@ from homeassistant.helpers import storage
 from homeassistant.helpers.typing import ConfigType
 
 from . import api, config_flow
+from .common import Configuration
 from .const import *
 from .services import Services
 
@@ -32,7 +33,8 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Optional(CONF_SIMULATE, default=False): cv.boolean,
                 vol.Optional(CONF_CACHE, default=True): cv.boolean,
                 vol.Optional(CONF_LANG, default=None): vol.Any(str, None),
-                vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(str, None)
+                vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(str, None),
+                vol.Optional(CONF_NAME_TEMPLATE, default=None): vol.Any(str, None)
             }
         )
     },
@@ -85,6 +87,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     lang = conf[CONF_LANG] # if conf[CONF_LANG] != "" else None
     host = SIM_HOST if simulate else API_HOST
     use_cache = conf[CONF_CACHE]
+    Configuration.set_global_config(conf)
 
     # If using an aiohttp-based API lib
     auth = api.AsyncConfigEntryAuth(
