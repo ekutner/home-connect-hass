@@ -34,10 +34,11 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
                             device = OptionSelect(appliance, option.key)
                             entity_manager.add(device)
 
-        for setting in appliance.settings.values():
-            if setting.key not in SPECIAL_ENTITIES['ignore'] and setting.allowedvalues and len(setting.allowedvalues)>1:
-                device = SettingsSelect(appliance, setting.key)
-                entity_manager.add(device)
+        if appliance.settings:
+            for setting in appliance.settings.values():
+                if setting.key not in SPECIAL_ENTITIES['ignore'] and setting.allowedvalues and len(setting.allowedvalues)>1:
+                    device = SettingsSelect(appliance, setting.key)
+                    entity_manager.add(device)
 
         entity_manager.register()
 

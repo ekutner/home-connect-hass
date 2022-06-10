@@ -43,25 +43,27 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
                     device = ProgramOptionSensor(appliance, option.key, conf)
                     entity_manager.add(device)
 
-        for (key, value) in appliance.status.items():
-            device = None
-            if key in SPECIAL_ENTITIES['status']:
-                conf = Configuration(SPECIAL_ENTITIES['status'][key])
-                if conf['type'] == 'sensor':
-                    device = StatusSensor(appliance, key, conf)
-            else:
-                conf = Configuration()
-                if not isinstance(value.value, bool): # should be a binary sensor if it has a boolean value
-                    if 'temperature' in key.lower():
-                        conf['class'] = 'temperature'
-                    device = StatusSensor(appliance, key, conf)
-            entity_manager.add(device)
-
-        for setting in appliance.settings.values():
-            conf = Configuration()
-            if setting.type != "Boolean" and not isinstance(setting.value, bool):
-                device = SettingsSensor(appliance, setting.key, conf)
+        if appliance.status:
+            for (key, value) in appliance.status.items():
+                device = None
+                if key in SPECIAL_ENTITIES['status']:
+                    conf = Configuration(SPECIAL_ENTITIES['status'][key])
+                    if conf['type'] == 'sensor':
+                        device = StatusSensor(appliance, key, conf)
+                else:
+                    conf = Configuration()
+                    if not isinstance(value.value, bool): # should be a binary sensor if it has a boolean value
+                        if 'temperature' in key.lower():
+                            conf['class'] = 'temperature'
+                        device = StatusSensor(appliance, key, conf)
                 entity_manager.add(device)
+
+        if appliance.settings:
+            for setting in appliance.settings.values():
+                conf = Configuration()
+                if setting.type != "Boolean" and not isinstance(setting.value, bool):
+                    device = SettingsSensor(appliance, setting.key, conf)
+                    entity_manager.add(device)
 
 
         entity_manager.register()
