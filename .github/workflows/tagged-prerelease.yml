@@ -3,7 +3,7 @@ name: "Auto Release"
 on:
   push:
     tags:
-      - "v?[0-9]+.[0-9]+.[0-9]+"
+      - "v?[0-9]+.[0-9]+.[0-9]+-*"
 
 jobs:
   tagged-release:
@@ -14,5 +14,5 @@ jobs:
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        prerelease: false
+        prerelease: true
 
