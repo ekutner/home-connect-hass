@@ -12,6 +12,7 @@ CONF_LANG = "language"
 CONF_CACHE = "cache"
 CONF_SENSORS_TRANSLATION = "sensor_value_translation"
 CONF_NAME_TEMPLATE = "name_template"
+CONF_LOG_MODE = "log_mode"
 
 HOME_CONNECT_DEVICE = {
     "identifiers": {(DOMAIN, "homeconnect")},

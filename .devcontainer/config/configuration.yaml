@@ -28,5 +28,5 @@ home_connect_alt:
   # language: es
   # sensor_value_translation: server
   # name_template: $appliance $name ($brand)
-
+  log_mode: 3
 
