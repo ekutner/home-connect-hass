@@ -160,13 +160,10 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
         # if self._appliance.selected_program.options[self._key].value not in self.options:
         #     _LOGGER.debug("The current option is not in the list of available options")
         if self.program_option_available:
-            if self._appliance.selected_program.options[self._key].value == '':
-                _LOGGER.error("Returning empty option value for %s", self._key)
-            #_LOGGER.info("Current value for %s : %s", self._key, self._appliance.selected_program.options[self._key].value)
-            return self._appliance.selected_program.options[self._key].value
-        else:
-            #_LOGGER.info("Current value for %s : %s", self._key, None)
-            return None
+            current_program = self._appliance.active_program if self._appliance.active_program else self._appliance.selected_program
+            if current_program and current_program.options and (self._key in current_program.options):
+                return current_program.options[self._key].value
+        return None
 
     async def async_select_option(self, option: str) -> None:
         if option == '':
