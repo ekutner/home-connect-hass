@@ -1,6 +1,7 @@
 """ Implement the Switch entities of this implementation """
 
 from __future__ import annotations
+import logging
 from typing import Any
 
 from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
@@ -10,9 +11,10 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
-from .common import InteractiveEntityBase, EntityManager
+from .common import InteractiveEntityBase, EntityManager, is_boolean_enum
 from .const import DOMAIN, SPECIAL_ENTITIES
 
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
     """Add sensors for passed config_entry in HA."""
@@ -30,7 +32,8 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
 
         if appliance.settings:
             for setting in appliance.settings.values():
-                if setting.key not in SPECIAL_ENTITIES['ignore'] and (setting.type == "Boolean" or isinstance(setting.value, bool)):
+                if setting.key not in SPECIAL_ENTITIES['ignore'] and \
+                    ( setting.type == "Boolean" or isinstance(setting.value, bool) or is_boolean_enum(setting.allowedvalues) ):
                     device = SettingsSwitch(appliance, setting.key)
                     entity_manager.add(device)
 
@@ -130,12 +133,30 @@ class SettingsSwitch(InteractiveEntityBase, SwitchEntity):
     def is_on(self) -> bool:
         """Return True if entity is on."""
         if self._key in self._appliance.settings:
-            return self._appliance.settings[self._key].value
+            setting = self._appliance.settings[self._key]
+            if setting.allowedvalues and setting.value.lower().endswith(".off"):
+                return False
+            elif setting.allowedvalues and setting.value.lower().endswith(".on"):
+                return True
+            else:
+                return setting.value
+        return None
+
+    def bool_to_enum(self, allowedvalues, val:bool) -> str:
+        """ Get the matching enum value for the provided boolean value """
+        for av in allowedvalues:
+            if (val and av.lower().endswith('.on')) or (not val and av.lower().endswith('.off')) :
+                return av
+        _LOGGER.error("Unexpected Error: couldn't find a boolean enum value in allowedvalues: %s", allowedvalues)
         return None
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         try:
-            await self._appliance.async_apply_setting(self._key, True)
+            setting = self._appliance.settings[self._key]
+            if setting.allowedvalues:
+                await self._appliance.async_apply_setting(self._key, self.bool_to_enum(setting.allowedvalues, True))
+            else:
+                await self._appliance.async_apply_setting(self._key, True)
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to apply the setting: {ex.error_description} ({ex.code})")
@@ -145,7 +166,17 @@ class SettingsSwitch(InteractiveEntityBase, SwitchEntity):
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the entity off."""
-        await self._appliance.async_apply_setting(self._key, False)
+        try:
+            setting = self._appliance.settings[self._key]
+            if setting.allowedvalues:
+                await self._appliance.async_apply_setting(self._key, self.bool_to_enum(setting.allowedvalues, False))
+            else:
+                await self._appliance.async_apply_setting(self._key, False)
+        except HomeConnectError as ex:
+            if ex.error_description:
+                raise HomeAssistantError(f"Failed to apply the setting: {ex.error_description} ({ex.code})")
+            else:
+                raise HomeAssistantError(f"Failed to apply the setting: ({ex.code})")
 
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
