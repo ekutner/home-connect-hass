@@ -70,10 +70,10 @@ class ProgramOptionBinarySensor(EntityBase, BinarySensorEntity):
 
     @property
     def name_ext(self) -> str:
-        if self._appliance.selected_program and (self._key in self._appliance.selected_program.options):
-            return self._appliance.selected_program.options[self._key].name
-        elif self._appliance.active_program and (self._key in self._appliance.active_program.options):
-            return self._appliance.active_program.options[self._key].name
+        current_program = self._appliance.get_applied_program()
+
+        if current_program and current_program.options and self._key in current_program.options:
+            return current_program.options[self._key].name
         return None
 
     @property
@@ -82,25 +82,15 @@ class ProgramOptionBinarySensor(EntityBase, BinarySensorEntity):
 
     @property
     def available(self) -> bool:
-        return super().available and (
-            (self._appliance.selected_program and (self._key in self._appliance.selected_program.options))
-            or (self._appliance.active_program and (self._key in self._appliance.active_program.options))
-        )
+        current_program = self._appliance.get_applied_program()
+        return super().available and current_program and current_program.options and self._key in current_program.options
 
     @property
     def is_on(self):
-
-        program = self._appliance.active_program if self._appliance.active_program else self._appliance.selected_program
-        if program is None:
-            return None
-
-        if self._key not in program.options:
-            _LOGGER.debug("Option key %s is missing from program", self._key)
-            return None
-
-        option = program.options[self._key]
-
-        return option.value
+        current_program = self._appliance.get_applied_program()
+        if current_program and current_program.options and self._key in current_program.options:
+            return current_program.options[self._key].value
+        return None
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
