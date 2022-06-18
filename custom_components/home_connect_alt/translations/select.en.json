@@ -139,7 +139,7 @@
       "LaundryCare.WasherDryer.Program.ShirtsBlouses.ShirtsBlouses": "Wash&Dry: Shirts Blouses"
       "Cooking.Common.Program.Hood.Automatic": "Automatic",
       "Cooking.Common.Program.Hood.Venting": "Venting",
-      "Cooking.Common.Program.Hood.DelayedShutOff" "Delayed Shut off",
+      "Cooking.Common.Program.Hood.DelayedShutOff": "Delayed Shut off",
     },
     "home_connect_alt__options": {
       "BSH.Common.Root.SelectedProgram": "Selected Program",
