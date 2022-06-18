@@ -139,7 +139,7 @@
       "LaundryCare.WasherDryer.Program.ShirtsBlouses.ShirtsBlouses": "Wash&Dry: Shirts Blouses"
       "Cooking.Common.Program.Hood.Automatic": "Automatic",
       "Cooking.Common.Program.Hood.Venting": "Venting",
-      "Cooking.Common.Program.Hood.DelayedShutOff": "Delayed Shut off",
+      "Cooking.Common.Program.Hood.DelayedShutOff": "Delayed Shut off"
     },
     "home_connect_alt__options": {
       "BSH.Common.Root.SelectedProgram": "Selected Program",
@@ -251,9 +251,7 @@
       "Cooking.Hood.EnumType.Stage.FanStage02": "Stage 2",
       "Cooking.Hood.EnumType.Stage.FanStage03": "Stage 3",
       "Cooking.Hood.EnumType.IntensiveStage.IntensiveStage1": "Boost",
-      "Cooking.Hood.EnumType.IntensiveStage.IntensiveStage1": "Power Boost",
-
-      
+      "Cooking.Hood.EnumType.IntensiveStage.IntensiveStage1": "Power Boost"
     },
     "home_connect_alt__settings": {
       "BSH.Common.EnumType.PowerState.Off": "Off",
