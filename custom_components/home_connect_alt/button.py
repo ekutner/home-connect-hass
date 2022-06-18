@@ -59,14 +59,16 @@ class StartButton(EntityBase, ButtonEntity):
         return super().available and op_state and \
             (
                 (
-                    op_state.value == "BSH.Common.EnumType.OperationState.Ready"
+                    op_state.value in ["BSH.Common.EnumType.OperationState.Ready", "BSH.Common.EnumType.OperationState.Inactive" ]
                     and (
                         "BSH.Common.Status.RemoteControlStartAllowed" not in self._appliance.status or
                         self._appliance.status["BSH.Common.Status.RemoteControlStartAllowed"].value
                     )
                     and (
-                        self._appliance.selected_program and self._appliance.available_programs and
-                        self._appliance.selected_program.key in self._appliance.available_programs
+                        self._appliance.selected_program
+                        or self._appliance.startonly_program
+                        # and self._appliance.available_programs and
+                        # self._appliance.selected_program.key in self._appliance.available_programs
                     )
                 )
                 or (
@@ -92,7 +94,7 @@ class StartButton(EntityBase, ButtonEntity):
         """ Handle button press """
         try:
             op_state = self._appliance.status.get("BSH.Common.Status.OperationState")
-            if op_state and op_state.value == "BSH.Common.EnumType.OperationState.Ready":
+            if op_state and op_state.value in ["BSH.Common.EnumType.OperationState.Ready", "BSH.Common.EnumType.OperationState.Inactive" ]:
                 await self._appliance.async_start_program()
             elif op_state and op_state.value == "BSH.Common.EnumType.OperationState.Run":
                 await self._appliance.async_pause_active_program()
