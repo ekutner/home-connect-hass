@@ -113,7 +113,7 @@ class StartButton(EntityBase, ButtonEntity):
 
     async def async_will_remove_from_hass(self):
         """Entity being removed from hass."""
-        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, "BSH.Common.Status.RemoteControlStartAllowed"]
+        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, Events.PROGRAM_SELECTED, "BSH.Common.Status.RemoteControlStartAllowed"]
         self._appliance.deregister_callback(self.async_on_update, events)
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:

@@ -14,7 +14,7 @@ _LOGGER = logging.getLogger(__name__)
 
 def is_boolean_enum(values:list[str]) -> bool:
     """ Check if the list of enum values represents a boolean on/off option"""
-    if len(values) != 2:
+    if not values or len(values) != 2:
         return False
 
     for v in values:
