@@ -32,6 +32,7 @@ class EntityBase(ABC):
     def __init__(self, appliance:Appliance, key:str=None, conf:dict=None) -> None:
         """Initialize the sensor."""
         self._appliance = appliance
+        self._homeconnect = appliance._homeconnect
         self._key = key
         self._conf = conf if conf else Configuration()
         self.entity_id = f'home_connect.{self.unique_id}'

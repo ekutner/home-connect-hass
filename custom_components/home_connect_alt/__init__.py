@@ -6,7 +6,7 @@ import logging
 from datetime import datetime
 
 import voluptuous as vol
-from home_connect_async import Appliance, HomeConnect, Events, LogMode
+from home_connect_async import Appliance, HomeConnect, Events, ConditionalLogger
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_CLIENT_ID, CONF_CLIENT_SECRET, Platform
 from homeassistant.core import Event, HomeAssistant, HomeAssistantError
@@ -88,7 +88,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     lang = conf[CONF_LANG] # if conf[CONF_LANG] != "" else None
     host = SIM_HOST if simulate else API_HOST
     use_cache = conf[CONF_CACHE]
-    log_mode = conf[CONF_LOG_MODE] if conf[CONF_LOG_MODE] else LogMode.REQUESTS
+    logmode = conf[CONF_LOG_MODE] if conf[CONF_LOG_MODE] else ConditionalLogger.LogMode.REQUESTS
     Configuration.set_global_config(conf)
 
     # If using an aiohttp-based API lib
@@ -107,7 +107,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     #     except HomeConnectError as ex:
     #         _LOGGER.warning("Failed to create the HomeConnect object", exc_info=ex)
     #         return False
-    homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang, log_mode=log_mode)
+    ConditionalLogger.mode(logmode)
+    homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang)
 
     conf[entry.entry_id] = auth
     conf['homeconnect'] = homeconnect

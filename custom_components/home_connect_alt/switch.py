@@ -74,7 +74,7 @@ class OptionSwitch(InteractiveEntityBase, SwitchEntity):
     @property
     def is_on(self) -> bool:
         """Return True if entity is on."""
-        option = self._appliance.get_applied_program_available_option(self._key)
+        option = self._appliance.get_applied_program_option(self._key)
         if option:
             return option.value
         return None

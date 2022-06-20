@@ -19,14 +19,22 @@ logger:
 
 # If you need to debug uncomment the line below (doc: https://www.home-assistant.io/integrations/debugpy/)
 #debugpy:
+input_select:
+  who_cooks:
+    name: Who cooks today
+    options:
+      - Paulus
+      - Anne Therese
+    initial: Anne Therese
+    icon: mdi:panda
 
 home_connect_alt:
   client_id: !secret home_connect_client_id
   client_secret: !secret home_connect_client_secret
   # cache: false
   # simulate: false
-  # language: es
+  #language: en
   # sensor_value_translation: server
-  # name_template: $appliance $name ($brand)
-  log_mode: 3
+  name_template: $appliance $name ($brand)
+  log_mode: 5
 

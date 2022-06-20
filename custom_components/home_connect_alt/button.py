@@ -65,8 +65,8 @@ class StartButton(EntityBase, ButtonEntity):
                         self._appliance.status["BSH.Common.Status.RemoteControlStartAllowed"].value
                     )
                     and (
-                        self._appliance.selected_program
-                        or self._appliance.startonly_program
+                        (self._appliance.selected_program or self._appliance.startonly_program)
+                        and not self._appliance.active_program
                         # and self._appliance.available_programs and
                         # self._appliance.selected_program.key in self._appliance.available_programs
                     )
@@ -108,12 +108,26 @@ class StartButton(EntityBase, ButtonEntity):
 
     async def async_added_to_hass(self):
         """Run when this Entity has been added to HA."""
-        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, "BSH.Common.Status.RemoteControlStartAllowed"]
+        events = [ Events.CONNECTION_CHANGED,
+                   Events.DATA_CHANGED,
+                   Events.PROGRAM_SELECTED,
+                   Events.PROGRAM_STARTED,
+                   Events.PROGRAM_FINISHED,
+                   "BSH.Common.Status.*"
+                   "BSH.Common.Setting.PowerState"
+        ]
         self._appliance.register_callback(self.async_on_update, events)
 
     async def async_will_remove_from_hass(self):
         """Entity being removed from hass."""
-        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, Events.PROGRAM_SELECTED, "BSH.Common.Status.RemoteControlStartAllowed"]
+        events = [ Events.CONNECTION_CHANGED,
+                   Events.DATA_CHANGED,
+                   Events.PROGRAM_SELECTED,
+                   Events.PROGRAM_STARTED,
+                   Events.PROGRAM_FINISHED,
+                   "BSH.Common.Status.*"
+                   "BSH.Common.Setting.PowerState"
+        ]
         self._appliance.deregister_callback(self.async_on_update, events)
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
@@ -155,12 +169,26 @@ class StopButton(EntityBase, ButtonEntity):
 
     async def async_added_to_hass(self):
         """Run when this Entity has been added to HA."""
-        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, "BSH.Common.Status.*"]
+        events = [ Events.CONNECTION_CHANGED,
+                   Events.DATA_CHANGED,
+                   Events.PROGRAM_SELECTED,
+                   Events.PROGRAM_STARTED,
+                   Events.PROGRAM_FINISHED,
+                   "BSH.Common.Status.*"
+                   "BSH.Common.Setting.PowerState"
+        ]
         self._appliance.register_callback(self.async_on_update, events)
 
     async def async_will_remove_from_hass(self):
         """Entity being removed from hass."""
-        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, "BSH.Common.Status.*"]
+        events = [ Events.CONNECTION_CHANGED,
+                   Events.DATA_CHANGED,
+                   Events.PROGRAM_SELECTED,
+                   Events.PROGRAM_STARTED,
+                   Events.PROGRAM_FINISHED,
+                   "BSH.Common.Status.*"
+                   "BSH.Common.Setting.PowerState"
+        ]
         self._appliance.deregister_callback(self.async_on_update, events)
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:

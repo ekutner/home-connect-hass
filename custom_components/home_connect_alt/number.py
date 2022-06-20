@@ -93,11 +93,12 @@ class OptionNumber(InteractiveEntityBase, NumberEntity):
     @property
     def value(self) -> float:
         """Return the entity value to represent the entity state."""
-        option = self._appliance.get_applied_program_available_option(self._key)
+        option = self._appliance.get_applied_program_option(self._key)
         if option:
             return option.value
         return None
 
+    #TODO: update all methods to use native_ name prefix
     async def async_set_value(self, value: float) -> None:
         """Set new value."""
         try:

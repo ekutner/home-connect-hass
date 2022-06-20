@@ -118,12 +118,6 @@ class ProgramSensor(EntityBase, SensorEntity):
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
 
-    # async def async_start_program(self) -> bool:
-    #     return await self._appliance.async_start_program()
-
-    # async def async_select_program(self, program, options=None, **kwargs) -> bool:
-    #     return await self._appliance.async_select_program(key=program, options=options)
-
 
 class ProgramOptionSensor(EntityBase, SensorEntity):
     """ Special active program sensor """

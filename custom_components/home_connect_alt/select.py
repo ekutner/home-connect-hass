@@ -1,7 +1,7 @@
 """ Implement the Select entities of this implementation """
 from __future__ import annotations
 import logging
-from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
+from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events, ConditionalLogger as CL
 from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
@@ -94,16 +94,17 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
         if current_program:
             if self._appliance.available_programs and current_program.key in self._appliance.available_programs:
                 # The API sometimes returns programs which are not one of the avilable programs so we ignore it
+                CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Current selected program is %s", current_program.key)
                 return current_program.key
             else:
-                return None
-        elif self._appliance.startonly_program:
-            return self._appliance.startonly_program.key
+                CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Current program %s is not in available_programs", current_program.key)
+        else:
+            CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Current program is None")
         return None
 
     async def async_select_option(self, option: str) -> None:
         try:
-            await self._appliance.async_select_program(key=option)
+            await self._appliance.async_select_program(program_key=option)
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to set the selected program: {ex.error_description} ({ex.code} - {self._key}={option})")
@@ -153,7 +154,7 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
         option = self._appliance.get_applied_program_available_option(self._key)
         if option:
             vals = option.allowedvalues.copy()
-            vals.append('')
+            #vals.append('')
             return vals
 
         return []
@@ -163,10 +164,11 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
         """Return the selected entity option to represent the entity state."""
         # if self._appliance.selected_program.options[self._key].value not in self.options:
         #     _LOGGER.debug("The current option is not in the list of available options")
-        if self.program_option_available:
-            current_program = self._appliance.active_program if self._appliance.active_program else self._appliance.selected_program
-            if current_program and current_program.options and (self._key in current_program.options):
-                return current_program.options[self._key].value
+        option = self._appliance.get_applied_program_option(self._key)
+        if option:
+            CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Option %s current value: %s", self._key, option.value)
+            return option.value
+        CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Option %s current value is None", self._key)
         return None
 
     async def async_select_option(self, option: str) -> None:
