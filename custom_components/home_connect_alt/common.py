@@ -105,14 +105,14 @@ class EntityBase(ABC):
 
     async def async_added_to_hass(self):
         """Run when this Entity has been added to HA."""
-        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED]
+        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, Events.PROGRAM_SELECTED]
         if self._key:
             events.append(self._key)
         self._appliance.register_callback(self.async_on_update, events)
 
     async def async_will_remove_from_hass(self):
         """Entity being removed from hass."""
-        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED]
+        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, Events.PROGRAM_SELECTED]
         if self._key:
             events.append(self._key)
         self._appliance.deregister_callback(self.async_on_update, events)

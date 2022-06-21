@@ -58,7 +58,6 @@ PUBLISHED_EVENTS = [
 ]
 
 TRIGGERS_CONFIG = {
-    #"program_started": { "key": "BSH.Common.Event.ProgramFinished" },
     "program_started": { "key": "BSH.Common.Status.OperationState", "value": "BSH.Common.EnumType.OperationState.Run" },
     "program_finished": { "key": "BSH.Common.Status.OperationState", "value": "BSH.Common.EnumType.OperationState.Finished" }
 }
