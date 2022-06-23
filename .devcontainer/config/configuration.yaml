@@ -33,8 +33,8 @@ home_connect_alt:
   client_secret: !secret home_connect_client_secret
   # cache: false
   # simulate: false
-  #language: en
-  # sensor_value_translation: server
+  language: en
+  sensor_value_translation: local
   name_template: $appliance $name ($brand)
   log_mode: 5
 
