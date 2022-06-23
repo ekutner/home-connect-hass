@@ -9,7 +9,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
 from .common import Configuration, EntityBase, EntityManager
-from .const import CONF_NAME_TEMPLATE, DEVICE_ICON_MAP, DOMAIN, CONF_SENSORS_TRANSLATION, HOME_CONNECT_DEVICE, SPECIAL_ENTITIES
+from .const import CONF_NAME_TEMPLATE, CONF_SENSORS_TRANSLATION_SERVER, DEVICE_ICON_MAP, DOMAIN, CONF_SENSORS_TRANSLATION, HOME_CONNECT_DEVICE, SPECIAL_ENTITIES
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -109,7 +109,7 @@ class ProgramSensor(EntityBase, SensorEntity):
         """Return the state of the sensor."""
         prog = self._appliance.selected_program if self._conf['program_type'] == 'selected' else self._appliance.active_program
         if prog:
-            if prog.name and self._conf[CONF_SENSORS_TRANSLATION]:
+            if prog.name and self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER:
                 return prog.name
             else:
                 return prog.key
@@ -187,9 +187,9 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
             return f"{h}:{m:02d}"
         if self.internal_unit=="gram":
             return round(option.value/1000, 1)
-        if option.displayvalue and  self._conf[CONF_SENSORS_TRANSLATION]:
+        if option.displayvalue and  self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER:
             return option.displayvalue
-        if isinstance(option.value, str) and self._conf[CONF_SENSORS_TRANSLATION]:
+        if isinstance(option.value, str) and self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER:
             if option.value.endswith(".Off"):
                 return "Off"
             if option.value.endswith(".On"):
@@ -223,7 +223,7 @@ class StatusSensor(EntityBase, SensorEntity):
         """Return the state of the sensor."""
         status = self._appliance.status.get(self._key)
         if status:
-            if status.displayvalue  and self._conf[CONF_SENSORS_TRANSLATION]:
+            if status.displayvalue  and self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER:
                 return status.displayvalue
             return status.value
         return None
@@ -255,7 +255,7 @@ class SettingsSensor(EntityBase, SensorEntity):
         """Return the state of the sensor."""
         setting = self._appliance.settings.get(self._key)
         if setting:
-            if setting.displayvalue  and self._conf[CONF_SENSORS_TRANSLATION]:
+            if setting.displayvalue  and self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER:
                 return setting.displayvalue
             return setting.value
         return None
