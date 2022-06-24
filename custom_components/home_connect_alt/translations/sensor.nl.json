@@ -62,7 +62,7 @@
       "Dishcare.Dishwasher.Program.Kurz60": "Express 60",
       "Dishcare.Dishwasher.Program.MachineCare": "Machine Onderhoud",
       "Dishcare.Dishwasher.Program.MagicDaily": "Magic Daily",
-      "Dishcare.Dishwasher.Program.MaximumCleaning": "Maximum Cleaning",
+      "Dishcare.Dishwasher.Program.MaximumCleaning": "Maximaal Reinigen",
       "Dishcare.Dishwasher.Program.NightWash": "Nacht Was",
       "Dishcare.Dishwasher.Program.Normal45": "Normaal 45°C",
       "Dishcare.Dishwasher.Program.Normal65": "Normaal 65°C",
@@ -263,7 +263,7 @@
       "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Off": "Uit",
       "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus1": "+1",
       "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus2": "+2",
-      "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus3": "+3"
+      "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus3": "+3",
       "LaundryCare.Washer.Option.SpinSpeed": "Omwentellingsnelheid",
       "LaundryCare.Washer.Option.Temperature": "Temperatuur"
     },
