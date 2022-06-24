@@ -219,6 +219,13 @@ class StatusSensor(EntityBase, SensorEntity):
         return self._conf.get('icon', 'mdi:gauge-full')
 
     @property
+    def native_unit_of_measurement(self) -> str | None:
+        status = self._appliance.status.get(self._key)
+        if status:
+            return status.unit
+        return None
+
+    @property
     def native_value(self):
         """Return the state of the sensor."""
         status = self._appliance.status.get(self._key)
@@ -249,6 +256,13 @@ class SettingsSensor(EntityBase, SensorEntity):
     @property
     def icon(self) -> str:
         return self._conf.get('icon', 'mdi:tune')
+
+    @property
+    def native_unit_of_measurement(self) -> str | None:
+        setting = self._appliance.settings.get(self._key)
+        if setting:
+            return setting.unit
+        return None
 
     @property
     def native_value(self):
