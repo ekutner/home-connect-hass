@@ -19,10 +19,20 @@ select_program:
       required: true
       selector:
         text:
+    validate:
+      name: Validate
+      description: >
+        (Optional) Validate that the specified program_key is currently available to be called.
+        When this is set to false "startonly" programs will not be supported
+      required: false
+      default: true
+      advanced: true
+      selector:
+        boolean:
     options:
       name: Options
       description: >
-        A list of dictionaries with options for the program:
+        (Optional) A list of dictionaries with options for the program:
         [
           { "key": "... option key ...", "value": "... option value ... "}
         ]
@@ -57,10 +67,19 @@ start_program:
       required: true
       selector:
         text:
+    validate:
+      name: Validate
+      description: >
+        (Optional) Validate that the specified program_key is currently available to be called.
+      required: false
+      default: true
+      advanced: true
+      selector:
+        boolean:
     options:
       name: Options
       description: >
-        A list of dictionaries with options for the program:
+        (Optional) A list of dictionaries with options for the program:
         [
           { "key": "... option key ...", "value": "... option value ... "}
         ]

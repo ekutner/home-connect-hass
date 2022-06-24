@@ -19,8 +19,9 @@ class Services():
         if appliance:
             program_key = data['program_key']
             options = data.get('options')
+            validate = data.get('validate')
             try:
-                await appliance.async_select_program(program_key, options)
+                await appliance.async_select_program(program_key, options, validate)
             except HomeConnectError as ex:
                 raise HomeAssistantError(ex.error_description if ex.error_description else ex.msg)
 
@@ -31,8 +32,9 @@ class Services():
         if appliance:
             program_key = data.get('program_key')
             options = data.get('options')
+            validate = data.get('validate')
             try:
-                await appliance.async_start_program(program_key, options)
+                await appliance.async_start_program(program_key, options, validate)
             except HomeConnectError as ex:
                 raise HomeAssistantError(ex.error_description if ex.error_description else ex.msg)
 

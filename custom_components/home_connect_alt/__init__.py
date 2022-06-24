@@ -229,6 +229,7 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
         {
             vol.Required('device_id'): cv.string,
             vol.Required('program_key'): cv.string,
+            vol.Optional('validate', default=True): cv.boolean,
             vol.Optional('options'): vol.Schema(
                 [
                     {
@@ -245,6 +246,7 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
         {
             vol.Required('device_id'): cv.string,
             vol.Optional('program_key'): cv.string,
+            vol.Optional('validate', default=True): cv.boolean,
             vol.Optional('options'): vol.Schema(
                 [
                     {
