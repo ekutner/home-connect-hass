@@ -28,6 +28,7 @@ This integration attempts to address those issues and has the following features
 
 # Configuration
 Follow the instructions for the default Home Connect integration at https://www.home-assistant.io/integrations/home_connect/  
+**Note:** If you are modifying an existing Home Connect app it may take up to two hours for the changes to take effect.  
 This integration requires the same configuration process and similar settings in configuration.yaml:
 ```
 home_connect_alt:
@@ -58,6 +59,10 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
 </br>
 
 # FAQ
+* **I get errors on the browser window that pops-up after installing the integration for the first time**
+  This popup window is trying to log you into the Home Connect website to establish a connection with the integration. If you get an error at this stage it means you didn't follow the setup instuctions carefully enough, so make sure that you do.  
+  Also make sure that you open https://my.home-assistant.io/ and configure the URL of your Home-Assistant server.  
+  **NOTE:** If you are modifying an existing Home-Connect App then it may take up to 2 hours for the changes to take effect, so make sure you wait long enough. 
 * **Some of my appliances are not showing up after I added the integration**  
   This is most commonly caused by two reasons:
   1. The appliance must be powered on and connected to the Home Connect service to be dicovered. Once the missing devices are turned on and connected they will automatically be discovered and added by the integration.  
