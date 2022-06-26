@@ -215,6 +215,7 @@
       "LaundryCare.Washer.EnumType.IDosingLevel.Light":  "אוֹר",
       "LaundryCare.Washer.EnumType.IDosingLevel.Normal":  "נוֹרמָלִי",
       "LaundryCare.Washer.EnumType.IDosingLevel.Off":  "כבוי",
+      "LaundryCare.Washer.EnumType.IDosingLevel.Strong": "חזק",
       "LaundryCare.Washer.EnumType.ProcessPhase.FinalSpinning":  "ספינינג סופי",
       "LaundryCare.Washer.EnumType.ProcessPhase.Rinsing":  "שְׁטִיפָה",
       "LaundryCare.Washer.EnumType.ProcessPhase.Undefined":  "לא מוגדר",

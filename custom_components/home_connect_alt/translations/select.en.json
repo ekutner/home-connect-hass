@@ -223,6 +223,7 @@
       "LaundryCare.Washer.EnumType.IDosingLevel.Light": "Light",
       "LaundryCare.Washer.EnumType.IDosingLevel.Normal": "Normal",
       "LaundryCare.Washer.EnumType.IDosingLevel.Off": "Off",
+      "LaundryCare.Washer.EnumType.IDosingLevel.Strong": "Strong",
       "LaundryCare.Washer.EnumType.ProcessPhase.FinalSpinning": "Final Spinning",
       "LaundryCare.Washer.EnumType.ProcessPhase.Rinsing": "Rinsing",
       "LaundryCare.Washer.EnumType.ProcessPhase.Undefined": "Undefined",

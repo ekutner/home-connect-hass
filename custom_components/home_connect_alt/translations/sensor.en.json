@@ -215,6 +215,7 @@
       "LaundryCare.Washer.EnumType.IDosingLevel.Light": "Light",
       "LaundryCare.Washer.EnumType.IDosingLevel.Normal": "Normal",
       "LaundryCare.Washer.EnumType.IDosingLevel.Off": "Off",
+      "LaundryCare.Washer.EnumType.IDosingLevel.Strong": "Strong",
       "LaundryCare.Washer.EnumType.MultipleSoak.Off": "Off",
       "LaundryCare.Washer.EnumType.MultipleSoak.On": "On",
       "LaundryCare.Washer.EnumType.ProcessPhase.DetergentDispensing": "Dispensing",
