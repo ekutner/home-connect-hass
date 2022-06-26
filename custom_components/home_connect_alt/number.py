@@ -1,5 +1,6 @@
 """ Implement the Number entities of this implementation """
 from __future__ import annotations
+import sys
 from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
 from homeassistant.components.number import NumberEntity
 from homeassistant.core import HomeAssistant
@@ -70,16 +71,16 @@ class OptionNumber(InteractiveEntityBase, NumberEntity):
     @property
     def min_value(self) -> float:
         """Return the minimum value."""
-        try:
+        if self._conf['opt'].min:
             return self._conf['opt'].min
-        except Exception as ex:
-            pass
         return 0
 
     @property
     def max_value(self) -> float:
         """Return the maximum value."""
-        return self._conf['opt'].max
+        if self._conf['opt'].max:
+            return self._conf['opt'].max
+        return sys.maxsize
 
     @property
     def step(self) -> float:
@@ -134,12 +135,16 @@ class SettingsNumber(InteractiveEntityBase, NumberEntity):
     @property
     def min_value(self) -> float:
         """Return the minimum value."""
-        return self._conf['opt'].min
+        if self._conf['opt'].min:
+            return self._conf['opt'].min
+        return 0
 
     @property
     def max_value(self) -> float:
         """Return the maximum value."""
-        return self._conf['opt'].max
+        if self._conf['opt'].max:
+            return self._conf['opt'].max
+        return sys.maxsize
 
     @property
     def step(self) -> float:
