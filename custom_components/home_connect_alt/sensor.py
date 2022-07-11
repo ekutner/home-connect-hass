@@ -2,6 +2,7 @@
 from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 import logging
+from typing import Any, Mapping
 from home_connect_async import Appliance, HomeConnect, Events, GlobalStatus
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
@@ -304,5 +305,12 @@ class HomeConnectStatusSensor(SensorEntity):
 
     @property
     def native_value(self):
-        #return self._homeconnect.status.name
-        return GlobalStatus.get_status_str()
+        return GlobalStatus.get_status().name
+        #return GlobalStatus.get_status_str()
+
+    @property
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:
+        return {
+            "blocked_until": GlobalStatus.get_blocked_until(),
+            "blocked_for": GlobalStatus.get_block_time_str()
+        }
