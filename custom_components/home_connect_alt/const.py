@@ -35,7 +35,7 @@ SPECIAL_ENTITIES = {
         "BSH.Common.Option.FinishInRelative": { "unit": None, "class": f"{DOMAIN}__timespan"},
         "BSH.Common.Option.ElapsedProgramTime": { "unit": None, "class": f"{DOMAIN}__timespan"},
         "BSH.Common.Option.EstimatedTotalProgramTime": { "unit": None, "class": f"{DOMAIN}__timespan"},
-        "BSH.Common.Option.RemainingProgramTime": {"class": "timestamp" }
+        "BSH.Common.Option.RemainingProgramTime": {"unit": None, "class": "timestamp" }
    }
 }
 
