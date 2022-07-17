@@ -1,8 +1,8 @@
 ---
 weight: 100
-title: Portfolio Images
+title: המיטב
 #title_align: "left"
-summary: The absolute best of over 20 years of travel photography
+summary: המיטב של 20 שנות צילום
 date: 2020-12-15
 draft: false
 

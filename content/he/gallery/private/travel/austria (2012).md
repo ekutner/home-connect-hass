@@ -1,15 +1,13 @@
 ---
-weight: 30
-title: אוסטריה
+weight: 40
+title: אוסטריה (2012)
 #title_align: "left"
-summary: 2015 
+summary: 2015
 date: 2020-12-15
 draft: false
-personal: false
 
-gallery: gallery/Travel/Austria
+gallery: gallery/Private/Travel/Austria (2012)
 files: "*"
 cover: IMG_5486.jpg
 coverPos: 80%
-
 ---

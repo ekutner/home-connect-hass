@@ -35,6 +35,9 @@
     font-style: normal;
 }
 
+.gallery-slideshow-button-container {
+    position: relative;
+}
 .gallery-slideshow-button {
     background-color: rgba(255,255,255,.15);
     background-repeat: no-repeat;
@@ -45,9 +48,25 @@
     color: white;
     font-size: 20pt;
     position: absolute;
+    padding: 0px 12px;
+    border-radius: 7px;
     {{- cond $rtl "left" "right" -}}: 20px;
     bottom: 10px;
     text-shadow: 2px 2px #a0a0a0;
+}
+.gallery-slideshow-button-container .tooltiptext {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: 6px;
+    {{- cond $rtl "right" "left" -}}: 90%;
+    position: absolute;
+    z-index: 1;
+}
+.gallery-slideshow-button-container:hover .tooltiptext {
+    visibility: visible;
 }
 </style>
 {{ if and .Params.gallery .Params.cover }}
@@ -92,7 +111,10 @@
                 <img class="album-cover-image" src="{{ $coverImage.RelPermalink }}"  />
             {{- end -}}
             <div class="album-cover-title">{{.Title}}</div>
-            <button title="Start Slideshow" class="gallery-slideshow-button" data-fancybox-trigger="{{$galleryId}}"><i class="fa-solid fa-play"></i></button>
+            <div class="gallery-slideshow-button-container">
+                <button class="gallery-slideshow-button" data-fancybox-trigger="{{$galleryId}}"><i class="fa-solid fa-play"></i></button>
+                <span class="tooltiptext">Start Slideshow</span>
+            </div>
         </div>
         {{ partial "gallery.html" $context }}
     </div>

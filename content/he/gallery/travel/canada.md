@@ -1,6 +1,6 @@
 ---
-weight: 1000
-title: Canada
+weight: 3
+title: קנדה
 #title_align: "left"
 summary: 2015 
 date: 2020-12-15

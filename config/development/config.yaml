@@ -1,0 +1,1 @@
+ignoreFilesx: [\.ipynb$, .ipynb_checkpoints$, \.Rmd$, \.Rmarkdown$, _cache$, _files$, private]

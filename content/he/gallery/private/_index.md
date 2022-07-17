@@ -1,12 +1,11 @@
 ---
 weight: 100
-title: Public Travel Photos
+title: Private photos section
 #title_align: "left"
 summary:
 date: 2020-12-15
 draft: false
-
-
+layout: gallery 
 
 ---
 

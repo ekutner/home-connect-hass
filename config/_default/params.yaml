@@ -20,7 +20,7 @@ marketing:
     description: "Eran Kutner's personal website"
     twitter: 'ekutner'
   analytics:
-    google_analytics: ''
+    google_analytics: 'UA-43087203-1'
     baidu_tongji: ''
   verification:
     google: ''

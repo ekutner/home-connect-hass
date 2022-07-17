@@ -1,6 +1,6 @@
 ---
-weight: 1000
-title: Iceland
+weight: 2
+title: איסלנד
 #title_align: "left"
 summary: 2015 
 date: 2020-12-15
