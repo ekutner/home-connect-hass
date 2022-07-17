@@ -1,0 +1,39 @@
+{{- $before := (.Get "before") -}}
+{{- $after := (.Get "after") -}}
+
+{{ $id := delimit (shuffle (seq 1 9)) "" }}
+
+<div id="twentytwenty-{{ $id }}" class="twentytwenty-container">
+    <!-- The before image is first -->
+    <img src="{{ $before }}" />
+    <!-- The after image is last -->
+    <img src="{{ $after }}" />
+</div>
+
+<script>
+
+(function() {
+    let a = setInterval( function() {
+        $("#twentytwenty-{{ $id }}").twentytwenty({
+            {{ with (.Get "default_offset_pct") }}default_offset_pct: {{.}}, {{end}} // How much of the before image is visible when the page loads
+            {{ with (.Get "orientation") }}orientation: '{{.}}', {{end}}     // Orientation of the before and after images ('horizontal' or 'vertical')
+            {{ with (.Get "before_label") }}before_label: '{{.}}', {{end}}    // Set a custom before label
+            {{ with (.Get "after_label") }}after_label: '{{.}}', {{end}}     // Set a custom after label
+            {{ with (.Get "no_overlay") }}no_overlay: {{.}}, {{end}}        //Do not show the overlay with before and after
+            {{ with (.Get "move_slider_on_hover") }}move_slider_on_hover: {{.}}, {{end}} // Move slider on mouse hover?
+            {{ with (.Get "move_with_handle_only") }}move_with_handle_only: {{.}}, {{end}} // Allow a user to swipe anywhere on the image to control slider movement. 
+            {{ with (.Get "click_to_move") }}click_to_move: {{.}}, {{end}} // Allow a user to click (or tap) anywhere on the image to move the slider to that location.
+            dummy: true
+        });
+        clearInterval( a );
+    }
+    , 500 );
+  })();
+
+    //alert("test");
+// $(window).load(function() {
+//   $("#container1").twentytwenty();
+// });
+
+
+</script>

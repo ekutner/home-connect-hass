@@ -1,0 +1,18 @@
+{
+  "comments": {
+    "dependencies": {
+      "postcss": "github.com/paazca/wowchemy-rtl-module",
+      "postcss-cli": "github.com/paazca/wowchemy-rtl-module",
+      "rtlcss": "github.com/paazca/wowchemy-rtl-module"
+    },
+    "devDependencies": {}
+  },
+  "dependencies": {
+    "postcss": "^8.1.0",
+    "postcss-cli": "^8.0.0",
+    "rtlcss": "^2.6.2"
+  },
+  "devDependencies": {},
+  "name": "photos.kutner.org",
+  "version": "0.1.0"
+}

@@ -1,0 +1,13 @@
+{{/* Do not directly modify this file! */}}
+{{/* Instead, create a `layouts/partials/custom_js.html` file in your site and add your code to it. */}}
+
+{{/* This partial is included in `themes/academic/layouts/partials/site_js.html`. */}}
+
+{{ $js := site.Data.custom_assets.js }}
+
+{{ if .HasShortcode "before-after" }}    
+    {{ printf "<script src=\"%s\" integrity=\"%s\" crossorigin=\"anonymous\"></script>" (printf $js.jQuery.event.move.url $js.jQuery.event.move.version) $js.jQuery.event.move.sri | safeHTML }}
+    {{/* printf "<script src=\"%s\" integrity=\"%s\" crossorigin=\"anonymous\"></script>" (printf $js.jQuery.TwentyTwenty.url $js.jQuery.TwentyTwenty.version) $js.jQuery.TwentyTwenty.sri | safeHTML */}}    
+    <script src="/js/jquery.twentytwenty.js" ></script>
+{{ end }}
+

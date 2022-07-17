@@ -1,0 +1,41 @@
+{{- define "main" -}}
+
+{{ $current_page := . }}
+
+
+<div class="container docs" >
+  <div class="row align-items-start row justify-content-center">
+    <div class="col-12 col-md-9 article-container px-0" >{{ partial "page_header" . }}</div>    
+    <div class="d-none d-md-block col-md-3"> </div>
+  </div>
+  <div class="row align-items-start row justify-content-center">
+
+    {{/* Show ToC by default. */}}
+    {{ if eq .Params.toc true }}
+    <div class="d-md-none d-lg-block col-lg-3 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">{{ i18n "on_this_page" }}</a></li>
+      </ul>
+
+      {{ .TableOfContents }}
+
+      {{ partial "docs_toc_foot" . }}
+    </div>
+    {{ end }}
+
+      
+    <article class="col12 col-lg-9 docs-content article">
+      <div class="article-container">
+    
+        <div class="article-style">
+          {{ .Content }}
+        </div>
+    
+        {{ partial "page_footer" . }}
+    
+      </div>
+    </article>
+
+  </div>
+</div>
+{{- end -}}

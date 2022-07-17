@@ -1,0 +1,13 @@
+{{ $context := dict
+    "currentPage" .
+    "imagePath" (.Get "imagePath")
+    "sortOrder" (.Get "sort")
+    "rowHeight" (.Get "rowHeight")
+    "margins" (.Get "margins")
+	"imageResizeOptions" (.Get "imageResizeOptions")
+    "showExif" (.Get "showExif")
+    "embedPreview" (.Get "embedPreview")
+    "carouselId" (printf "gallery-%v-%v" .Page.File.UniqueID (delimit (shuffle (seq 1 9)) ""))
+}}
+
+{{ partial "gallery.html" $context }}

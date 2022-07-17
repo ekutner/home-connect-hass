@@ -1,0 +1,24 @@
+{{ $page := .root }}
+{{ $section := .page }}
+
+<h2>{{$section.Title}}</h2>
+<p>{{$section.Content}}</p>
+
+{{ $context := dict
+    "currentPage" $page
+    "imagePath" $section.Params.imagePath
+    "sortOrder" $section.Params.sort
+    "rowHeight" $section.Params.rowHeight
+    "margins"  $section.Params.margins
+    "imageResizeOptions" $section.Params.imageResizeOptions
+    "loadJQuery" $section.Params.loadJQuery
+    "showExif"  $section.Params.showExif
+    "justifiedGalleryParameters" $section.Params.justifiedGalleryParameters
+    "previewType" $section.Params.previewType
+    "embedPreview" $section.Params.embedPreview
+    "thumbnailHoverEffect" $section.Params.thumbnailHoverEffect
+    "lastRowJustification"  $section.Params.lastRowJustification
+    "galleryId" (printf "gallery-%v-%v" $section.File.UniqueID (delimit (shuffle (seq 1 9)) ""))
+}}
+
+{{ partial "gallery.html" $context }}

@@ -1,0 +1,18 @@
+{{ $context := dict
+    "currentPage" .
+    "imagePath" (.Get "imagePath")
+    "sortOrder" (.Get "sort")
+    "rowHeight" (.Get "rowHeight")
+    "margins" (.Get "margins")
+    "imageResizeOptions" (.Get "imageResizeOptions")
+    "loadJQuery" (.Get "loadJQuery")
+    "showExif" (.Get "showExif")
+    "justifiedGalleryParameters" (.Get "justifiedGalleryParameters")
+    "previewType" (.Get "previewType")
+    "embedPreview" (.Get "embedPreview")
+    "thumbnailHoverEffect" (.Get "thumbnailHoverEffect")
+    "lastRowJustification" (.Get "lastRowJustification")
+    "galleryId" (printf "gallery-%v-%v" .Page.File.UniqueID (delimit (shuffle (seq 1 9)) ""))
+}}
+
+{{ partial "gallery.html" $context }}

@@ -1,0 +1,122 @@
+{{/* Gallery options */}}
+{{ $currentPage := .currentPage }}
+{{ $imagePath := .imagePath }}
+{{ $sortOrder := .sortOrder | default "asc"}}
+{{ $rowHeight := float (.rowHeight | default 300.0) }}
+{{ $margins := .margins | default 2 }}
+{{ $autoplay := .autoplay | default 0}}
+{{ $imageResizeOptions := .imageResizeOptions | default (.Site.Params.gallery.imageResizeOptions | default "1920x1080 webp") }}
+{{ $showExif := .showExif | default false }}
+{{ $embedPreview := .embedPreview | default (.Site.Params.gallery.embedPreview | default false) }}
+{{ $carouselId := .carouselId | default (printf "carousel-%v" (delimit (shuffle (seq 1 9)) "")) }}
+
+{{ $images := resources.Match $imagePath }}
+{{ if eq $sortOrder "random" }}
+	{{ $images = shuffle $images }}
+{{ else }}
+	{{ $images = sort $images "Name" $sortOrder }}
+{{ end }}
+
+
+<!-- Load dependencies only once per page -->
+{{ if not (.currentPage.Scratch.Get "fancyboxLoaded") }}
+	{{/*  loading fb in carousel  */}}
+	{{/*  {{ warnf (printf "loading fb in carousel %s" .currentPage.RelPermalink) }}  */}}
+  	{{ .currentPage.Scratch.Set "fancyboxLoaded" true }}
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" />
+	<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+{{/*  {{ else }}
+	not loading in carousel
+	{{ warnf (printf "skipping fb in carousel %s" .currentPage.RelPermalink) }}  */}}
+{{ end }}
+
+<script type="module">
+	{{ if ne $autoplay 0 }}
+	import { Autoplay } from "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/carousel.autoplay.esm.js";
+	Carousel.Plugins.Autoplay = Autoplay;
+	{{ end }}
+	const myCarousel = new Carousel(document.querySelector("#{{$carouselId}}"), {
+		{{ if ne $autoplay 0 }}
+			Autoplay: {
+				timeout: {{ $autoplay}},
+			},
+		{{ end }}
+		'slidesPerPage': 1,
+		'fill': true
+		}
+	);
+	//myCarousel.plugins.Autoplay.start()
+</script>
+<style>
+	.carousel {
+		--carousel-button-bg: #ffffff30;
+		--carousel-button-width: 60px;
+		--carousel-button-height: 60px;
+		--carousel-button-svg-width: 27px;
+		--carousel-button-svg-height: 27px;
+		--carousel-button-svg-stroke-width: 2.5;
+		--carousel-button-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px
+			0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px
+			4px -1px;
+	}
+</style>
+
+<div id="{{ $carouselId }}" class="carousel fullscreen" dir="ltr">
+	{{ range $original := $images }}
+		{{ if eq $original.ResourceType "image" }}
+
+			{{/* Get metadata from sidecar file, if present. Else an empty dictionary is used. */}}
+			{{ $metaFileName := print $original.Name ".meta"}}
+			{{ $metadata := $currentPage.Page.Resources.GetMatch ($metaFileName) }}
+			{{ if $metadata }}
+				{{ $metadata = $metadata.Content }}
+				{{ $metadata = $metadata | unmarshal }}
+			{{ else }}
+				{{ $metadata = dict }}
+			{{ end }}
+
+			{{/* If the image has exif informations, those are merged together with the metadata from the file */}}
+			{{ if in "jpg jpeg tiff" $original.MediaType.SubType }}
+				{{ with $original.Exif }}
+					{{ $metadata = merge .Tags $metadata }}
+				{{ end }}
+			{{ end }}
+
+			{{/* Create thumbnail, rotate it if needed */}}
+			{{/* $newWidth := mul $original.Width $rowHeight }}
+			{{ $newWidth = div $newWidth $original.Height */}}
+
+			{{/*  {{ $newWidth := int (div (mul ($original.Width) ($rowHeight)) ($original.Height) ) }}
+			{{ $rowHeight = int $rowHeight }}  */}}
+
+			{{ $image := ($original.Fit $imageResizeOptions ) }}
+			{{ $widthRatio := div (mul $original.Width 1.0) $original.Height }}
+			<div class="carousel__slide" style="padding:0; margin: 0px {{$margins}}px;" data-width-ratio="{{ $widthRatio }}">
+				<img style="width:100%; height: 100%;"  data-lazy-src="{{ $image.RelPermalink }}" >
+			</div>
+		{{ end }}
+	{{ end }}
+</div>
+
+<script>
+window.addEventListener("resize", resize_slides, true);
+resize_slides()
+
+function resize_slides(event) {
+    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+    var element = document.getElementById("{{ $carouselId }}")
+    var positionInfo = element.getBoundingClientRect();
+    //console.log(positionInfo)
+    height = vh-Math.floor(positionInfo.top)
+    var children = element.querySelectorAll(".carousel__slide");
+    for (var i = 0; i < children.length; i++) {
+        var child = children[i];
+        widthRatio = child.getAttribute("data-width-ratio")
+        child.style.height = height + "px";
+        child.style.width = Math.ceil(height*widthRatio) + "px";
+        // console.log(child)
+    }
+}
+
+</script>

@@ -3,8 +3,8 @@
 # Hugo Documentation: https://gohugo.io/getting-started/configuration/#all-configuration-settings
 # This file is formatted using YAML syntax - learn more at https://learnxinyminutes.com/docs/yaml/
 
-title: Academic # Website name
-baseURL: 'https://example.com/' # Website URL
+title: Eran Kutner Photography  # Website name
+baseURL: "https://photos-test.kutner.org/" # Website URL
 
 ############################
 ## LANGUAGE
@@ -12,8 +12,9 @@ baseURL: 'https://example.com/' # Website URL
 
 defaultContentLanguage: en
 hasCJKLanguage: false
-defaultContentLanguageInSubdir: false
+defaultContentLanguageInSubdir: true
 removePathAccents: true
+
 
 ############################
 ## MODULES
@@ -21,8 +22,10 @@ removePathAccents: true
 
 module:
   imports:
+    # - path: github.com/paazca/wowchemy-rtl-module
     - path: github.com/wowchemy/wowchemy-hugo-modules/wowchemy-cms/v5
     - path: github.com/wowchemy/wowchemy-hugo-modules/wowchemy/v5
+
 
 ############################
 ## ADVANCED
@@ -34,8 +37,9 @@ paginate: 10
 enableEmoji: true
 enableRobotsTXT: true
 footnotereturnlinkcontents: <sup>^</sup>
-ignoreFiles: [\.ipynb$, .ipynb_checkpoints$, \.Rmd$, \.Rmarkdown$, _cache$]
+ignoreFiles: [\.ipynb$, .ipynb_checkpoints$, \.Rmd$, \.Rmarkdown$, _cache$, _files$]
 permalinks:
+  authors: '/author/:slug/'
   event: '/talk/:slug/'
   tags: '/tag/:slug/'
   categories: '/category/:slug/'
@@ -48,6 +52,9 @@ imaging:
   resampleFilter: lanczos
   quality: 75
   anchor: smart
+  exif:
+    includeFields: ".*"
+
 timeout: 600000
 taxonomies:
   tag: tags
@@ -61,6 +68,10 @@ related:
   includeNewer: true
   toLower: true
   indices:
+    - name: title
+      weight: 60.0
+    - name: summary
+      weight: 50.0
     - name: tags
       weight: 100
     - name: categories
@@ -69,3 +80,10 @@ security:
   _merge: deep
 sitemap:
   _merge: deep
+
+
+deployment:
+  targets:
+    - name: s3
+      URL: "s3://photos.kutner.org?region=eu-west-1"
+      cloudFrontDistributionID: d1s8g60crwiyn4

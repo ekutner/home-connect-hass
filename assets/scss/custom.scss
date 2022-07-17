@@ -1,0 +1,216 @@
+// fix bug in 5.0.0 beta
+.cta-btns a {
+  color: white !important;
+}
+.article-title {
+  font-size: xx-large;
+}
+
+.hero-lead {
+	font-size: 1.35rem;
+}
+
+// override button ending in portfolio tag filter toolbar to work correctly in RTL
+.btn-toolbar .btn:last-child {
+  border-radius: 6px 0 0 6px !important;
+}
+.btn-toolbar .btn:first-child {
+ 	border-radius: 0 6px 6px 0 !important;
+}
+
+.navbar-nav {
+	font-size: large;
+}
+
+.navbar-brand {
+	font-size: x-large;
+}
+
+#navbar-main {
+  padding: 0;
+}
+
+#navbar-main .main-menu-item {
+  // Fix for RTL
+	text-align: right !important;
+}
+
+#navbar-main .container-xl {
+  max-width: 3000px;
+}
+.network-icon li:last-of-type {
+	margin-right: 10px;
+}
+
+.article-metadata a {
+	margin-right: 0.4em;
+}
+
+.text-md-left {
+	text-align: right !important;
+}
+
+.pr-1, .px-1 {
+	padding-left: .25rem !important;
+}
+
+.ml-md-auto {
+  margin-right: auto;
+  margin-left: 30px !important;
+}
+
+ul.nav-icons li:last-of-type {
+	padding-right: 30px;
+	padding-left: 0;
+}
+
+.spoiler .btn, .spoiler .btn-primary:not(:disabled):not(.disabled):active:focus, .spoiler .btn-primary.active:not(:disabled):not(.disabled):focus {
+  border: 0px !important;
+  background-color: white !important;
+  color: black;
+  font-size: x-large;
+  box-shadow: 0 0 0 0.0rem;
+  text-align: right;
+}
+.spoiler_blue .btn, .spoilspoiler_blueer .btn-primary:not(:disabled):not(.disabled):active:focus, .spoiler_blue .btn-primary.active:not(:disabled):not(.disabled):focus {
+  color: blue;
+}
+
+#TableOfContents ul {
+  padding-right: 0;
+}
+
+ul.toc-top {
+	padding-right: 0px;
+}
+
+#TableOfContents {
+	padding-left: right;
+  border-right: 1px solid #eee;
+  border-left: none;
+}
+
+// override wordbreak rules for articles
+.article-style {
+	word-break: normal;
+}
+
+// Hide the floating toolbar on charts
+.modebar-container {
+  display: none;
+}
+
+figure {
+  display: inline;
+  margin: 1em, 1em, 1em, 1em;
+}
+// override default table
+.article-container table {
+  margin: 0 auto;
+  display: table;
+}
+/*
+.article-container table thead {
+  background-color: #dadada;
+}
+*/
+// Override table when there is a special marker before it
+.article-container .table-headless + table thead {
+  display: none;
+}
+.article-container .table-borderless + table > tbody > tr > td {
+  border: 0;
+}
+/*
+.article-container .table-white + table thead {
+  background-color:white !important;
+}
+.article-container .table-white + table tbody {
+  background-color: white !important;
+}
+.article-container .table-white + table > tbody > tr:nth-child(odd) > td, .article-container .table-white + .article-container .table-white + table > tbody > tr:nth-child(odd) > th {
+	background-color: white;
+}
+.article-container .table-white + table > tbody > tr:hover > td, table > tbody > tr:hover > th {
+  background-color: white;
+}
+
+.article-container .table-grey + table thead {
+  background-color: lightgrey !important;
+}
+.article-container .table-grey + table tbody {
+  background-color: lightgrey !important;
+}
+.article-container .table-grey + table > tbody > tr:nth-child(odd) > td, .article-container .table-grey + table > tbody > tr:nth-child(odd) > th {
+	background-color: lightgrey;
+}
+.article-container .table-grey + table > tbody > tr:hover > td, .article-container .table-grey + table > tbody > tr:hover > th {
+  background-color: lightgrey;
+}
+*/
+
+// Hide menu item with target "hide"
+a[href*="hide"] {
+  display: none;
+}
+
+@import "twentytwenty-no-compass";
+
+@font-face {
+  font-family: "Raleway";
+  src: url("https://fonts.gstatic.com/s/raleway/v27/1Ptug8zYS_SKggPNyC0ITw.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  unicode-range: U+0-FF, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Raleway";
+  src: url("https://fonts.gstatic.com/s/raleway/v27/1Ptug8zYS_SKggPNyC0ITw.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200;
+  unicode-range: U+0-FF, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+.home-section.container.fullscreen,
+.fullscreen {
+  min-height: calc(100vh - 70px); }
+
+@media (max-width: 991.98px) {
+  .home-section.fullscreen,
+  .fullscreen {
+    min-height: calc(100vh - 50px); } }
+
+.no-navbar .home-section.fullscreen,
+.no-navbar .fullscreen {
+  min-height: 100vh;
+}
+
+/*
+.page-body .home-section {
+  padding: 40px 0 0 0 !important;
+}
+body .page-body .home-section {
+  padding: 0 0 0 0 !important;
+}
+*/
+body .page-body #carousel  {
+  padding: 0 20px !important;
+}
+body .page-body #gallery {
+  padding: 30px 20px !important;
+}
+
+html[dir*="rtl"] {
+  .i18n-dropdown .dropdown-menu, .theme-dropdown .dropdown-menu {
+    position: absolute;
+    left: 0;
+    right: auto;
+  }
+}
+html[dir*="ltr"] {
+  .i18n-dropdown .dropdown-menu, .theme-dropdown .dropdown-menu {
+    position: absolute;
+    right: 0;
+    left: auto;
+  }
+}

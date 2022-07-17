@@ -6,7 +6,26 @@
 en:
   languageCode: en-us
   # Uncomment for multi-lingual sites, and move English content into `en` sub-folder.
-  #contentDir: content/en
+  contentDir: content/en
+  rtl: ltr
+  languagedirection: ltr
+  title: Eran Kutner's website
+  weight: 1
+  footer:
+    copyright:
+      notice: '© {year} Eran Kutner'
+
+
+he:
+  languageCode: "he"
+  languagedirection: "rtl"
+  contentDir: content/he
+  title: "צילום מתקדם"
+  weight: 2
+  footer:
+    copyright:
+      notice: '© {year} כל הזכויות שמורות'
+
 
 # Uncomment the lines below to configure your website in a second language.
 #zh:

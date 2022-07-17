@@ -1,0 +1,18 @@
+{{ $value              := . }}
+{{ $type               := (printf "%T" $value) }}
+{{ $typeIsBool         := (eq "bool" $type) }}
+{{ $typeIsNumber       := (or (eq "int" $type) (eq "int64" $type) (eq "float64" $type)) }}
+{{ $typeIsString       := (eq "string" $type) }}
+{{ $typeIsTime         := (eq "time.Time" $type) }}
+{{ $typeIsSlice        := (findRE "^([[][]]|.*TaxonomyList|output\\.Formats|resource\\.Resources|\\*?hugolib\\.Menu$|\\*?hugolib\\.Pages$)" $type) }} <!-- match ^[] -->
+{{ $typeIsMap          := (findRE "^(map[[].+[]]|.*SiteSocial|\\*hugolib\\.Menus|hugolib\\.AuthorList)" $type) }} <!-- match ^map[*] -->
+
+{{ $typeIsSiteInfo     := (eq "*hugolib.SiteInfo" $type) }}
+{{ $typeIsGitInfo      := (findRE "^.*gitmap\\.GitInfo" $type) }}
+{{ $typeIsOutputFormat := (eq "output.Format" $type) }}
+{{ $typeIsResource     := (findRE "^\\*resource" $type) }}
+{{ $typeIsPage         := (findRE "^\\*hugolib\\.Page" $type) }}
+{{ $typeIsFileInfo     := (findRE "^\\*(hugolib|source)\\.[fF]ileInfo$" $type) }} <!-- terms pages for e.g. uses source.FileInfo, regular pages using hugolib.fileInfo -->
+{{ $typeIsMenuEntry    := (eq "*hugolib.MenuEntry" $type) }}
+{{ $typeIsStruct       := (or $typeIsSiteInfo $typeIsGitInfo $typeIsOutputFormat $typeIsFileInfo $typeIsPage $typeIsMenuEntry) }}
+{{ $typeIsInterface := (or $typeIsResource) }}

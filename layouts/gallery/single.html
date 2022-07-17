@@ -1,0 +1,100 @@
+{{- define "main" -}}
+
+{{ $rtl := eq .Site.Language.LanguageDirection "rtl" }}
+
+{{ $coverPos := .Params.coverPos | default "center" }}
+
+<style>
+.album {
+    padding: 0px 20px 20px 20px;
+}
+.album-cover {
+    position: relative;
+    margin-bottom: 10px;
+}
+.album-cover-image {
+  object-fit: cover; /* Do not scale the image */
+  object-position: center {{ $coverPos }}; /* Center the image within the element */
+  height: 40vh;
+  width: 100%;
+}
+
+.album-cover-title {
+	background: linear-gradient(to top,rgba(0,0,0,.5) 0,rgba(0,0,0,0) 100%);
+    width:100%;
+	padding-{{- cond $rtl "right" "left" -}}: 24px;
+	padding-top: 24px;
+	position: absolute;
+	bottom: 0;
+    left: 0;
+    text-align: {{ cond $rtl "right" "left" }};
+    color: white;
+    font-family: Raleway,Helvetica,Arial,sans-serif;
+    font-size: 60px;
+    font-weight: 200;
+    font-style: normal;
+}
+
+.gallery-slideshow-button {
+    background-color: rgba(255,255,255,.15);
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+    color: white;
+    font-size: 20pt;
+    position: absolute;
+    {{- cond $rtl "left" "right" -}}: 20px;
+    bottom: 10px;
+    text-shadow: 2px 2px #a0a0a0;
+}
+</style>
+{{ if and .Params.gallery .Params.cover }}
+    {{ $coverImagePath := path.Join .Params.gallery .Params.cover }}
+    {{ $coverImage := resources.Get $coverImagePath}}
+    {{ $imagePath := path.Join (.Params.gallery) (.Params.files | default "*") }}
+    {{ $sortOrder := "asc" }}
+    {{ $rowHeight := 300 }}
+    {{ $margins := 2 }}
+    {{ $thumbnailResizeOptions := .Site.Params.gallery.thumbnailResizeOptions }}
+    {{ $imageResizeOptions := .Site.Params.gallery.imageResizeOptions }}
+    {{ $loadJQuery := true }}
+    {{ $showExif := false }}
+    {{ $justifiedGalleryParameters := "" }}
+    {{ $previewType := "blur" }}
+    {{ $embedPreview := false }}
+    {{ $thumbnailHoverEffect := "none" }}
+    {{ $lastRowJustification := "nojustify" }}
+    {{ $galleryId := (printf "gallery-%v-%v" .Page.File.UniqueID (delimit (shuffle (seq 1 9)) "")) }}
+
+    {{ $context := dict
+        "currentPage" .
+        "imagePath" $imagePath
+        "sortOrder" $sortOrder
+        "rowHeight" $rowHeight
+        "margins" $margins
+        "thumbnailResizeOptions" $thumbnailResizeOptions
+        "imageResizeOptions" $imageResizeOptions
+        "loadJQuery" $loadJQuery
+        "showExif" $showExif
+        "justifiedGalleryParameters" $justifiedGalleryParameters
+        "previewType" $previewType
+        "embedPreview" $embedPreview
+        "thumbnailHoverEffect" $thumbnailHoverEffect
+        "lastRowJustification" $lastRowJustification
+        "galleryId" $galleryId
+    }}
+
+    <div class="album">
+        <div class="album-cover">
+            {{ if $coverImage }}
+                <img class="album-cover-image" src="{{ $coverImage.RelPermalink }}"  />
+            {{- end -}}
+            <div class="album-cover-title">{{.Title}}</div>
+            <button title="Start Slideshow" class="gallery-slideshow-button" data-fancybox-trigger="{{$galleryId}}"><i class="fa-solid fa-play"></i></button>
+        </div>
+        {{ partial "gallery.html" $context }}
+    </div>
+    {{- end -}}
+{{- end -}}

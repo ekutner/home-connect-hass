@@ -1,0 +1,18 @@
+{{ $page := .root }}
+{{ $section := .page }}
+
+{{ .Content }}
+
+{{ $context := dict
+    "currentPage" $page
+    "imagePath" $section.Params.imagePath
+    "sortOrder" $section.Params.sort
+    "rowHeight" $section.Params.rowHeight
+    "margins" $section.Params.margins
+    "autoplay" $section.Params.autoplay
+    "imageResizeOptions" $section.Params.imageResizeOptions
+    "showExif" $section.Params.showExif
+    "embedPreview" $section.Params.embedPreview
+    "carouselId" (printf "carousel-%v-%v" $section.File.UniqueID (delimit (shuffle (seq 1 9)) ""))
+}}
+{{ partial "carousel.html" $context }}

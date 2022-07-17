@@ -1,0 +1,77 @@
+{{- define "main" -}}
+
+{{ $rtl := eq .Site.Language.LanguageDirection "rtl" }}
+
+<style>
+body {
+    background-color: #1f1f21;
+    color: #8F919C;
+    scrollbar-color: #525259 transparent;
+    scrollbar-width: thin;
+}
+.navbar {
+    background-color: #1f1f21;
+}
+#navbar-main .main-menu-item ul li .nav-link  {
+    color: #8F919C;
+}
+.albums {
+    float: {{ cond $rtl "right" "left" }};
+    padding: 5px 5px;
+}
+.album {
+    position: relative;
+    float: {{ cond $rtl "right" "left" }};
+    margin: 5px 5px;
+    width: 450px;
+    height: 300px
+}
+.album-thumbnail {
+    width: 450px;
+    height: 300px
+}
+.album-title {
+    background: linear-gradient(to top,rgba(0,0,0,.5) 0,rgba(0,0,0,0) 100%);
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    padding: 5px 5px;
+    text-align: center;
+    font-size: 15pt;
+    color: white;
+    font-family: Raleway,Helvetica,Arial,sans-serif;
+    font-size: 20pt;
+    font-weight: 200;
+    font-style: normal;
+
+}
+</style>
+
+<div class="albums" >
+{{ range $page := .Pages }}
+    <div class="album">
+        {{ if and .Params.gallery .Params.cover }}
+            {{ $coverImagePath := path.Join .Params.gallery .Params.cover }}
+            {{ $coverImage := resources.Get $coverImagePath}}
+
+                <a href="{{.RelPermalink}}">
+                    {{ if $coverImage }}
+                        {{ $coverThumbnail := $coverImage.Fit .Site.Params.gallery.thumbnailResizeOptions }}
+                        <img class="album-thumbnail" src="{{ $coverThumbnail.RelPermalink }}"  />
+                    {{ else }}
+                        <p>Missing cover image file for album: {{ $coverImagePath }} </p>
+                    {{ end }}
+                    <div class="album-title">{{ .Title }}</div>
+                </a>
+        {{ else }}
+            <a href="{{.RelPermalink}}">{{.Title}} - Missing cover image</a>
+        {{end}}
+    </div>
+{{end}}
+</div>
+<div style="clear: both">
+{{ .Content }}
+</div>
+
+{{- end -}}

@@ -6,10 +6,9 @@
 # Appearance
 
 appearance:
-  theme_day: minimal
   theme_night: minimal
   font: minimal
-  font_size: L
+  font_size: M
 
 # SEO
 
@@ -18,8 +17,8 @@ marketing:
     site_type: Person
     local_business_type: ''
     org_name: ''
-    description: 'A highly-customizable Hugo academic resume theme powered by Wowchemy website builder.'
-    twitter: 'wowchemy'
+    description: "Eran Kutner's personal website"
+    twitter: 'ekutner'
   analytics:
     google_analytics: ''
     baidu_tongji: ''
@@ -33,21 +32,21 @@ header:
   navbar:
     enable: true
     align: l
-    show_logo: true
+    show_logo: false
     show_language: false
-    show_day_night: true
+    show_day_night: false
     show_search: true
-    highlight_active_link: true
+    highlight_active_link: false
 
 # Site footer
 
 footer:
   copyright:
-    notice: '© {year} Me. This work is licensed under {license}'
+    notice: '© {year} Eran Kutner. This work is licensed under {license}'
     license:
-      enable: true
+      enable: false
       allow_derivatives: false
-      share_alike: true
+      share_alike: false
       allow_commercial: false
 
 # Localization
@@ -109,3 +108,8 @@ extensions:
 security:
   # Allow frame for embedding speaker notes in slides
   allow_frame: true
+
+
+gallery:
+  imageResizeOptions: "1920x1080 webp"
+  thumbnailResizeOptions: "400x400 webp"

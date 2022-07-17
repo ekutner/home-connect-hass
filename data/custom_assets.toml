@@ -1,0 +1,17 @@
+# Versioning and Subresource Integrity (SRI) for Academic's JavaScript and CSS dependencies
+
+# When updating the version of an asset below, please also update the corresponding SRI.
+# How to update the SRI for an entry:
+#   echo -n "sha512-" && curl --silent "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML" | openssl dgst -sha512 -binary | openssl enc -base64 -A
+# Or, the SRI for the appropriate asset can be copied from https://cdnjs.com/ .
+
+# JavaScript
+
+[js.jQuery.event.move]
+  version = "1.3.6"
+  sri = "sha512-3BqqLnbFr1fTh7MGjLxRTs7K6t5vTwUWA5bYaGGI30qB599Gr+qCGbH08W66TYo+vwfywaB4ksLZNxN3hnpv9Q=="
+  url = "https://cdnjs.cloudflare.com/ajax/libs/jquery.event.move/%s/jquery.event.move.js"  
+[js.jQuery.TwentyTwenty]
+  version = "1.0.0"
+  sri = "sha512-GPLeok4pmABjbz8dF6i4cqao9fhF9LE5X4rI0ORBe2YqbZmaqdSiM7g4oO+CEy99SxZV6memnoKANwopFr6Z6g=="
+  url = "https://cdnjs.cloudflare.com/ajax/libs/mhayes-twentytwenty/%s/js/jquery.twentytwenty.min.js"
