@@ -1,5 +1,9 @@
 {
   "terminal.integrated.env.windows": {
     "WC_POST_CSS__XX": "true"
+  },
+  "search.exclude": {
+    "./assets/gallery": true,
+    "./public": true
   }
 }

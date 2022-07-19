@@ -1,12 +1,14 @@
 {{ $context := dict
     "currentPage" .
-    "imagePath" (.Get "imagePath")
+    "gallery" (.Get "gallery")
+    "files" (.Get "files")
     "sortOrder" (.Get "sort")
     "rowHeight" (.Get "rowHeight")
     "margins" (.Get "margins")
     "imageResizeOptions" (.Get "imageResizeOptions")
     "loadJQuery" (.Get "loadJQuery")
     "showExif" (.Get "showExif")
+    "captions" (.Get "captions")
     "justifiedGalleryParameters" (.Get "justifiedGalleryParameters")
     "previewType" (.Get "previewType")
     "embedPreview" (.Get "embedPreview")

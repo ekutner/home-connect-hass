@@ -1,6 +1,6 @@
 {{/* Gallery options */}}
 {{ $currentPage := .currentPage }}
-{{ $imagePath := .imagePath }}
+{{ $galleryPath := .galleryPath }}
 {{ $sortOrder := .sortOrder | default "asc"}}
 {{ $rowHeight := float (.rowHeight | default 300.0) }}
 {{ $margins := .margins | default 2 }}
@@ -10,7 +10,7 @@
 {{ $embedPreview := .embedPreview | default (.Site.Params.gallery.embedPreview | default false) }}
 {{ $carouselId := .carouselId | default (printf "carousel-%v" (delimit (shuffle (seq 1 9)) "")) }}
 
-{{ $images := resources.Match $imagePath }}
+{{ $images := resources.Match $galleryPath }}
 {{ if eq $sortOrder "random" }}
 	{{ $images = shuffle $images }}
 {{ else }}

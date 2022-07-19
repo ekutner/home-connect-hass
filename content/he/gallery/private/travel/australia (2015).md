@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Private/Travel/Australia (2015)
-files: "*"
+files: "*.jpg"
 cover: KR4A1184-Edit.jpg
 ---

@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Private/Travel/Iceland (2020)
-files: "*"
+files: "*.jpg"
 cover: DSC07173-Edit.jpg
 ---

@@ -17,7 +17,7 @@ marketing:
     site_type: Person
     local_business_type: ''
     org_name: ''
-    description: "Eran Kutner's personal website"
+    description: "Eran Kutner Photography"
     twitter: 'ekutner'
   analytics:
     google_analytics: 'UA-43087203-1'
@@ -84,11 +84,14 @@ features:
       url: ''
   search:
     provider: wowchemy
+    wowchemy:
+      min_length: 2
+      threshold: 0.4
     algolia:
-      app_id: ''
-      api_key: ''
-      index_name: ''
-      show_logo: false
+      app_id: 'AW1SEXXQZE'
+      api_key: 'bfaa0b7c217b75c22ca730d2f754010b'
+      index_name: 'photos_search_en'
+      show_logo: true
   map:
     provider: ''
     api_key: ''

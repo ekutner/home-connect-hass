@@ -8,14 +8,26 @@ main:
     url: '/'
     weight: 10
   - name: פורטפוליו
-    url: /gallery/portfolio
+    url: /gallery/portfolio/
     weight: 20
-  - name: גלריית טיולים
-    url: /gallery/travel
+  - name: צילומים נבחרים
+    url: /gallery/select/
     weight: 30
-  - name: פרטי
-    url: /gallery/private
+  - name: גלריית טיולים
+    url: /gallery/travel/
     weight: 40
+  - name: פרטי
+    url: prvt
+    weight: 50
+    # workaround for bootstrap bug that tries to download the page on mouse over
+    post: >
+      <script>
+        var element = document.querySelector('a[href*="prvt"]');
+        element.addEventListener("mousedown", function(event){
+          window.location.href = element.href.replace("prvt", "gallery/private/");
+        }, true);
+      </script>
+
 
 # Link to a PDF of your resume/CV from the menu.
 # To enable, copy your resume/CV to `static/uploads/resume.pdf` and uncomment the lines below.

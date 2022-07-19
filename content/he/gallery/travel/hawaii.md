@@ -7,7 +7,7 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Travel/Hawaii
-files: "*"
+files: "*.jpg"
 cover: 5D4_1739-Edit.jpg
 
 featured: true

@@ -17,8 +17,8 @@ weight: 20
 # See https://sourcethemes.com/academic/docs/get-started/#introduce-yourself
 
 fullscreen: true
-imagePath: /gallery/portfolio/*
+gallery: /gallery/Portfolio/
 rowHeight: 300
 sort: random
-
+captions: false
 ---

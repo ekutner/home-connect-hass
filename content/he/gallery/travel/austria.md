@@ -8,7 +8,7 @@ draft: false
 personal: false
 
 gallery: gallery/Travel/Austria
-files: "*"
+files: "*.jpg"
 cover: IMG_5486.jpg
 coverPos: 80%
 

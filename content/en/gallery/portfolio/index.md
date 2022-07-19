@@ -7,7 +7,9 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Portfolio
+files: "*.jpg"
 cover: DSC07173-Edit.jpg
 coverPos: 35%
+captions: false
 ---
 

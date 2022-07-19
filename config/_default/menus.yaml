@@ -7,12 +7,23 @@ main:
   - name: Home
     url: /
     weight: 10
-  - name: Portfolio
-    url: /gallery/portfolio
+  - name: Portfolio Images
+    url: /gallery/portfolio/
     weight: 20
-  - name: Travel Galleries
-    url: /gallery/travel
+  - name: Select Photos
+    url: /gallery/select/
     weight: 30
-  - name: Private
-    url: /gallery/private
+  - name: Travel Galleries
+    url: /gallery/travel/
     weight: 40
+  - name: Private
+    url: /prvt
+    weight: 50
+    # workaround for bootstrap bug that tries to download the page on mouse over
+    post: >
+      <script>
+        var element = document.querySelector('a[href*="prvt"]');
+        element.addEventListener("mousedown", function(event){
+          window.location.href = element.href.replace("prvt", "gallery/private/");
+        }, true);
+      </script>

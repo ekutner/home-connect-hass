@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Private/Travel/Canada - Newfoundland (2011)
-files: "*"
+files: "*.jpg"
 cover: IMG_3407-Edit-2.jpg
 ---

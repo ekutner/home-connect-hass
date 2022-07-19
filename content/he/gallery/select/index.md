@@ -8,6 +8,6 @@ draft: false
 
 gallery: gallery/Select
 cover: DSC07173-Edit.jpg
-
+captions: false
 ---
 

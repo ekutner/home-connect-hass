@@ -9,5 +9,6 @@ draft: false
 gallery: gallery/Portfolio
 cover: DSC07173-Edit.jpg
 coverPos: 35%
+captions: false
 ---
 

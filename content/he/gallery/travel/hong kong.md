@@ -7,7 +7,7 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Travel/Hong Kong
-files: "*"
+files: "*.jpg"
 cover: KR4A8931.jpg
 
 featured: true

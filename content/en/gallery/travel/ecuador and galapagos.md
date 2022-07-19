@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Travel/Ecuador
-files: "*"
+files: "*.jpg"
 cover: DSCN1416.jpg
 ---

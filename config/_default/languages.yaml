@@ -9,7 +9,7 @@ en:
   contentDir: content/en
   rtl: ltr
   languagedirection: ltr
-  title: Eran Kutner's website
+  title: Eran Kutner Photography
   weight: 1
   footer:
     copyright:
@@ -20,7 +20,7 @@ he:
   languageCode: "he"
   languagedirection: "rtl"
   contentDir: content/he
-  title: "צילום מתקדם"
+  title: "צילום ערן קוטנר"
   weight: 2
   footer:
     copyright:

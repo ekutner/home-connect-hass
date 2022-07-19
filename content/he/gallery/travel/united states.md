@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Travel/United States
-files: "*"
+files: "*.jpg"
 cover: DSC02466-Edit.jpg
 ---

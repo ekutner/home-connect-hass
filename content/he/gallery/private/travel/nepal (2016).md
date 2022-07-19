@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Private/Travel/Nepal (2016)
-files: "*"
+files: "*.jpg"
 cover: NEPL7312-HDR-Pano-Edit.jpg
 ---

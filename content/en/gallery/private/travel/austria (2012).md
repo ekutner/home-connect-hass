@@ -7,7 +7,7 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Private/Travel/Austria (2012)
-files: "*"
+files: "*.jpg"
 cover: IMG_5486.jpg
 coverPos: 80%
 ---

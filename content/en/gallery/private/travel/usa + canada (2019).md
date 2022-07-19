@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Private/Travel/USA + Canada (2019)
-files: "*"
+files: "*.jpg"
 cover: DSC02434.jpg
 ---

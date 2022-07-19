@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Travel/Turkey
-files: "*"
+files: "*.jpg"
 cover: _MG_5935.jpg
 ---

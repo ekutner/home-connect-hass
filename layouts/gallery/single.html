@@ -72,36 +72,23 @@
 {{ if and .Params.gallery .Params.cover }}
     {{ $coverImagePath := path.Join .Params.gallery .Params.cover }}
     {{ $coverImage := resources.Get $coverImagePath}}
-    {{ $imagePath := path.Join (.Params.gallery) (.Params.files | default "*") }}
-    {{ $sortOrder := "asc" }}
-    {{ $rowHeight := 300 }}
-    {{ $margins := 2 }}
-    {{ $thumbnailResizeOptions := .Site.Params.gallery.thumbnailResizeOptions }}
-    {{ $imageResizeOptions := .Site.Params.gallery.imageResizeOptions }}
-    {{ $loadJQuery := true }}
-    {{ $showExif := false }}
-    {{ $justifiedGalleryParameters := "" }}
-    {{ $previewType := "blur" }}
-    {{ $embedPreview := false }}
-    {{ $thumbnailHoverEffect := "none" }}
-    {{ $lastRowJustification := "nojustify" }}
     {{ $galleryId := (printf "gallery-%v-%v" .Page.File.UniqueID (delimit (shuffle (seq 1 9)) "")) }}
 
     {{ $context := dict
         "currentPage" .
-        "imagePath" $imagePath
-        "sortOrder" $sortOrder
-        "rowHeight" $rowHeight
-        "margins" $margins
-        "thumbnailResizeOptions" $thumbnailResizeOptions
-        "imageResizeOptions" $imageResizeOptions
-        "loadJQuery" $loadJQuery
-        "showExif" $showExif
-        "justifiedGalleryParameters" $justifiedGalleryParameters
-        "previewType" $previewType
-        "embedPreview" $embedPreview
-        "thumbnailHoverEffect" $thumbnailHoverEffect
-        "lastRowJustification" $lastRowJustification
+        "galleryPath" .Params.gallery
+        "files" .Params.files
+        "sortOrder" .Params.sort
+        "rowHeight" .Params.rowHeight
+        "margins" .Params.margins
+        "imageResizeOptions" .Params.imageResizeOptions
+        "loadJQuery" .Params.loadJQuery
+        "showExif" .Params.showExif
+        "justifiedGalleryParameters" .Params.justifiedGalleryParameters
+        "previewType" .Params.previewType
+        "embedPreview" .Params.embedPreview
+        "thumbnailHoverEffect" .Params.thumbnailHoverEffect
+        "lastRowJustification" .Params.lastRowJustification
         "galleryId" $galleryId
     }}
 

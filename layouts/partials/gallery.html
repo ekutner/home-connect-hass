@@ -1,20 +1,22 @@
 {{ $currentPage := .currentPage}}
-{{ $imagePath := .imagePath }}
+{{ $galleryPath := .galleryPath }}
+{{ $files := .files | default "*.jpg" }}
 {{ $sortOrder := .sortOrder | default "asc" }}
 {{ $rowHeight := .rowHeight | default 300 }}
 {{ $margins := .margins | default 2 }}
 {{ $imageResizeOptions := .imageResizeOptions | default (.Site.Params.gallery.imageResizeOptions | default "1920x1080 webp") }}
 {{ $loadJQuery := .loadJQuery | default true }}
 {{ $showExif := .showExif | default false }}
+{{ $captions := .captions | default true }}
 {{ $justifiedGalleryParameters := .justifiedGalleryParameters }}
 {{ $previewType := .previewType | default "blur"}}
-{{ $embedPreview := .embedPreview |default false}}
+{{ $embedPreview := .embedPreview |default true}}
 {{ $thumbnailHoverEffect := .thumbnailHoverEffect | default "none" }}
 {{ $lastRowJustification := .lastRowJustification | default "nojustify" }}
 {{ $galleryId := .galleryId | default (printf "gallery-%v" (delimit (shuffle (seq 1 9)) "")) }}
 {{ $filterOptions := "[]" }}
 
-{{ $images := resources.Match $imagePath }}
+{{ $images := resources.Match (path.Join $galleryPath $files) }}
 
 {{ if ne $sortOrder "random" }}
 	{{ $images = sort $images "Name" $sortOrder }}
@@ -78,10 +80,9 @@
 		{{ if eq $original.ResourceType "image" }}
 
 			{{/* Get metadata from sidecar file, if present. Else an empty dictionary is used. */}}
-			{{ $metaFileName := print $original.Name ".meta"}}
-			{{ $metadata := $currentPage.Page.Resources.GetMatch ($metaFileName) }}
+			{{ $metadataFileName := path.Join $galleryPath ".metadata" (printf "%s.json" (path.Base $original.Name) ) }}
+			{{ $metadata := resources.Get $metadataFileName }}
 			{{ if $metadata }}
-				{{ $metadata = $metadata.Content }}
 				{{ $metadata = $metadata | unmarshal }}
 			{{ else }}
 				{{ $metadata = dict }}
@@ -109,16 +110,13 @@
 				{{ end }}
 				<a href="{{ $full.RelPermalink }}" data-fancybox="{{$galleryId}}"
 					class="galleryImg"
-                    stam="{{$metadata }}"
 					data-download-src="{{$original.RelPermalink}}"
 					data-slug="{{ $original.Name }}"
+					data-meta="{{ $metadata }}"
 					{{ with $metadata }}
 						{{ if .Title }}
-							title="{{ .Title }}"
+							alt="{{ .Title }}"
                             data-caption="{{ .Title }}"
-						{{ else if .ImageDescription }}
-							title="{{ .ImageDescription }}"
-                            data-caption="{{ .ImageDescription }}"
 						{{ end }}
 
 						{{ if $showExif }}
@@ -134,7 +132,7 @@
 					<img
 						width="{{ $thumbnail.Width }}" height="{{ $thumbnail.Height }}"
 						{{ if (eq $previewType "blur") }}
-							{{ $preview_b := ($thumbnail.Fit ("32x32 q70 box jpg")) }}
+							{{ $preview_b := ($thumbnail.Fit ("24x24 q70 NearestNeighbor webp")) }}
 							style="filter: blur(25px);"
 							{{ if $embedPreview }}
 								src="data:image/jpeg;base64,{{ $preview_b.Content | base64Encode }}"
@@ -144,7 +142,7 @@
 							class="lazy"
 							data-src="{{ $thumbnail.RelPermalink }}"
 						{{ else if (eq $previewType "color") }}
-							{{ $preview_1p := ($thumbnail.Resize ("1x1 box png")) }}
+							{{ $preview_1p := ($thumbnail.Resize ("1x1 NearestNeighbor webp")) }}
 							{{ if $embedPreview }}
 								src="data:image/png;base64,{{ $preview_1p.Content | base64Encode }}"
 							{{ else }}
@@ -157,8 +155,8 @@
 						{{ end }}
 
 						{{ with $metadata }}
-							{{ if .ImageDescription }}
-								alt="{{ .ImageDescription }}"
+							{{ if .Title }}
+								alt="{{ .Title }}"
 							{{ end }}
 						{{ end }}
 					>
@@ -203,7 +201,7 @@
 			border : 0,
 			waitThumbnailsLoad : false,
 			lastRow : {{ $lastRowJustification }},
-			captions : false,
+			captions : {{ $captions }},
 			randomize: {{ eq $sortOrder "random" }}
 			// if there is at least one filter option
 		});

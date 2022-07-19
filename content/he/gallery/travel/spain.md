@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Travel/Spain
-files: "*"
+files: "*.jpg"
 cover: IMG_0551-Edit.jpg
 ---

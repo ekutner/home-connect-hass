@@ -7,7 +7,7 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Private/Travel/Spain (2010)
-files: "*"
+files: "*.jpg"
 cover: IMG_0335-Edit.jpg
 coverPos: 10%
 ---

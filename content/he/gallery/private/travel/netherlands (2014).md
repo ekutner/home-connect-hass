@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Private/Travel/Netherlands (2014)
-files: "*"
+files: "*.jpg"
 cover: KR4A5573.jpg
 ---

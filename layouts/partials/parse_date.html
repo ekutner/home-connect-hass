@@ -1,0 +1,11 @@
+{{- $dateTime := humanize . -}}
+{{- $dateParts := split $dateTime " " -}}
+{{- $date := index $dateParts 0 -}}
+{{- $day := index $dateParts 0 -}}
+{{- $month := index $dateParts 1 -}}
+{{- $year := index $dateParts 2 -}}
+{{- $hour := index $dateParts 3 -}}
+{{- $minute := index $dateParts 4 -}}
+{{- $final := printf "%s-%s-%sT%s:%s:00Z" $year $month $day $hour $minute -}}
+
+{{- return (time $final) -}}

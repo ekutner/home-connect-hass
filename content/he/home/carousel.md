@@ -16,7 +16,7 @@ fullscreen: true
 # Choose the user profile to display
 # This should be the username (folder name) of a profile in your `content/authors/` folder.
 # See https://sourcethemes.com/academic/docs/get-started/#introduce-yourself
-imagePath: /gallery/portfolio/*
+galleryPath: /gallery/portfolio/*
 rowHeight: 1000
 sort: random
 autoplay: 2000

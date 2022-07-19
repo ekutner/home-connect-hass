@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Private/Travel/Alaska (2005)
-files: "*"
+files: "*.jpg"
 cover: IMG_2025-Edit.jpg
 ---

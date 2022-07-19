@@ -7,7 +7,7 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Travel/Alaska
-files: "*"
+files: "*.jpg"
 cover: IMG_2025-Edit.jpg
 
 

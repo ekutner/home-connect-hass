@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Travel/Vietnam
-files: "*"
+files: "*.jpg"
 cover: IMG_0331.jpg
 ---

@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Travel/Madagascar
-files: "*"
+files: "*.jpg"
 cover: dscn1348.jpg
 ---

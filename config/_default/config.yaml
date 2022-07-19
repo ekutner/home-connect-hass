@@ -86,4 +86,4 @@ deployment:
   targets:
     - name: s3
       URL: "s3://photos.kutner.org?region=eu-west-1"
-      cloudFrontDistributionID: d1s8g60crwiyn4
+      cloudFrontDistributionID: "E20QZ4M8ZGU1KB"

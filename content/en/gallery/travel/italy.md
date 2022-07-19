@@ -7,6 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Travel/Italy
-files: "*"
+files: "*.jpg"
 cover: KR4A4261-Edit.jpg
 ---

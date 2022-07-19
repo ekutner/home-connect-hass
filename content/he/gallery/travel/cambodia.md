@@ -7,7 +7,7 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Travel/Cambodia
-files: "*"
+files: "*.jpg"
 cover: IMG_1145-Edit.jpg
 
 

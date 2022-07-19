@@ -7,9 +7,6 @@ date: 2020-12-15
 draft: false
 
 gallery: gallery/Travel/Iceland
-files: "*"
+files: "*.jpg"
 cover: R3102391.jpg
-
-featured: true
-
 ---

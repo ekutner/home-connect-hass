@@ -6,13 +6,15 @@
 
 {{ $context := dict
     "currentPage" $page
-    "imagePath" $section.Params.imagePath
+    "galleryPath" $section.Params.gallery
+    "files" $section.Params.files
     "sortOrder" $section.Params.sort
     "rowHeight" $section.Params.rowHeight
     "margins"  $section.Params.margins
     "imageResizeOptions" $section.Params.imageResizeOptions
     "loadJQuery" $section.Params.loadJQuery
     "showExif"  $section.Params.showExif
+    "captions" $section.Params.captions
     "justifiedGalleryParameters" $section.Params.justifiedGalleryParameters
     "previewType" $section.Params.previewType
     "embedPreview" $section.Params.embedPreview
