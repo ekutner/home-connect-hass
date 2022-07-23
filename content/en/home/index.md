@@ -3,7 +3,7 @@
 type: widget_page
 title: Home
 #title_align: "left"
-summary: 2015 
+summary:  
 
 # Homepage is headless, other widget pages are not.
 headless: true

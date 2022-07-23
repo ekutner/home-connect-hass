@@ -7,6 +7,9 @@ date: 2020-12-15
 draft: false
 layout: gallery 
 
+aliases:
+    - "/he/prvt/"
+
 ---
 
 

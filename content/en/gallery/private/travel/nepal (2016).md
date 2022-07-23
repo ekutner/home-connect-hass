@@ -2,7 +2,7 @@
 weight: 200
 title: Nepal (2016)
 #title_align: "left"
-summary: 2015
+summary: 
 date: 2020-12-15
 draft: false
 

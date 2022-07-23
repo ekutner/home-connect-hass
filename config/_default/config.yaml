@@ -23,14 +23,15 @@ removePathAccents: true
 module:
   imports:
     # - path: github.com/paazca/wowchemy-rtl-module
-    - path: github.com/wowchemy/wowchemy-hugo-modules/wowchemy-cms/v5
+    # - path: github.com/wowchemy/wowchemy-hugo-modules/wowchemy-cms/v5
     - path: github.com/wowchemy/wowchemy-hugo-modules/wowchemy/v5
 
 
 ############################
 ## ADVANCED
 ############################
-
+disablePathToLower: true
+disableAliases: false
 enableGitInfo: false
 summaryLength: 30
 paginate: 10
@@ -44,9 +45,20 @@ permalinks:
   tags: '/tag/:slug/'
   categories: '/category/:slug/'
   publication_types: '/publication-type/:slug/'
-disableAliases: true
+
+outputFormats:
+  PrivateIndex:
+    mediaType: "application/json"
+    baseName: "private_index"
+    isPlainText: true
+    notAlternative: true
+  PublicIndex:
+    mediaType: "application/json"
+    baseName: "public_index"
+    isPlainText: true
+    notAlternative: true
 outputs:
-  home: [HTML, RSS, JSON, WebAppManifest, headers, redirects]
+  home: [HTML, RSS, WebAppManifest, headers, redirects, PrivateIndex, PublicIndex]
   section: [HTML, RSS]
 imaging:
   resampleFilter: lanczos
@@ -66,7 +78,7 @@ markup:
 related:
   threshold: 80
   includeNewer: true
-  toLower: true
+  toLower: false
   indices:
     - name: title
       weight: 60.0

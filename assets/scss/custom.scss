@@ -18,26 +18,52 @@
  	border-radius: 0 6px 6px 0 !important;
 }
 
-.navbar-nav {
-	font-size: large;
-}
-
-.navbar-brand {
-	font-size: x-large;
-}
-
 #navbar-main {
+
+  display: flex;
+  justify-content: start;
   padding: 0;
+
+  .main-menu-item:dir(rtl) {
+    text-align: right !important;
+  }
+  .navbar-toggler {
+    margin: 0 20px;
+    flex-basis: auto;
+    flex-grow: 1;
+    text-align: left;
+  }
+  .navbar-toggler:dir(ltr) {
+    text-align: left;
+  }
+  .navbar-toggler:dir(rtl) {
+    text-align: right;
+  }
+
+  #navbar-content {
+    ul .nav-icons {
+      margin: 0 20px;
+    }
+  }
+
+  .container-xlx, .container-xl, .container-lg, .container-md, .container-sm, .container {
+    max-width: none;
+  }
+  .navbar-nav {
+    font-size: large;
+    padding: 0;
+  }
+  .navbar-brand {
+    font-size: x-large;
+  }
+
 }
 
-#navbar-main .main-menu-item {
-  // Fix for RTL
-	text-align: right !important;
-}
 
-#navbar-main .container-xl {
-  max-width: 3000px;
-}
+
+
+
+
 .network-icon li:last-of-type {
 	margin-right: 10px;
 }
@@ -104,6 +130,9 @@ figure {
   display: inline;
   margin: 1em, 1em, 1em, 1em;
 }
+
+
+
 // override default table
 .article-container table {
   margin: 0 auto;
@@ -213,4 +242,5 @@ html[dir*="ltr"] {
     right: 0;
     left: auto;
   }
+
 }

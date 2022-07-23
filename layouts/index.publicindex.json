@@ -1,0 +1,2 @@
+{{ $params := dict "exclude" "private" "lang" .Language.Lang}}
+{{ partial "index" $params }}

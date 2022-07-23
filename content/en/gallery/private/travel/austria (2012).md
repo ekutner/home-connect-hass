@@ -2,7 +2,7 @@
 weight: 40
 title: Austria (2012)
 #title_align: "left"
-summary: 2015
+summary: 
 date: 2020-12-15
 draft: false
 

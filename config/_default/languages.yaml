@@ -11,10 +11,11 @@ en:
   languagedirection: ltr
   title: Eran Kutner Photography
   weight: 1
-  footer:
-    copyright:
-      notice: '© {year} Eran Kutner'
-
+  params:
+    _merge: deep
+    footer:
+      copyright:
+        notice: '© {year} Eran Kutner'
 
 he:
   languageCode: "he"
@@ -22,9 +23,10 @@ he:
   contentDir: content/he
   title: "צילום ערן קוטנר"
   weight: 2
-  footer:
-    copyright:
-      notice: '© {year} כל הזכויות שמורות'
+  params:
+    footer:
+      copyright:
+        notice: '© {year} כל הזכויות שמורות'
 
 
 # Uncomment the lines below to configure your website in a second language.

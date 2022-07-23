@@ -1,6 +1,7 @@
 {{/* Gallery options */}}
 {{ $currentPage := .currentPage }}
 {{ $galleryPath := .galleryPath }}
+{{- $files := .files | default "*.jpg" -}}
 {{ $sortOrder := .sortOrder | default "asc"}}
 {{ $rowHeight := float (.rowHeight | default 300.0) }}
 {{ $margins := .margins | default 2 }}
@@ -10,7 +11,8 @@
 {{ $embedPreview := .embedPreview | default (.Site.Params.gallery.embedPreview | default false) }}
 {{ $carouselId := .carouselId | default (printf "carousel-%v" (delimit (shuffle (seq 1 9)) "")) }}
 
-{{ $images := resources.Match $galleryPath }}
+{{ $searchPath := path.Join (print "*" $galleryPath) $files}}
+{{- $images := resources.Match $searchPath -}}
 {{ if eq $sortOrder "random" }}
 	{{ $images = shuffle $images }}
 {{ else }}
@@ -91,7 +93,7 @@
 
 			{{ $image := ($original.Fit $imageResizeOptions ) }}
 			{{ $widthRatio := div (mul $original.Width 1.0) $original.Height }}
-			<div class="carousel__slide" style="padding:0; margin: 0px {{$margins}}px;" data-width-ratio="{{ $widthRatio }}">
+			<div class="carousel__slide" style="padding:0; margin: 0px {{$margins}}px; max-width: none;" data-width-ratio="{{ $widthRatio }}">
 				<img style="width:100%; height: 100%;"  data-lazy-src="{{ $image.RelPermalink }}" >
 			</div>
 		{{ end }}

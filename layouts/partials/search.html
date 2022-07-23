@@ -1,0 +1,188 @@
+{{/* Partial for built-in search and Algolia search. */}}
+{{ $search_provider := lower site.Params.features.search.provider }}
+{{ if eq $search_provider "algolia"}}
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.14.1/dist/algoliasearch-lite.umd.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.43.1/dist/instantsearch.production.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7.3.1/themes/reset-min.css" crossorigin="anonymous">
+{{ end }}
+{{ if in (slice "wowchemy" "algolia") $search_provider }}
+<aside class="search-modal" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>{{ i18n "search" }}</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#" aria-label="{{i18n "close" | default "Close"}}"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        {{ if eq $search_provider "wowchemy" }}
+        <input name="q" id="search-query" placeholder="{{i18n "search_placeholder"}}" autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control"
+        aria-label="{{i18n "search_placeholder"}}">
+        {{ else }}
+        <!-- Search box will appear here -->
+        {{ end }}
+      </div>
+
+      {{ $search_queries := false }}
+      {{ if isset site.Data (printf "search_queries.%s" .Site.Language.Lang) }}
+        {{ $search_queries = index site.Data (printf "search_queries.%s" .Site.Language.Lang) }}
+      {{ else if isset site.Data "search_queries" }}
+        {{ $search_queries = site.Data.search_queries }}
+      {{end}}
+
+      {{ if $search_queries }}
+      <div id="search-common-queries" class="pt-3">
+        <div class="font-weight-bold pb-3">{{ i18n "search_common_queries" | default "Common searches" }}</div>
+        <ul class="fa-ul">
+          {{ range $search_queries }}
+            <li class="pb-3">
+              <a href="{{.link | relURL}}"><i class="fa-li fas fa-search" aria-hidden="true"></i><span class="pl-1">{{.query | markdownify | emojify}}</span></a>
+            </li>
+          {{ end }}
+        </ul>
+      </div>
+      {{ end }}
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        <!-- Search results will appear here -->
+      </div>
+
+    </section>
+  </div>
+</aside>
+  {{ if eq $search_provider "algolia"}}
+    <style>
+      .hit-container {
+        margin: 10px;
+        display:grid;
+        grid-gap: 10px;
+        grid-template-columns:
+        150px auto;
+        font-family: Roboto, sans-serif;
+      }
+      .hit-container a:link, .hit-container a:visited {
+        text-decoration: none;
+        color: inherit;
+      }
+      .hit-image {
+        grid-row-start: span 2;
+      }
+      .hit-title {
+        font: 1.3em bold Roboto, sans-serif;
+        color: #e0e0e0;
+      }
+      .hit-summary {
+        color: #c0c0c0;
+      }
+      .hit-tags {
+        color: gray;
+      }
+    </style>
+    <script>
+      function searchFunction(requests) {
+        if (requests.every(({ params }) => !params.query)) {
+
+          result = Promise.resolve({
+            results: requests.map(() => ({
+              hits: [],
+              nbHits: 0,
+              nbPages: 0,
+              page: 0,
+              processingTimeMS: 0,
+            })),
+          });
+          return result;
+        }
+        result = algoliaClient.search(requests);
+        return result;
+      }
+
+      {{ if in .RelPermalink "private" }}
+        const algoliaClient = algoliasearch({{site.Params.features.search.algolia.app_id}}, {{site.Params.features.search.algolia.private_api_key}});
+        const searchClient = {
+          algoliaClient,
+          search(requests) {
+            return searchFunction(requests);
+          },
+        };
+        const search = instantsearch({
+          indexName: '{{ site.Params.features.search.algolia.private_index }}',
+          searchClient: searchClient,
+        });
+      {{ else }}
+        const algoliaClient = algoliasearch({{site.Params.features.search.algolia.app_id}}, {{site.Params.features.search.algolia.public_api_key}});
+        const searchClient = {
+          ...algoliaClient,
+          search(requests) {
+            return searchFunction(requests);
+          }
+        };
+        const search = instantsearch({
+          indexName: '{{ site.Params.features.search.algolia.public_index }}',
+          searchClient: searchClient,
+        });
+
+      {{ end }}
+      search.addWidgets([
+        instantsearch.widgets.searchBox({
+          container: '#search-box',
+          distinct: true,
+          autofocus: true,
+          //queryHook: queryHook
+        }),
+
+        instantsearch.widgets.hits({
+          container: '#search-hits',
+          templates: {
+            item(hit) {
+              var relpermalink = hit.relpermalink;
+              var locationPrefix = window.location.pathname.substring(0,3);
+              if (relpermalink.substring(0,3) != locationPrefix) {
+                relpermalink = locationPrefix + relpermalink.substring(3);
+              }
+
+              var album = hit.album ? hit.album + " - " : "";
+
+              var part1 =  `
+                <article>
+                  <div class="hit-container">
+                    <div class="hit-image" ><a href="${relpermalink}"><img src="${hit.thumbnail}" ></a></div>
+                    <div class="hit-header">
+                      <a href="${relpermalink}">
+                        <div class="hit-title" style=" ">${album}${instantsearch.highlight({ attribute: 'title', highlightedTagName: 'mark', hit })}</div>
+                        <div class="hit-summary">${instantsearch.highlight({ attribute: 'summary', highlightedTagName: 'mark', hit })}</div>
+                      </a>
+                    </div>
+                    <div class="hit-tags">
+              `;
+              var part2= ""
+              if (hit.tags) {
+                hit.tags.forEach((tag, i, a) => {
+                  if (tag!="") part2 += tag;
+                  if (i < a.length-1)  part2 += "; "
+                });
+              }
+              var part3 = `
+                    </div>
+                  </div>
+                </article>
+              `;
+            return part1 + part2 + part3;
+            }
+          }
+        })
+      ]);
+
+      search.start();
+    </script>
+  {{end}}
+{{end}}

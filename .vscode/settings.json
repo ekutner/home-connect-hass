@@ -1,6 +1,7 @@
 {
   "terminal.integrated.env.windows": {
-    "WC_POST_CSS__XX": "true"
+    "WC_POST_CSS__XX": "true",
+    "HUGO_NUMWORKERMULTIPLIER": "24"
   },
   "search.exclude": {
     "./assets/gallery": true,

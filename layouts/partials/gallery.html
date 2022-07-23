@@ -1,63 +1,71 @@
-{{ $currentPage := .currentPage}}
-{{ $galleryPath := .galleryPath }}
-{{ $files := .files | default "*.jpg" }}
-{{ $sortOrder := .sortOrder | default "asc" }}
-{{ $rowHeight := .rowHeight | default 300 }}
-{{ $margins := .margins | default 2 }}
-{{ $imageResizeOptions := .imageResizeOptions | default (.Site.Params.gallery.imageResizeOptions | default "1920x1080 webp") }}
-{{ $loadJQuery := .loadJQuery | default true }}
-{{ $showExif := .showExif | default false }}
-{{ $captions := .captions | default true }}
-{{ $justifiedGalleryParameters := .justifiedGalleryParameters }}
-{{ $previewType := .previewType | default "blur"}}
-{{ $embedPreview := .embedPreview |default true}}
-{{ $thumbnailHoverEffect := .thumbnailHoverEffect | default "none" }}
-{{ $lastRowJustification := .lastRowJustification | default "nojustify" }}
-{{ $galleryId := .galleryId | default (printf "gallery-%v" (delimit (shuffle (seq 1 9)) "")) }}
-{{ $filterOptions := "[]" }}
+{{- $currentPage := .currentPage}}
+{{- $galleryPath := .galleryPath -}}
+{{- $files := .files | default "*.jpg" -}}
+{{- $sortOrder := .sortOrder | default "asc" -}}
+{{- $rowHeight := .rowHeight | default .Site.Params.gallery.rowHeight | default 300 -}}
+{{- $margins := .margins | default 2 -}}
+{{- $imageResizeOptions := .imageResizeOptions | default (.Site.Params.gallery.imageResizeOptions | default "1920x1080 webp") -}}
+{{- $loadJQuery := .loadJQuery | default true -}}
+{{- $showExif := .showExif | default false -}}
+{{- $captions := .captions | default true -}}
+{{- $justifiedGalleryParameters := .justifiedGalleryParameters -}}
+{{- $previewType := .previewType | default "none"}}
+{{- $embedPreview := .embedPreview |default true}}
+{{- $thumbnailHoverEffect := .thumbnailHoverEffect | default "none" -}}
+{{- $lastRowJustification := .lastRowJustification | default "nojustify" -}}
+{{- $galleryId := .galleryId | default (printf "gallery-%v" (delimit (shuffle (seq 1 9)) "")) -}}
+{{- $filterOptions := "[]" -}}
 
-{{ $images := resources.Match (path.Join $galleryPath $files) }}
+{{ $searchPath := path.Join (print "*" $galleryPath) $files}}
+{{- $images := resources.Match $searchPath -}}
 
-{{ if ne $sortOrder "random" }}
-	{{ $images = sort $images "Name" $sortOrder }}
-{{ end }}
+{{- if ne $sortOrder "random" -}}
+	{{- $images = sort $images "Name" $sortOrder -}}
+{{- end -}}
+
+{{/*  {{- $images := resources.Match "*gallery/Travel/Iceland/*.jpg" -}}
+{{ range $image := $images}}
+	{{ $image.RelPermalink}}
+	{{ $new := $image.Fit "100x100"}}
+	{{ $new.RelPermalink }}<br>
+{{ end }}  */}}
 
 <!-- hugos image processing saves images at resources/_gen/images, if the property resourceDir
 	 is changed in hugos config.toml file the images are save <resourceDir>/_gen/images.
 	 Because it is not possible to access the value of resourceDir, users who change resourceDir also have to change
 	[params] resourceDir. -->
-	{{ $thumbnailResourceDir := printf "%s%s" (.Site.Params.resourceDir | default "resources") "/_gen/images/" }}
+	{{- $thumbnailResourceDir := printf "%s%s" (.Site.Params.resourceDir | default "resources") "/_gen/images/" -}}
 
 <!-- Load jquery, jquery-lazy, swipebox and justified_gallery only once per page -->
-{{ if not ($currentPage.Scratch.Get "galleryLoaded") }}
-  	{{ $currentPage.Scratch.Set "galleryLoaded" true }}
+{{- if not ($currentPage.Scratch.Get "galleryLoaded") -}}
+  	{{- $currentPage.Scratch.Set "galleryLoaded" true -}}
 	<!-- Use relURL to support hugo projects that run in a subdirectory (bug #18) -->
 
-	{{ if $loadJQuery }}
+	{{- if $loadJQuery -}}
 		<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 		<script>
 			var jQuery_local = $;
 		</script>
-	{{ end }}
+	{{- end -}}
 
-	{{ if not (eq $previewType "none") }}
+	{{- if not (eq $previewType "none") -}}
 		<script src="https://cdn.jsdelivr.net/npm/jquery-lazy@1.7.11/jquery.lazy.min.js"></script>
-	{{ end }}
+	{{- end -}}
 
 	<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"/>
-{{ end }}
+{{- end -}}
 
-{{ if not ($currentPage.Scratch.Get "fancyboxLoaded") }}
+{{- if not ($currentPage.Scratch.Get "fancyboxLoaded") -}}
 	{{/*  loading fb in gallery  */}}
-	{{/*  {{ warnf (printf "loading fb in gallery %s" $currentPage.RelPermalink) }}  */}}
-	{{ $currentPage.Scratch.Set "fancyboxLoaded" true }}
+	{{/*  {{- warnf (printf "loading fb in gallery %s" $currentPage.RelPermalink) -}}  */}}
+	{{- $currentPage.Scratch.Set "fancyboxLoaded" true -}}
 	<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css">
-{{/*  {{ else }}
+{{/*  {{- else -}}
 	not loading in gallery
-	{{ warnf (printf "skipping fb in gallery %s" .currentPage.RelPermalink) }}  */}}
-{{ end }}
+	{{- warnf (printf "skipping fb in gallery %s" .currentPage.RelPermalink) -}}  */}}
+{{- end -}}
 <script>
 	Fancybox.bind('[data-fancybox="{{$galleryId}}"]', {
 		Toolbar: {
@@ -75,95 +83,93 @@
 		},
 	});
 </script>
-<div id="{{ $galleryId }}" class="justified-gallery fullscreen">
+<div id="{{- $galleryId -}}" class="justified-gallery fullscreen">
 	{{ range $original := $images}}
-		{{ if eq $original.ResourceType "image" }}
-
+		{{- if eq $original.ResourceType "image" -}}
 			{{/* Get metadata from sidecar file, if present. Else an empty dictionary is used. */}}
-			{{ $metadataFileName := path.Join $galleryPath ".metadata" (printf "%s.json" (path.Base $original.Name) ) }}
-			{{ $metadata := resources.Get $metadataFileName }}
-			{{ if $metadata }}
-				{{ $metadata = $metadata | unmarshal }}
-			{{ else }}
-				{{ $metadata = dict }}
-			{{ end }}
+			{{- $metadataFileName := path.Join $galleryPath ".metadata" (printf "%s.json" (path.Base $original.Name) ) -}}
+			{{- $metadata := resources.Get $metadataFileName -}}
+			{{- if $metadata -}}
+				{{- $metadata = $metadata | unmarshal -}}
+			{{- else -}}
+				{{- $metadata = dict -}}
+			{{- end -}}
 
 			{{/* If the image has exif informations, those are merged together with the metadata from the file */}}
-			{{ if in "jpg jpeg tiff" $original.MediaType.SubType }}
-				{{ with $original.Exif }}
-					{{ $metadata = merge .Tags $metadata }}
-				{{ end }}
-			{{ end }}
+			{{- if in "jpg jpeg tiff" $original.MediaType.SubType -}}
+				{{- with $original.Exif -}}
+					{{- $metadata = merge .Tags $metadata -}}
+				{{- end -}}
+			{{- end -}}
 
 			{{/* Create thumbnail */}}
-			{{ $thumnailWidth := (int (div (mul (mul $original.Width 1.0) $rowHeight) $original.Height)) }}
-			{{ $thumbnail := ($original.Fit (printf "%dx%d webp" $thumnailWidth $rowHeight)) }}
-
+			{{- $thumbnailWidth := (int (div (mul (mul $original.Width 1.0) $rowHeight) $original.Height)) -}}
+			{{- $thumbnail := ($original.Fit (printf "%dx%d webp" $thumbnailWidth $rowHeight)) -}}
 
 			<div>
-				{{ $full := "" }}
-				{{ if $imageResizeOptions }}
+				{{- $full := "" -}}
+				{{- if $imageResizeOptions -}}
 					{{/* Downscale gallery image */}}
-					{{ $full = ($original.Fit (printf "%s" $imageResizeOptions)) }}
-				{{ else }}
-					{{ $full = $original }}
-				{{ end }}
-				<a href="{{ $full.RelPermalink }}" data-fancybox="{{$galleryId}}"
+					{{- $full = $original.Fit $imageResizeOptions -}}
+				{{- else -}}
+					{{- $full = $original -}}
+				{{- end -}}
+				<a href="{{- partial "functions/url_encode" $full.RelPermalink -}}" data-fancybox="{{$galleryId}}"
 					class="galleryImg"
-					data-download-src="{{$original.RelPermalink}}"
-					data-slug="{{ $original.Name }}"
-					data-meta="{{ $metadata }}"
-					{{ with $metadata }}
-						{{ if .Title }}
-							alt="{{ .Title }}"
-                            data-caption="{{ .Title }}"
-						{{ end }}
+					data-download-src="{{ partial "functions/url_encode" $original.RelPermalink }}"
+					data-slug="{{- partial "functions/url_encode" $original.Name -}}"
+					{{/*  data-meta="{{- $metadata -}}"  */}}
+					{{- with $metadata -}}
+						{{- if .Title -}}
+							alt="{{- .Title -}}"
+                            data-caption="{{- .Title -}}"
+						{{- end -}}
 
-						{{ if $showExif }}
-							data-description="{{ .Model }} + {{ .LensModel }}<br/>{{ .FocalLength }}mm f/{{ .FNumber }} {{ .ExposureTime }}sec ISO {{ .ISOSpeedRatings }}"
-						{{ end }}
+						{{- if $showExif }}
+							data-description="{{- .Model -}} + {{- .LensModel -}}<br/>{{- .FocalLength -}}mm f/{{- .FNumber -}} {{- .ExposureTime -}}sec ISO {{- .ISOSpeedRatings -}}"
+						{{- end -}}
 
-						{{ if not (eq $filterOptions "[]")  }}
+						{{- if not (eq $filterOptions "[]")  -}}
 							{{/* only include fields that are currently supported by the filter mechanism (in JS at the end of the file) */}}
-							data-meta="{{ (dict "Tags" $metadata.Tags "Rating" $metadata.Rating "ColorLabels" $metadata.ColorLabels "ImageDescription" $metadata.ImageDescription) | jsonify }}"
-						{{ end }}
-					{{ end }}
+							data-meta="{{- (dict "Tags" $metadata.Tags "Rating" $metadata.Rating "ColorLabels" $metadata.ColorLabels "ImageDescription" $metadata.ImageDescription) | jsonify -}}"
+						{{- end -}}
+					{{- end -}}
 					>
 					<img
-						width="{{ $thumbnail.Width }}" height="{{ $thumbnail.Height }}"
-						{{ if (eq $previewType "blur") }}
-							{{ $preview_b := ($thumbnail.Fit ("24x24 q70 NearestNeighbor webp")) }}
+						width="{{- $thumbnail.Width -}}" height="{{- $thumbnail.Height -}}"
+						{{- if (eq $previewType "blur") -}}
+							{{- $preview_b := ($thumbnail.Fit ("24x24 q70 NearestNeighbor webp")) -}}
 							style="filter: blur(25px);"
-							{{ if $embedPreview }}
-								src="data:image/jpeg;base64,{{ $preview_b.Content | base64Encode }}"
-							{{ else }}
-								src="{{ $preview_b.RelPermalink }}"
-							{{ end }}
+							{{- if $embedPreview -}}
+								src="data:image/jpeg;base64,{{- $preview_b.Content | base64Encode -}}"
+							{{- else -}}
+								src="{{- $preview_b.RelPermalink -}}"
+							{{- end -}}
 							class="lazy"
-							data-src="{{ $thumbnail.RelPermalink }}"
-						{{ else if (eq $previewType "color") }}
-							{{ $preview_1p := ($thumbnail.Resize ("1x1 NearestNeighbor webp")) }}
-							{{ if $embedPreview }}
-								src="data:image/png;base64,{{ $preview_1p.Content | base64Encode }}"
-							{{ else }}
-								src="{{ $preview_1p.RelPermalink }}"
-							{{ end }}
+							data-src="{{- partial "functions/url_encode" $thumbnail.RelPermalink -}}"
+						{{- else if (eq $previewType "color") -}}
+							{{- $preview_1p := ($thumbnail.Resize ("1x1 NearestNeighbor webp")) -}}
+							{{- if $embedPreview -}}
+								src="data:image/png;base64,{{- $preview_1p.Content | base64Encode -}}"
+							{{- else -}}
+								src="{{- $preview_1p.RelPermalink -}}"
+							{{- end -}}
 							class="lazy"
-							data-src="{{ $thumbnail.RelPermalink }}"
-						{{ else }}
-							src="{{ $thumbnail.RelPermalink }}"
-						{{ end }}
+							data-src="{{- partial "functions/url_encode" $thumbnail.RelPermalink -}}"
+						{{- else -}}
+							src="{{- partial "functions/url_encode" $thumbnail.RelPermalink -}}"
+						{{- end -}}
 
-						{{ with $metadata }}
-							{{ if .Title }}
-								alt="{{ .Title }}"
-							{{ end }}
-						{{ end }}
+						{{- with $metadata -}}
+							{{- if .Title -}}
+								alt="{{- .Title -}}"
+							{{- end -}}
+						{{- end -}}
 					>
 				</a>
 			</div>
-		{{ end }}
-	{{ end }}
+		{{- end -}}
+	{{- end -}}
 </div>
 
 
@@ -175,7 +181,7 @@
 
 	jQuery_local( document ).ready(() => {
 		let $ = jQuery_local
-		const gallery = jQuery_local("#{{ $galleryId }}");
+		const gallery = jQuery_local("#{{- $galleryId -}}");
 
 		// before the gallery initialization the listener has to be added
 		// else we can get a race condition and the listener is never called
@@ -196,13 +202,13 @@
 
 		// initialize the justified gallery
 		gallery.justifiedGallery({
-			rowHeight : {{ $rowHeight }},
-			margins : {{ $margins }},
+			rowHeight : {{- $rowHeight -}},
+			margins : {{- $margins -}},
 			border : 0,
 			waitThumbnailsLoad : false,
-			lastRow : {{ $lastRowJustification }},
-			captions : {{ $captions }},
-			randomize: {{ eq $sortOrder "random" }}
+			lastRow : {{- $lastRowJustification -}},
+			captions : {{- $captions -}},
+			randomize: {{- eq $sortOrder "random" -}}
 			// if there is at least one filter option
 		});
     });

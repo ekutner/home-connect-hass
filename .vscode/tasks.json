@@ -4,14 +4,14 @@
     "version": "2.0.0",
     "options": {
         "env": {
-            "WC_POST_CSS": "true"
+            "WC_POST_CSS": "false"
         }
     },
     "tasks": [
         {
             "label": "Hugo server",
             "type": "shell",
-            "command": "../hugo server --gc"
+            "command": "scripts/hugo server --gc --disableFastRender -v"
         }
     ]
 }

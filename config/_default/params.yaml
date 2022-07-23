@@ -83,14 +83,18 @@ features:
     commento:
       url: ''
   search:
-    provider: wowchemy
+    provider: algolia
     wowchemy:
       min_length: 2
       threshold: 0.4
     algolia:
       app_id: 'AW1SEXXQZE'
-      api_key: 'bfaa0b7c217b75c22ca730d2f754010b'
-      index_name: 'photos_search_en'
+      public_api_key: '683b88d47c2301a91295c8d3b52def49'
+      private_api_key: 'abe9833429495397b01ba56c0989c2d9'
+      public_index: 'public'
+      private_index: 'private'
+
+
       show_logo: true
   map:
     provider: ''
@@ -116,3 +120,4 @@ security:
 gallery:
   imageResizeOptions: "1920x1080 webp"
   thumbnailResizeOptions: "400x400 webp"
+  rowHeight: 300

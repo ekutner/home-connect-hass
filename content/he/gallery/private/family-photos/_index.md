@@ -1,6 +1,6 @@
 ---
 weight: 100
-title: Family Photos
+title: תמונות משפחתיות
 summary:
 date: 2020-12-15
 draft: false

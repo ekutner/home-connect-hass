@@ -2,7 +2,7 @@
 weight: 260
 title: ארצות הברית וקנדה (2019)
 #title_align: "left"
-summary: 2015
+summary: 
 date: 2020-12-15
 draft: false
 

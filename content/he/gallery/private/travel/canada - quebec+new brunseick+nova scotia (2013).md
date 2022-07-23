@@ -2,7 +2,7 @@
 weight: 70
 title: קנדה - קוויבק + ניו ברונסוויק + נובה סקוטיה (2013)
 #title_align: "left"
-summary: 2015
+summary: 
 date: 2020-12-15
 draft: false
 

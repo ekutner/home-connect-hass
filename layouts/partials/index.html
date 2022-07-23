@@ -1,4 +1,9 @@
+
 {{- /* Generate the search index. */ -}}
+{{ $exclude := .exclude }}
+{{ $lang := .lang }}
+{{- $rowHeight := .rowHeight | default .Site.Params.gallery.rowHeight | default 300 -}}
+
 {{- $index := slice -}}
 {{- $pages := site.RegularPages -}}
 {{- /* Add the index page of multi-page content separately since it's not in RegularPages above. */ -}}
@@ -8,7 +13,7 @@
 
 {{- range $pages -}}
   {{- /* Do not index drafts or private pages. */ -}}
-  {{- if and (not .Draft) (not .Params.private) | and (ne .Params.searchable false) -}}
+  {{- if and (not .Draft) (not .Params.private) (ne .Params.searchable false) (not (in .Permalink "hidden")) (not (in .Permalink $exclude )) -}}
 
     {{- /* Generate page description. */ -}}
     {{- $desc := "" -}}
@@ -50,15 +55,19 @@
           {{- end -}}
         {{- end -}}
     {{- end -}}
+    {{ $thumbnail := slice }}
+    {{- if (and .Params.gallery .Params.cover) -}}
+      {{- $thumbnail = path.Join "/" .Params.gallery .Params.cover -}}
+    {{- end -}}
 
     {{- /* Add page to index. */ -}}
     {{/* Exclude virtual pages which aren't backed by a file */}}
     {{- if .File -}}
-      {{- $index = $index | append (dict "objectID" .File.UniqueID "date" .Date.UTC.Unix "publishdate" .PublishDate "lastmod" .Lastmod.UTC.Unix "expirydate" .ExpiryDate.UTC.Unix "lang" .Lang "permalink" $permalink "relpermalink" $rel_permalink "title" $title "summary" (plainify $desc | htmlUnescape) "content" (.Plain | htmlUnescape | truncate 5000) "authors" $authors "kind" .Kind "type" .Type "section" .Section "tags" .Params.Tags "categories" .Params.Categories) -}}
+      {{- $index = $index | append (dict "objectID" (print $lang "-" .File.UniqueID) "thumbnail" $thumbnail "date" .Date.UTC.Unix "publishdate" .PublishDate "lastmod" .Lastmod.UTC.Unix "expirydate" .ExpiryDate.UTC.Unix "lang" .Lang "permalink" $permalink "relpermalink" $rel_permalink "title" $title "summary" (plainify $desc | htmlUnescape) "content" (.Plain | htmlUnescape | truncate 5000) "authors" $authors "kind" .Kind "type" .Type "section" .Section "tags" .Params.Tags "categories" .Params.Categories) -}}
 
       {{- if .Params.gallery -}}
         {{- $files := .Params.files | default "*.jpg" -}}
-        {{- $galleryPath := path.Join .Params.gallery $files -}}
+        {{- $galleryPath := path.Join ( print "*" .Params.gallery) $files -}}
         {{- $metadataPath := path.Join .Params.gallery ".metadata" -}}
         {{- $images := resources.Match $galleryPath -}}
         {{- range $image := $images -}}
@@ -68,14 +77,20 @@
 				    {{- $metadata = $metadata.Content | unmarshal -}}
             {{- with $metadata -}}
               {{- if or .Title .Subject .Tags -}}
+                {{- $thumbnailWidth := (int (div (mul (mul $image.Width 1.0) $rowHeight) $image.Height)) -}}
+                {{- $thumbnail := ($image.Fit (printf "%dx%d webp" $thumbnailWidth $rowHeight)) -}}
                 {{- $record := (dict
-                  "permalink" (printf "%s#%s" $permalink $image.Name)
-                  "relpermalink" (printf "%s#%s" $rel_permalink $image.Name)
+                  "objectID" (md5  $image.RelPermalink)
+                  "size" $thumbnailWidth
+                  "relpermalink" (printf "%s#%s" $rel_permalink (partial "functions/url_encode" $image.Name))
+                  "album" $title
                   "title" (.Title | default "")
                   "summary" (.Subject |default "")
-                  "date" (partial "parse_date" (index . "Date taken") ).Unix
+                  "thumbnail" (partial "functions/url_encode" $thumbnail.RelPermalink)
+                  "date" (partial "functions/parse_date" (index . "Date taken") ).Unix
                   "section" .Kind
                   "tags" (split .Tags "; ")
+                  "rating" .Rating
                 )
                 -}}
                 {{- $index = $index | append ( $record ) -}}

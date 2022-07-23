@@ -2,7 +2,7 @@
 weight: 60
 title: קנדה - ניופאונדלנד (2011)
 #title_align: "left"
-summary: 2015
+summary: 
 date: 2020-12-15
 draft: false
 

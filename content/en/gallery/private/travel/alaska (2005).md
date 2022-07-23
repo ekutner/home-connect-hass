@@ -2,7 +2,7 @@
 weight: 20
 title: Alaska (2005)
 #title_align: "left"
-summary: 2015
+summary: 
 date: 2020-12-15
 draft: false
 

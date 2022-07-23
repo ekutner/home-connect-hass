@@ -17,16 +17,19 @@ main:
     url: /gallery/travel/
     weight: 40
   - name: פרטי
-    url: prvt
+    url: /prvt/
     weight: 50
     # workaround for bootstrap bug that tries to download the page on mouse over
-    post: >
-      <script>
-        var element = document.querySelector('a[href*="prvt"]');
-        element.addEventListener("mousedown", function(event){
-          window.location.href = element.href.replace("prvt", "gallery/private/");
-        }, true);
-      </script>
+    # post: >
+    #   <script>
+    #     var element = document.querySelector('a[href*="prvt"]');
+    #     element.addEventListener("mousedown", function(event){
+    #       event.stopPropagation();
+    #       event.preventDefault();
+    #       event.stopImmediatePropagation()
+    #       window.location.href = element.href.replace("prvt", "gallery/private/");
+    #     }, true);
+    #   </script>
 
 
 # Link to a PDF of your resume/CV from the menu.

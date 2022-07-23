@@ -6,7 +6,7 @@ summary:
 date: 2020-12-15
 draft: false
 
-gallery: gallery/Private/Travel/Iceland
+gallery: gallery/Travel/Iceland
 cover: R3102391.jpg
 
 ---

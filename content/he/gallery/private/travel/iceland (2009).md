@@ -2,7 +2,7 @@
 weight: 150
 title: איסלנד (2009)
 #title_align: "left"
-summary: 2015
+summary: 
 date: 2020-12-15
 draft: false
 

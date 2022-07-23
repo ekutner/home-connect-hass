@@ -2,15 +2,13 @@
 weight: 1000
 title: קמבודיה
 #title_align: "left"
-summary: 2015 
+summary:  
 date: 2020-12-15
 draft: false
 
 gallery: gallery/Travel/Cambodia
 files: "*.jpg"
 cover: IMG_1145-Edit.jpg
-
-
-featured: true
+coverPos: 20%
 
 ---
