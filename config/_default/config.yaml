@@ -93,6 +93,12 @@ security:
 sitemap:
   _merge: deep
 
+minify:
+  tdewolff:
+    html:
+      keepQuotes: true
+    json:
+      keepNumbers: true
 
 deployment:
   targets:

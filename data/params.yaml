@@ -1,0 +1,19 @@
+gallery:
+  _conf:
+    captions: false
+  travel:
+    alaska:
+      title.en: Alaska
+      title.he: אלסקה
+      gallery: gallery/Travel/Alaska
+      cover: IMG_2025-Edit.jpg
+      coverPos: 25%
+    canada:
+      title.en: Canada
+      title.he: קנדה
+      gallery: gallery/Travel/Canada
+      cover: KR4A2823-Edit.jpg
+      coverPos: 35%
+  private:
+    _conf:
+      captions: true

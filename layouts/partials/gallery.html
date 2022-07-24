@@ -1,26 +1,25 @@
 {{- $currentPage := .currentPage}}
-{{- $galleryPath := .galleryPath -}}
+{{- $gallery := .gallery -}}
 {{- $files := .files | default "*.jpg" -}}
-{{- $sortOrder := .sortOrder | default "asc" -}}
-{{- $rowHeight := .rowHeight | default .Site.Params.gallery.rowHeight | default 300 -}}
+{{- $sort := .sort | default "asc" -}}
+{{- $rowHeight := .rowHeight | default .rowheight | default .Site.Params.gallery.rowHeight | default 300 -}}
 {{- $margins := .margins | default 2 -}}
-{{- $imageResizeOptions := .imageResizeOptions | default (.Site.Params.gallery.imageResizeOptions | default "1920x1080 webp") -}}
-{{- $loadJQuery := .loadJQuery | default true -}}
-{{- $showExif := .showExif | default false -}}
+{{- $imageResizeOptions := .imageResizeOptions | default .imageresizeoptions | default (.Site.Params.gallery.imageResizeOptions | default "1920x1080 webp") -}}
+{{- $loadJQuery := .loadJQuery | default .loadjquery | default true -}}
+{{- $showExif := .showExif | default .showexif | default false -}}
 {{- $captions := .captions | default true -}}
-{{- $justifiedGalleryParameters := .justifiedGalleryParameters -}}
-{{- $previewType := .previewType | default "none"}}
-{{- $embedPreview := .embedPreview |default true}}
-{{- $thumbnailHoverEffect := .thumbnailHoverEffect | default "none" -}}
-{{- $lastRowJustification := .lastRowJustification | default "nojustify" -}}
+{{- $justifiedGalleryParameters := .justifiedGalleryParameters | default .justifiedgalleryparameters -}}
+{{- $previewType := .previewType | default .previewtype | default "none"}}
+{{- $embedPreview := .embedPreview |default .embedpreview | default true}}
+{{- $lastRowJustification := .lastRowJustification | default .lastrowjustification | default "nojustify" -}}
 {{- $galleryId := .galleryId | default (printf "gallery-%v" (delimit (shuffle (seq 1 9)) "")) -}}
 {{- $filterOptions := "[]" -}}
 
-{{ $searchPath := path.Join (print "*" $galleryPath) $files}}
+{{ $searchPath := path.Join (print "*" $gallery) $files}}
 {{- $images := resources.Match $searchPath -}}
 
-{{- if ne $sortOrder "random" -}}
-	{{- $images = sort $images "Name" $sortOrder -}}
+{{- if ne $sort "random" -}}
+	{{- $images = sort $images "Name" $sort -}}
 {{- end -}}
 
 {{/*  {{- $images := resources.Match "*gallery/Travel/Iceland/*.jpg" -}}
@@ -87,7 +86,7 @@
 	{{ range $original := $images}}
 		{{- if eq $original.ResourceType "image" -}}
 			{{/* Get metadata from sidecar file, if present. Else an empty dictionary is used. */}}
-			{{- $metadataFileName := path.Join $galleryPath ".metadata" (printf "%s.json" (path.Base $original.Name) ) -}}
+			{{- $metadataFileName := path.Join $gallery ".metadata" (printf "%s.json" (path.Base $original.Name) ) -}}
 			{{- $metadata := resources.Get $metadataFileName -}}
 			{{- if $metadata -}}
 				{{- $metadata = $metadata | unmarshal -}}
@@ -208,7 +207,7 @@
 			waitThumbnailsLoad : false,
 			lastRow : {{- $lastRowJustification -}},
 			captions : {{- $captions -}},
-			randomize: {{- eq $sortOrder "random" -}}
+			randomize: {{- eq $sort "random" -}}
 			// if there is at least one filter option
 		});
     });

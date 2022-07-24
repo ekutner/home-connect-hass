@@ -50,9 +50,10 @@
 
 <div class="albums" >
 {{ range $page := .Pages }}
+    {{ $params := partial "functions/params" . }}
     <div class="album">
-        {{ if and .Params.gallery .Params.cover }}
-            {{ $coverImagePath := path.Join .Params.gallery .Params.cover }}
+        {{ if and $params.gallery $params.cover }}
+            {{ $coverImagePath := path.Join $params.gallery $params.cover }}
             {{ $coverImage := resources.Get $coverImagePath}}
 
                 <a href="{{.RelPermalink}}">
@@ -62,7 +63,7 @@
                     {{ else }}
                         <p>Missing cover image file for album: {{ $coverImagePath }} </p>
                     {{ end }}
-                    <div class="album-title">{{ .Title }}</div>
+                    <div class="album-title">{{ $params.title }}</div>
                 </a>
         {{ else }}
             <a href="{{.RelPermalink}}">{{.Title}} - Missing cover image</a>

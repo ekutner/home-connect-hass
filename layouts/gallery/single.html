@@ -1,8 +1,8 @@
 {{- define "main" -}}
-
+{{ $params := partial "functions/params" . }}
 {{ $rtl := eq .Site.Language.LanguageDirection "rtl" }}
 
-{{ $coverPos := .Params.coverPos | default "center" }}
+{{ $coverPos := $params.coverPos | default $params.coverpos | default "center" }}
 
 <style>
 .album {
@@ -69,35 +69,23 @@
     visibility: visible;
 }
 </style>
-{{ if and .Params.gallery .Params.cover }}
-    {{ $coverImagePath := path.Join .Params.gallery .Params.cover }}
+
+{{ if and $params.gallery $params.cover }}
+    {{ $coverImagePath := path.Join $params.gallery $params.cover }}
     {{ $coverImage := resources.Get $coverImagePath}}
     {{ $galleryId := (printf "gallery-%v-%v" .Page.File.UniqueID (delimit (shuffle (seq 1 9)) "")) }}
 
-    {{ $context := dict
+    {{ $context := merge $params (dict
         "currentPage" .
-        "galleryPath" .Params.gallery
-        "files" .Params.files
-        "sortOrder" .Params.sort
-        "rowHeight" .Params.rowHeight
-        "margins" .Params.margins
-        "imageResizeOptions" .Params.imageResizeOptions
-        "loadJQuery" .Params.loadJQuery
-        "showExif" .Params.showExif
-        "justifiedGalleryParameters" .Params.justifiedGalleryParameters
-        "previewType" .Params.previewType
-        "embedPreview" .Params.embedPreview
-        "thumbnailHoverEffect" .Params.thumbnailHoverEffect
-        "lastRowJustification" .Params.lastRowJustification
         "galleryId" $galleryId
-    }}
+    )}}
 
     <div class="album">
         <div class="album-cover">
             {{ if $coverImage }}
                 <img class="album-cover-image" src="{{ $coverImage.RelPermalink }}"  />
             {{- end -}}
-            <div class="album-cover-title">{{.Title}}</div>
+            <div class="album-cover-title">{{$params.title}}</div>
             <div class="gallery-slideshow-button-container">
                 <button class="gallery-slideshow-button" data-fancybox-trigger="{{$galleryId}}"><i class="fa-solid fa-play"></i></button>
                 <span class="tooltiptext">Start Slideshow</span>

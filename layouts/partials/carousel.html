@@ -1,22 +1,22 @@
 {{/* Gallery options */}}
 {{ $currentPage := .currentPage }}
-{{ $galleryPath := .galleryPath }}
+{{ $gallery := .gallery }}
 {{- $files := .files | default "*.jpg" -}}
-{{ $sortOrder := .sortOrder | default "asc"}}
-{{ $rowHeight := float (.rowHeight | default 300.0) }}
+{{ $sort := .sort | default "asc"}}
+{{ $rowHeight := float (.rowHeight | default .rowheight | default 300.0) }}
 {{ $margins := .margins | default 2 }}
 {{ $autoplay := .autoplay | default 0}}
-{{ $imageResizeOptions := .imageResizeOptions | default (.Site.Params.gallery.imageResizeOptions | default "1920x1080 webp") }}
-{{ $showExif := .showExif | default false }}
-{{ $embedPreview := .embedPreview | default (.Site.Params.gallery.embedPreview | default false) }}
+{{ $imageResizeOptions := .imageResizeOptions | default .imageresizeoptions | default (.Site.Params.gallery.imageResizeOptions | default "1920x1080 webp") }}
+{{ $showExif := .showExif | default .showexif | default false }}
+{{ $embedPreview := .embedPreview | default .embedpreview | default false }}
 {{ $carouselId := .carouselId | default (printf "carousel-%v" (delimit (shuffle (seq 1 9)) "")) }}
 
-{{ $searchPath := path.Join (print "*" $galleryPath) $files}}
+{{ $searchPath := path.Join (print "*" $gallery) $files}}
 {{- $images := resources.Match $searchPath -}}
-{{ if eq $sortOrder "random" }}
+{{ if eq $sort "random" }}
 	{{ $images = shuffle $images }}
 {{ else }}
-	{{ $images = sort $images "Name" $sortOrder }}
+	{{ $images = sort $images "Name" $sort }}
 {{ end }}
 
 

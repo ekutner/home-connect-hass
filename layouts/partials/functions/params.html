@@ -1,0 +1,37 @@
+{{ $path := "" }}
+{{ with .File }}
+      {{ $path = .Path }}
+{{ else }}
+      {{ $path = .Path }}
+{{ end }}
+
+{{ $pagePath := substr $path 0 -3 }}
+{{ $pathParts := split $pagePath "\\"}}
+{{ $indexPath := replace $pagePath "\\" "."}}
+
+{{ $conf := dict }}
+{{ $data := .Site.Data.params }}
+{{ range $pathPart := $pathParts }}
+    {{ if $data }}
+        {{ $localConf := index $data "_conf" }}
+        {{ if $localConf }}
+            {{ $conf = merge $conf $localConf }}
+        {{ end }}
+        {{ $data = index $data $pathPart }}
+    {{ end }}
+{{ end }}
+
+{{ $lang := .Language.Lang }}
+{{ if ne $data nil }}
+    {{ range $key, $val := $data }}
+        {{ if eq (substr $key -3 1 ) "." }}
+            {{ if eq (substr $key -2 ) $lang }}
+                {{ $conf = merge $conf (dict (substr $key 0 -3) $val) }}
+            {{ end }}
+        {{ else }}
+            {{ $conf = merge $conf (dict $key $val) }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+{{ $conf = merge .Params $conf }}
+{{ return $conf }}
