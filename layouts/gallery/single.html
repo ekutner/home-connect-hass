@@ -35,37 +35,47 @@
     font-style: normal;
 }
 
-.gallery-slideshow-button-container {
-    position: relative;
+.cover-buttons-container {
+    display:flex;
+    gap:20px;
+    position: absolute;
+    bottom:10px;
 }
-.gallery-slideshow-button {
+.cover-buttons-container:dir(rtl) {
+    left: 20px;
+}
+.cover-buttons-container:dir(ltr) {
+    right: 20px;
+}
+
+.cover-button {
     background-color: rgba(255,255,255,.15);
-    background-repeat: no-repeat;
+    text-shadow: 2px 2px #a0a0a0;
     border: none;
     cursor: pointer;
     overflow: hidden;
     outline: none;
     color: white;
-    font-size: 20pt;
-    position: absolute;
+    font-size: 1.6em;
     padding: 0px 12px;
     border-radius: 7px;
-    {{- cond $rtl "left" "right" -}}: 20px;
-    bottom: 10px;
-    text-shadow: 2px 2px #a0a0a0;
 }
-.gallery-slideshow-button-container .tooltiptext {
+
+.cover-buttons-container .tooltiptext {
     visibility: hidden;
     background-color: black;
     color: #fff;
     text-align: center;
     padding: 5px 10px;
     border-radius: 6px;
-    {{- cond $rtl "right" "left" -}}: 90%;
     position: absolute;
-    z-index: 1;
+    right: 0;
+    bottom: 3em;
 }
-.gallery-slideshow-button-container:hover .tooltiptext {
+.cover-button-slideshow:hover .tooltiptext {
+    visibility: visible;
+}
+.cover-button-share:hover .tooltiptext {
     visibility: visible;
 }
 </style>
@@ -86,9 +96,13 @@
                 <img class="album-cover-image" src="{{ partial "functions/url_encode" $coverImage.RelPermalink }}"  />
             {{- end -}}
             <div class="album-cover-title">{{$params.title}}</div>
-            <div class="cover-buttons">
-                <div class="gallery-slideshow-button-container">
-                    <button class="gallery-slideshow-button" data-fancybox-trigger="{{$galleryId}}"><i class="fa-solid fa-play"></i></button>
+            <div class="cover-buttons-container">
+                {{/*  <div class="cover-button-share">
+                    <button class="cover-button"><i class="fa-solid fa-share-nodes"></i></button>
+                    <span class="tooltiptext">Share Page</span>
+                </div>  */}}
+                <div class="cover-button-slideshow">
+                    <button class="cover-button" data-fancybox-trigger="{{$galleryId}}"><i class="fa-solid fa-play"></i></button>
                     <span class="tooltiptext">Start Slideshow</span>
                 </div>
             </div>
@@ -96,4 +110,9 @@
         {{ partial "gallery.html" $context }}
     </div>
     {{- end -}}
+<script>
+function share(event) {
+
+}
+</script>
 {{- end -}}
