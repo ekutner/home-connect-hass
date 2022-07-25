@@ -35,3 +35,21 @@ main:
     #     //  window.location.href = element.href.replace("prvt", "gallery/private/");
     #     // }, true);
     #   </script>
+
+main_right:
+  - name: ""
+    pre: '<span style="font-size: 1.2em;"><i class="fa-brands fa-instagram" ></i>'
+    post: "</span>"
+    url: "https://instagram.com/erankutner"
+    weight: 10
+  - name: " "
+    pre: '<span style="font-size: 1.2em;"><i class="fa-brands fa-twitter " ></i>'
+    post: "</span>"
+    url: "https://twitter.com/ekutner"
+    weight: 20
+
+  - name: "   "
+    pre: '<span style="font-size: 1.2em;"><i class="fa-brands fa-facebook" ></i>'
+    post: "</span>"
+    url: "https://facebook.com/ekutner"
+    weight: 30

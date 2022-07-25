@@ -9,12 +9,13 @@
 {{- $showExif := .showExif | default .showexif | default false -}}
 {{- $captions := .captions | default true -}}
 {{- $justifiedGalleryParameters := .justifiedGalleryParameters | default .justifiedgalleryparameters -}}
-{{- $previewType := .previewType | default .previewtype | default "none"}}
+{{- $previewType := .previewType | default .previewtype | default "blur"}}
 {{- $embedPreview := .embedPreview |default .embedpreview | default true}}
 {{- $lastRowJustification := .lastRowJustification | default .lastrowjustification | default "nojustify" -}}
 {{- $galleryId := .galleryId | default (printf "gallery-%v" (delimit (shuffle (seq 1 9)) "")) -}}
 {{- $filterOptions := "[]" -}}
 
+{{ $rtl := eq .Site.Language.LanguageDirection "rtl" }}
 {{ $searchPath := path.Join (print "*" $gallery) $files}}
 {{- $images := resources.Match $searchPath -}}
 
@@ -59,19 +60,33 @@
 	{{/*  loading fb in gallery  */}}
 	{{/*  {{- warnf (printf "loading fb in gallery %s" $currentPage.RelPermalink) -}}  */}}
 	{{- $currentPage.Scratch.Set "fancyboxLoaded" true -}}
-	<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.29/dist/fancybox.umd.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css">
 {{/*  {{- else -}}
 	not loading in gallery
 	{{- warnf (printf "skipping fb in gallery %s" .currentPage.RelPermalink) -}}  */}}
 {{- end -}}
+<style>
+.fancybox__caption {
+	text-align: {{ cond $rtl "right" "left"}};
+	font-size: 1.2em;
+}
+.fancybox__caption .caption-summary {
+	color: #c0c0c0;
+	font-size: 0.9em;
+}
+
+</style>
 <script>
 	Fancybox.bind('[data-fancybox="{{$galleryId}}"]', {
+		Image: {
+			"fit": "contain",
+		},
 		Toolbar: {
 			display: [
-				{ id: "prev", position: "center" },
-				{ id: "counter", position: "center" },
-				{ id: "next", position: "center" },
+				//{ id: "prev", position: "left" },
+				{ id: "counter", position: "left" },
+				//{ id: "next", position: "left" },
 				"zoom",
 				"slideshow",
 				"fullscreen",
@@ -79,6 +94,35 @@
 				"thumbs",
 				"close",
 			],
+		},
+		on: {
+			{{/*  "*": (event, fancybox, slide) => {
+			  console.log(`event: ${event}`);
+			},  */}}
+			ready: (fancybox, slide) => {
+				fancybox.plugins.Thumbs.toggle();
+				if (typeof fancybox.Carousel.plugins.Autoplay != 'undefined') {
+					fancybox.Carousel.plugins.Autoplay.stop();
+				}
+				if (typeof _allCarousels != 'undefined') {
+					_allCarousels.forEach( carousel => {
+						carousel.plugins.Autoplay.stop();
+					});
+				}
+			},
+			"Carousel.createSlide": (fancybox, carousel, slide) => {
+			  //console.log(slide.$el);
+			  //fancybox.getSlide().Panzoom.zoomIn();
+			},
+
+			closing: (fancybox, slide) => {
+				if (typeof _allCarousels != 'undefined') {
+					_allCarousels.forEach( carousel => {
+						carousel.plugins.Autoplay.start();
+					});
+				}
+			},
+
 		},
 	});
 </script>
@@ -116,21 +160,25 @@
 				<a href="{{- partial "functions/url_encode" $full.RelPermalink -}}" data-fancybox="{{$galleryId}}"
 					class="galleryImg"
 					data-download-src="{{ partial "functions/url_encode" $original.RelPermalink }}"
-					data-slug="{{- partial "functions/url_encode" $original.Name -}}"
-					{{/*  data-meta="{{- $metadata -}}"  */}}
-					{{- with $metadata -}}
-						{{- if .Title -}}
+					data-thumb="{{ partial "functions/url_encode" $thumbnail.RelPermalink }}"
+					data-slug="{{- path.BaseName $original.Name -}}" id="{{- path.BaseName $original.Name -}}"
+					{{/*  data-meta="{{- $metadata -}}" */}}
+					{{- if $captions -}}
+						{{- with $metadata -}}
+							{{ $date := (index . "Date modified") }}
+							{{ $date = cond (ne $date nil) (printf " (%s)" (substr $date 0 -6)) ("") }}
+							{{ $title := print (cond ( ne .Title nil) .Title "") $date }}
 							alt="{{- .Title -}}"
-                            data-caption="{{- .Title -}}"
-						{{- end -}}
+							data-caption="<span class='caption-title'>{{$title}}</span>{{ cond (ne .Subject nil) (print "<br/><span class='caption-summary'>" .Subject "</span>") "" }}"
 
-						{{- if $showExif }}
-							data-description="{{- .Model -}} + {{- .LensModel -}}<br/>{{- .FocalLength -}}mm f/{{- .FNumber -}} {{- .ExposureTime -}}sec ISO {{- .ISOSpeedRatings -}}"
-						{{- end -}}
+							{{- if $showExif }}
+								data-description="{{- .Model -}} + {{- .LensModel -}}<br/>{{- .FocalLength -}}mm f/{{- .FNumber -}} {{- .ExposureTime -}}sec ISO {{- .ISOSpeedRatings -}}"
+							{{- end -}}
 
-						{{- if not (eq $filterOptions "[]")  -}}
-							{{/* only include fields that are currently supported by the filter mechanism (in JS at the end of the file) */}}
-							data-meta="{{- (dict "Tags" $metadata.Tags "Rating" $metadata.Rating "ColorLabels" $metadata.ColorLabels "ImageDescription" $metadata.ImageDescription) | jsonify -}}"
+							{{- if not (eq $filterOptions "[]")  -}}
+								{{/* only include fields that are currently supported by the filter mechanism (in JS at the end of the file) */}}
+								data-meta="{{- (dict "Tags" $metadata.Tags "Rating" $metadata.Rating "ColorLabels" $metadata.ColorLabels "ImageDescription" $metadata.ImageDescription) | jsonify -}}"
+							{{- end -}}
 						{{- end -}}
 					{{- end -}}
 					>
@@ -158,10 +206,11 @@
 						{{- else -}}
 							src="{{- partial "functions/url_encode" $thumbnail.RelPermalink -}}"
 						{{- end -}}
-
-						{{- with $metadata -}}
-							{{- if .Title -}}
-								alt="{{- .Title -}}"
+						{{- if $captions -}}
+							{{- with $metadata -}}
+								{{- if .Title -}}
+									alt="{{- .Title -}}"
+								{{- end -}}
 							{{- end -}}
 						{{- end -}}
 					>
@@ -214,16 +263,18 @@
 
 
 // Start the fancybox with a selected image if it is specified in the url
-function startFancyboxFromUrl() {
-  if (!Fancybox.getInstance()) {
-    const { hash, slug, index } = Fancybox.Plugins.Hash.getParsedURL();
-    if (hash && slug) {
-	  Fancybox.show();
-    }
-  }
-}
+//function startFancyboxFromUrl() {
+//  if (!Fancybox.getInstance()) {
+//    const { hash, slug, index } = Fancybox.Plugins.Hash.getParsedURL();
+//	console.log("hash="+hash+"   slug="+slug + "  index=1"+index);
+//    if (hash && slug) {
+//	  //Fancybox.show();
+//	  Fancybox.fromOpener('[data-fancybox="{{$galleryId}}"]', { slug: hash});
+//    }
+//  }
+//}
 //window.addEventListener("hashchange", startFancyboxFromUrl, false);
-startFancyboxFromUrl();
+//startFancyboxFromUrl();
 
 </script>
 

@@ -56,17 +56,17 @@
             {{ $coverImagePath := path.Join $params.gallery $params.cover }}
             {{ $coverImage := resources.Get $coverImagePath}}
 
-                <a href="{{.RelPermalink}}">
+                <a href="{{partial "functions/url_encode" .RelPermalink}}">
                     {{ if $coverImage }}
                         {{ $coverThumbnail := $coverImage.Fit .Site.Params.gallery.thumbnailResizeOptions }}
-                        <img class="album-thumbnail" src="{{ $coverThumbnail.RelPermalink }}"  />
+                        <img class="album-thumbnail" src="{{ partial "functions/url_encode" $coverThumbnail.RelPermalink }}"  />
                     {{ else }}
                         <p>Missing cover image file for album: {{ $coverImagePath }} </p>
                     {{ end }}
                     <div class="album-title">{{ $params.title }}</div>
                 </a>
         {{ else }}
-            <a href="{{.RelPermalink}}">{{.Title}} - Missing cover image</a>
+            <a href="{{partial "functions/url_encode" .RelPermalink}}">{{.Title}} - Missing cover image</a>
         {{end}}
     </div>
 {{end}}

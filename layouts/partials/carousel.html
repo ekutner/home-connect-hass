@@ -47,9 +47,15 @@
 		'fill': true
 		}
 	);
+
+	if (typeof window._allCarousels == 'undefined') {
+		window._allCarousels = [];
+	}
+	window._allCarousels.push(myCarousel)
+
 	//myCarousel.plugins.Autoplay.start()
 </script>
-<style>
+{{/*  <style>
 	.carousel {
 		--carousel-button-bg: #ffffff30;
 		--carousel-button-width: 60px;
@@ -61,7 +67,7 @@
 			0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px
 			4px -1px;
 	}
-</style>
+</style>  */}}
 
 <div id="{{ $carouselId }}" class="carousel fullscreen" dir="ltr">
 	{{ range $original := $images }}

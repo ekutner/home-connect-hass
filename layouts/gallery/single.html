@@ -83,12 +83,14 @@
     <div class="album">
         <div class="album-cover">
             {{ if $coverImage }}
-                <img class="album-cover-image" src="{{ $coverImage.RelPermalink }}"  />
+                <img class="album-cover-image" src="{{ partial "functions/url_encode" $coverImage.RelPermalink }}"  />
             {{- end -}}
             <div class="album-cover-title">{{$params.title}}</div>
-            <div class="gallery-slideshow-button-container">
-                <button class="gallery-slideshow-button" data-fancybox-trigger="{{$galleryId}}"><i class="fa-solid fa-play"></i></button>
-                <span class="tooltiptext">Start Slideshow</span>
+            <div class="cover-buttons">
+                <div class="gallery-slideshow-button-container">
+                    <button class="gallery-slideshow-button" data-fancybox-trigger="{{$galleryId}}"><i class="fa-solid fa-play"></i></button>
+                    <span class="tooltiptext">Start Slideshow</span>
+                </div>
             </div>
         </div>
         {{ partial "gallery.html" $context }}

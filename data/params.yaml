@@ -17,3 +17,216 @@ gallery:
   private:
     _conf:
       captions: true
+    travel:
+      africa (2006):
+        title.en: Africa (2006)
+        title.he: אפריקה (2006)
+        gallery: gallery/Private/Travel/Africa (2006)
+        cover: IMG_08252-Edit.jpg
+        coverPos: 55%
+
+      alaska (2005):
+        title.en: Alaska (2005)
+        title.he: אלסקה (2005)
+        gallery: gallery/Private/Travel/Alaska (2005)
+        cover: IMG_2025-Edit.jpg
+        coverPos: 25%
+
+      australia (2015):
+        gallery: gallery/Private/Travel/Australia (2015)
+        cover: KR4A1184-Edit.jpg
+
+      austria (2012):
+        gallery: gallery/Private/Travel/Austria (2012)
+        cover: IMG_5022.jpg
+        coverPos: 40%
+
+      canada - newfoundland (2011):
+        title.en: Canada - Newfoundland (2011)
+        title.he: קנדה - ניפאונדלנד (2011)
+        gallery: gallery/private/travel/Canada - Newfoundland (2011)
+        cover: IMG_2478.jpg
+        coverPos: 60%
+
+      canada - quebec+new brunseick+nova scotia (2013):
+        title.en: Canada - Quebec, New Brunswick, Nova Scotia (2013)
+        title.he: קנדה - קוויבק, ניו ברונזוויק ונובה סקוטיה (2013)
+        gallery: gallery/Private/Travel/Canada - Quebec + New Brunswick + Nova Scotia (2013)
+        cover: KR4A2823-Edit.jpg
+        coverPos: 35%
+
+      cities:
+        gallery: gallery/Private/Travel/Cities
+        cover: KR4A5236.jpg
+
+      ecuador and galapagos (2003):
+        gallery: gallery/Private/Travel/Ecuador and Galapagos (2003)
+        cover: DSCN0466.jpg
+        coverPos: 25%
+
+      europe (2016):
+        gallery: gallery/Private/Travel/Europe (2016)
+        cover: KR4A5040.jpg
+        coverPos: 35%
+
+      georgia (2013):
+        cover: KR4A0930.jpg
+        coverPos: 30%
+
+      greece (2022):
+        gallery: gallery/Private/Travel/Greece (2022)
+        cover: R3106902.jpg
+
+      hawaii (2017):
+        gallery: gallery/Private/Travel/Hawaii (2017)
+        cover: 5D4_1273.jpg
+        coverPos: 65%
+
+      hong kong (2015):
+        gallery: gallery/Private/Travel/Hong Kong (2015)
+        cover: KR4A8931.jpg
+        coverPos: 40%
+
+      iceland (2009):
+        gallery: gallery/Private/Travel/Iceland (2009)
+        cover: IMG_0863-Edit.jpg
+        coverPos: 45%
+
+      iceland (2020):
+        gallery: gallery/Private/Travel/Iceland (2020)
+        cover: DSC07173-Edit.jpg
+        coverPos: 35%
+
+      iceland (2021):
+        gallery: gallery/Private/Travel/Iceland (2021)
+        cover: R3102391.jpg
+
+      italy (2014):
+        gallery: gallery/Private/Travel/Italy (2014)
+        cover: KR4A4261-Edit.jpg
+        coverPos: 60%
+
+      madagascar (2004):
+        gallery: gallery/Private/Travel/Madagascar (2004)
+        cover: dscn1353.jpg
+        coverPos: 30%
+
+      nepal (2016):
+        gallery: gallery/Private/Travel/Nepal (2016)
+        cover: NEPL7312-HDR-Pano-Edit.jpg
+        coverPos: 60%
+
+      netherlands (2014):
+        gallery: gallery/Private/Travel/Netherlands (2014)
+        cover: KR4A5573.jpg
+
+      short trips:
+        gallery: gallery/Private/Travel/Short Trips
+        cover: 5D4_5249.jpg
+        coverPos: 50%
+
+      spain (2010):
+        gallery: gallery/Private/Travel/Spain (2010)
+        cover: IMG_0239.jpg
+
+      switzerland (2021):
+        gallery: gallery/Private/Travel/Switzerland (2021)
+        cover: R3104165.jpg
+
+      turkey:
+        gallery: gallery/Private/Travel/Turkey
+        cover: _MG_5929.jpg
+        coverPos: 70%
+
+      usa + canada (2019):
+        gallery: gallery/Private/Travel/USA + Canada (2019)
+        cover: DSC02434.jpg
+        coverPos: 45%
+
+      vietnam + cambodia (2004):
+        gallery: gallery/Private/Travel/Vietnam + Cambodia (2004)
+        cover: IMG_0331.jpg
+        coverPos: 83%
+
+    family-photos:
+      2007:
+        gallery: gallery/Private/Family Photos/2007
+        cover: IMG_0334.jpg
+
+      2008:
+        gallery: gallery/Private/Family Photos/2008
+        cover: Family_2008-06-07_3.jpg
+
+      2009:
+        gallery: gallery/Private/Family Photos/2009
+        cover: Family_2009-04-13_5.jpg
+
+      2010:
+        gallery: gallery/Private/Family Photos/2010
+        cover: IMG_1074.jpg
+
+      2011:
+        gallery: gallery/Private/Family Photos/2011
+        cover: Family_2011-04-08_7.jpg
+        coverPos: 63%
+
+      2012:
+        gallery: gallery/Private/Family Photos/2012
+        cover: IMG_4274.jpg
+        coverPos: 30%
+
+      2013:
+        gallery: gallery/Private/Family Photos/2013
+        cover: IMG_6648.jpg
+        coverPos: 5%
+
+      2014:
+        gallery: gallery/Private/Family Photos/2014
+        cover: DSC00252.jpg
+        coverPos: 25%
+
+      2015:
+        gallery: gallery/Private/Family Photos/2015
+        cover: KR4A7518.jpg
+        coverPos: 30%
+
+      2016:
+        gallery: gallery/Private/Family Photos/2016
+        cover: KR4A3812.jpg
+
+      2017:
+        gallery: gallery/Private/Family Photos/2017
+        cover: 5D4_0812.jpg
+        coverPos: 45%
+
+      2018:
+        gallery: gallery/Private/Family Photos/2018
+        cover: DSC00760.jpg
+        coverPos: 45%
+
+      2019:
+        gallery: gallery/Private/Family Photos/2019
+        cover: DSC01147.jpg
+        coverPos: 47%
+
+      2020:
+        gallery: gallery/Private/Family Photos/2020
+        cover: DSC01147-2.jpg
+
+      2021:
+        gallery: gallery/Private/Family Photos/2021
+        cover: R3101521.jpg
+        coverPos: 60%
+
+      בת מצווה של רוני:
+        gallery: gallery/Private/Family Photos/בת מצווה של רוני
+        cover: DSC00913.jpg
+
+      עדי - גן ברוש 2014:
+        gallery: gallery/Private/Family Photos/עדי - גן ברוש 2014
+        cover: IMG-20140226-WA0000.jpg
+        coverPos: 5%
+
+      רוני - גן ברוש 2011:
+        gallery: gallery/Private/Family Photos/רוני - גן ברוש 2011
+        cover: Rony251.jpg

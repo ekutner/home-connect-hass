@@ -90,7 +90,7 @@
                   "date" (partial "functions/parse_date" (index . "Date taken") ).Unix
                   "section" .Kind
                   "tags" (split .Tags "; ")
-                  "rating" .Rating
+                  "rating" (int ( cond (eq .Rating "Unrated") (0) (substr .Rating 0 1) ))
                 )
                 -}}
                 {{- $index = $index | append ( $record ) -}}

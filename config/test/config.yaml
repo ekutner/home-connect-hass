@@ -1,0 +1,3 @@
+# ignoreFiles: [\.ipynb$, .ipynb_checkpoints$, \.Rmd$, \.Rmarkdown$, _cache$, _files$, "private/travel/.*20[0-9][0-8].*", "private/family" ]
+#ignoreFiles: [\.ipynb$, .ipynb_checkpoints$, \.Rmd$, \.Rmarkdown$, _cache$, _files$, "portfolio", "select", "gallery/travel", "private/family" ]
+ignoreFiles: [\.ipynb$, .ipynb_checkpoints$, \.Rmd$, \.Rmarkdown$, _cache$, _files$, "portfolio", "select", "gallery/travel", "private/travel" ]

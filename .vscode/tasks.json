@@ -11,7 +11,7 @@
         {
             "label": "Hugo server",
             "type": "shell",
-            "command": "scripts/hugo server --gc --disableFastRender -v"
+            "command": "scripts/hugo server --disableFastRender -v"
         }
     ]
 }

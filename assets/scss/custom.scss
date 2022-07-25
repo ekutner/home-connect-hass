@@ -80,9 +80,14 @@
 	padding-left: .25rem !important;
 }
 
-.ml-md-auto {
+
+// Fix right menu in RTL and LTR
+.ml-md-auto:dir(rtl) {
   margin-right: auto;
   margin-left: 30px !important;
+}
+.ml-md-auto:dir(ltr) {
+  margin-right: 30px !important;
 }
 
 ul.nav-icons li:last-of-type {
@@ -244,3 +249,29 @@ html[dir*="ltr"] {
   }
 
 }
+
+.fancybox__toolbar {
+  display: none;
+}
+// .fancybox__toolbar__items {
+// 	flex-direction: column;
+// }
+// .fancybox_container .fancybox__backdrop {
+//   background: var(--fancybox-bg, rgba(24, 24, 27, 0.98));
+// }
+:root  {
+  --fancybox-bg: rgba(24, 24, 27, 0.98);
+  --fancybox-color: #fff;
+}
+.carousel, .fancybox__carousel {
+  --carousel-button-bg: #ffffff30;
+  --carousel-button-width: 60px;
+  --carousel-button-height: 60px;
+  --carousel-button-svg-width: 27px;
+  --carousel-button-svg-height: 27px;
+  --carousel-button-svg-stroke-width: 2.5;
+  --carousel-button-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px
+    0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px
+    4px -1px;
+}
+

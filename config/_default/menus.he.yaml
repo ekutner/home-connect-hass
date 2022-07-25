@@ -32,8 +32,20 @@ main:
     #   </script>
 
 
-# Link to a PDF of your resume/CV from the menu.
-# To enable, copy your resume/CV to `static/uploads/resume.pdf` and uncomment the lines below.
-#  - name: CV
-#    url: uploads/resume.pdf
-#    weight: 70
+main_right:
+  - name: ""
+    pre: '<span style="font-size: 1.2em;"><i class="fa-brands fa-instagram" ></i>'
+    post: "</span>"
+    url: "https://instagram.com/erankutner"
+    weight: 10
+  - name: " "
+    pre: '<span style="font-size: 1.2em;"><i class="fa-brands fa-twitter " ></i>'
+    post: "</span>"
+    url: "https://twitter.com/ekutner"
+    weight: 20
+
+  - name: "   "
+    pre: '<span style="font-size: 1.2em;"><i class="fa-brands fa-facebook" ></i>'
+    post: "</span>"
+    url: "https://facebook.com/ekutner"
+    weight: 30
