@@ -11,5 +11,7 @@ go.sum
 .hugo_build.lock
 hugo.exe
 
+exiftool.exe
+
 # assets
 assets/gallery

@@ -22,17 +22,22 @@
 .album-cover-title {
 	background: linear-gradient(to top,rgba(0,0,0,.5) 0,rgba(0,0,0,0) 100%);
     width:100%;
-	padding-{{- cond $rtl "right" "left" -}}: 24px;
-	padding-top: 24px;
 	position: absolute;
 	bottom: 0;
     left: 0;
-    text-align: {{ cond $rtl "right" "left" }};
     color: white;
     font-family: Raleway,Helvetica,Arial,sans-serif;
-    font-size: 60px;
+    font-size: 10vmin;
     font-weight: 200;
     font-style: normal;
+}
+.album-cover-title:dir(rtl) {
+    padding: 0 24px 0 100px;
+    text-align: right;
+}
+.album-cover-title:dir(ltr) {
+    padding: 0 100px 0 24px;
+    text-align: left;
 }
 
 .cover-buttons-container {
@@ -78,6 +83,8 @@
 .cover-button-share:hover .tooltiptext {
     visibility: visible;
 }
+
+
 </style>
 
 {{ if and $params.gallery $params.cover }}
@@ -97,22 +104,28 @@
             {{- end -}}
             <div class="album-cover-title">{{$params.title}}</div>
             <div class="cover-buttons-container">
-                {{/*  <div class="cover-button-share">
+                <div class="cover-button-share">
                     <button class="cover-button"><i class="fa-solid fa-share-nodes"></i></button>
                     <span class="tooltiptext">Share Page</span>
-                </div>  */}}
+                </div>
                 <div class="cover-button-slideshow">
-                    <button class="cover-button" data-fancybox-trigger="{{$galleryId}}"><i class="fa-solid fa-play"></i></button>
+                    <button class="cover-button" onclick="startSlideshow()"><i class="fa-solid fa-play"></i></button>
                     <span class="tooltiptext">Start Slideshow</span>
                 </div>
             </div>
+            {{ partial "share_bar" ".cover-button-share"}}
         </div>
         {{ partial "gallery.html" $context }}
     </div>
-    {{- end -}}
-<script>
-function share(event) {
+    <script>
+        function startSlideshow() {
+            fancybox = Fancybox.fromOpener('[data-fancybox="{{$galleryId}}"]');
+            fancybox.plugins.Toolbar.Slideshow.toggle();
+        }
+    </script>
 
-}
-</script>
+{{- end -}}
+
+
+{{ partial "page_footer" . }}
 {{- end -}}

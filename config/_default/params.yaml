@@ -44,8 +44,8 @@ footer:
   copyright:
     notice: '© {year} Eran Kutner. This work is licensed under {license}'
     license:
-      enable: false
-      allow_derivatives: false
+      enable: true
+      allow_derivatives: true
       share_alike: false
       allow_commercial: false
 

@@ -40,6 +40,8 @@ if ($recurse) {
     $folders += Get-ChildItem -Path $path -Recurse -Directory -Exclude ".*"
 }
 
+#.\exiftool.exe -q -q -j -struct --History --XMP-crs:all --ICC_Profile:all --IFD1:all --Adobe:all -w %d/.meta/%F.json D:\Pictures\_Gallery\Portfolio\5D4_2217.jpg
+
 foreach ($folder in $folders) {
     Write-Host "Processing $folder"
     $exifFolder = Join-Path $folder ".metadata"

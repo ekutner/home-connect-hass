@@ -1,0 +1,151 @@
+{{ $shareButtonSelector := . }}
+
+<style>
+.share-bar {
+    display: table;
+    flex-direction: column;
+    gap: 0.2em;
+    background-color: rgba(40, 40, 40, 0.96);
+    padding: 15px;
+    border-radius: 10px;
+    position: fixed;
+    {{/*  right: 150px;
+    bottom: 1em;  */}}
+    visibility: hidden;
+    box-shadow: 0px 3px 3px -2px rgba(230, 230, 230, 0.2),
+        0px 3px 4px 0px rgba(230, 230, 230, 0.14),
+        0px 1px 8px 0px rgba(230, 230, 230, 0.12);
+    z-index: 2010;
+}
+.share-bar div {
+    cursor: pointer;
+    display: table-row;
+    padding: 10px;
+}
+</style>
+
+<script>
+shareButton = document.querySelector("{{ $shareButtonSelector }}");
+shareButton.addEventListener("click", (e) => {
+    toggleShareDialog(e);
+});
+
+const shareBarCloser = function(e) {
+    // Check if the filter list parent element exist
+    const isShareBar = e.target.closest(".share-bar");
+    const isShareButton = e.target.closest("{{ $shareButtonSelector }}");
+    shareBar = document.querySelector(".share-bar");
+
+    // If `isClosest` equals falsy & popup has the class `show`
+    // then hide the popup
+    {{/*  if (!isShareBar && !isShareButton && shareBar.style.visibility == "visible") {
+        shareBar.style.visibility = "hidden"
+    }  */}}
+    if ( !shareBar.contains(e.target)) {
+        shareBar.style.visibility = "hidden";
+        document.removeEventListener('click', shareBarCloser);
+        console.log("hiding")
+    }
+};
+
+function isMobile() {
+    var hasTouchScreen = false;
+
+    if ("maxTouchPoints" in navigator) {
+        hasTouchScreen = navigator.maxTouchPoints > 0;
+    } else if ("msMaxTouchPoints" in navigator) {
+        hasTouchScreen = navigator.msMaxTouchPoints > 0;
+    } else {
+        var mQ = window.matchMedia && matchMedia("(pointer:coarse)");
+        if (mQ && mQ.media === "(pointer:coarse)") {
+            hasTouchScreen = !!mQ.matches;
+        } else if ('orientation' in window) {
+            hasTouchScreen = true; // deprecated, but good fallback
+        } else {
+            // Only as a last resort, fall back to user agent sniffing
+            var UA = navigator.userAgent;
+            hasTouchScreen = (
+                /\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) ||
+                /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA)
+            );
+        }
+    }
+    return hasTouchScreen;
+}
+
+function toggleShareDialog(event) {
+    shareBar = document.querySelector(".share-bar");
+    shareButton = event.target;
+    dir = window.getComputedStyle(shareButton, null).getPropertyValue('direction');
+
+    //const rect = event.target.getBoundingClientRect();
+    if (dir=="ltr") {
+        const rect = shareBar.getBoundingClientRect();
+        x = event.clientX  - rect.width - event.offsetX;
+    }
+    else {
+        x = event.clientX  + shareButton.getBoundingClientRect().width;
+    }
+    const y = event.clientY ;
+    var yScroll = event.target.scrollTop || document.documentElement.scrollTop;
+
+    shareBar.style.top = `${y}px`;
+    shareBar.style.left = `${x}px`;
+
+    if (shareBar.style.visibility != "visible") {
+        shareBar.style.visibility = "visible";
+        setTimeout(() => {
+            document.addEventListener("click", shareBarCloser);
+        }, 250 );
+    }
+}
+
+function share(network) {
+    network_urls = {
+        twitter: "https://twitter.com/intent/tweet",
+        facebook: "https://www.facebook.com/dialog/share?display=page&app_id=118378531528852",
+        whatsapp_web: "https://api.whatsapp.com/send",
+        whatsapp_mobile: "whatsapp://send"
+    }
+
+    url = window.location.href;
+    text = null
+    hash = window.location.hash;
+    console.log(hash)
+    if (hash != "") {
+        hash = hash.substr(1);
+        element = document.getElementById(hash);
+        imageUrl = window.location.host + element.getAttribute("data-download-src");
+        imageElement = element.querySelector("img");
+        text = imageElement? imageElement.getAttribute("alt") : null;
+    }
+    switch(network) {
+        case "facebook":
+            request = network_urls["facebook"] + "&href=" + encodeURIComponent(url);
+            break;
+        case "twitter":
+            request = network_urls["twitter"] + "?url=" + encodeURIComponent(url) + "&text=" + encodeURIComponent(text);
+            break;
+        case "whatsapp":
+            base = isMobile() ? network_urls["whatsapp_mobile"] : network_urls["whatsapp_web"];
+            message = text ? text + "\n" + url : url;
+            request = base + "?text=" + encodeURIComponent(message);
+            break;
+        case "copy":
+            navigator.clipboard.writeText(window.location.href);
+            return;
+    }
+
+    window.open(request, "_blank");
+}
+
+
+
+</script>
+
+<div class="share-bar">
+    <div onclick="share('facebook')"><i class="fa-brands fa-facebook"></i> {{ i18n "facebook" }}</div>
+    <div onclick="share('twitter')"><i class="fa-brands fa-twitter"></i> {{ i18n "twitter" }} </div>
+    <div onclick="share('whatsapp')"><i class="fa-brands fa-whatsapp"></i> {{ i18n "whatsapp" }}</div>
+    <div onclick="share('copy')"><i class="fa-solid fa-copy"></i> {{ i18n "copylink" }}</div>
+</div>
