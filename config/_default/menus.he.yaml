@@ -49,3 +49,12 @@ main_right:
     post: "</span>"
     url: "https://facebook.com/ekutner"
     weight: 30
+
+  - name: "    "
+    pre: >
+     </a>
+     <span style="cursor: pointer; font-size: 1.2em; padding-right: 50px;" class="nav-link" onclick="document.documentElement.requestFullscreen()" ><i class="fa-solid fa-expand" ></i>
+     </span>
+    post: <a>
+    url: "hide"
+    weight: 40
