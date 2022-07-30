@@ -1,6 +1,6 @@
 {{- define "main" -}}
 {{ $params := partial "functions/params" . }}
-{{ $rtl := eq .Site.Language.LanguageDirection "rtl" }}
+{{ $rtl := in site.Data.i18n.rtl.rtl site.LanguageCode }}
 
 {{ $coverPos := $params.coverPos | default $params.coverpos | default "center" }}
 
@@ -30,30 +30,40 @@
     font-size: 10vmin;
     font-weight: 200;
     font-style: normal;
+    {{- if $rtl -}}
+    padding: 0 24px 0 100px;
+    text-align: right;
+    {{- else -}}
+    padding: 0 100px 0 24px;
+    text-align: left;
+    {{- end -}}
 }
-.album-cover-title:dir(rtl) {
+{{/*  .album-cover-title:dir(rtl) {
     padding: 0 24px 0 100px;
     text-align: right;
 }
 .album-cover-title:dir(ltr) {
     padding: 0 100px 0 24px;
     text-align: left;
-}
+}  */}}
 
 .cover-buttons-container {
     display:flex;
     gap:20px;
     position: absolute;
     bottom:10px;
+    {{ cond $rtl "left" "right"}}: 20px;
 }
-.cover-buttons-container:dir(rtl) {
+{{/*  .cover-buttons-container:dir(rtl) {
     left: 20px;
 }
 .cover-buttons-container:dir(ltr) {
     right: 20px;
-}
-
+}  */}}
 .cover-button {
+    position: relative;
+}
+.cover-button button {
     background-color: rgba(255,255,255,.15);
     text-shadow: 2px 2px #a0a0a0;
     border: none;
@@ -66,7 +76,7 @@
     border-radius: 7px;
 }
 
-.cover-buttons-container .tooltiptext {
+.cover-button .tooltiptext {
     visibility: hidden;
     background-color: black;
     color: #fff;
@@ -74,17 +84,12 @@
     padding: 5px 10px;
     border-radius: 6px;
     position: absolute;
-    right: 0;
+    {{ cond $rtl "left" "right"}}: 0;
     bottom: 3em;
 }
-.cover-button-slideshow:hover .tooltiptext {
+.cover-button:hover .tooltiptext {
     visibility: visible;
 }
-.cover-button-share:hover .tooltiptext {
-    visibility: visible;
-}
-
-
 </style>
 
 {{ if and $params.gallery $params.cover }}
@@ -104,13 +109,17 @@
             {{- end -}}
             <div class="album-cover-title">{{$params.title}}</div>
             <div class="cover-buttons-container">
-                <div class="cover-button-share">
-                    <button class="cover-button"><i class="fa-solid fa-share-nodes"></i></button>
-                    <span class="tooltiptext">Share Page</span>
+                <div class="cover-button">
+                    <button><i class="fa-solid fa-share-nodes"></i></button>
+                    <span class="tooltiptext">{{ i18n "share" }}</span>
                 </div>
-                <div class="cover-button-slideshow">
-                    <button class="cover-button" onclick="startSlideshow()"><i class="fa-solid fa-play"></i></button>
-                    <span class="tooltiptext">Start Slideshow</span>
+                <div class="cover-button">
+                    <button onclick="document.documentElement.requestFullscreen()"><i class="fa-solid fa-expand"></i></button>
+                    <span class="tooltiptext">{{ i18n "fullscreen" }}</span>
+                </div>
+                <div class="cover-button">
+                    <button onclick="startSlideshow()"><i class="fa-solid fa-play"></i></button>
+                    <span class="tooltiptext">{{ i18n "slideshow" }}</span>
                 </div>
             </div>
             {{ partial "share_bar" ".cover-button-share"}}

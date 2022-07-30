@@ -54,6 +54,7 @@
 
 	<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"/>
+	<script src="/js/lazysizes.min.js"></script>
 {{- end -}}
 
 {{- if not ($currentPage.Scratch.Get "fancyboxLoaded") -}}
@@ -74,6 +75,15 @@
 .fancybox__caption .caption-summary {
 	color: #c0c0c0;
 	font-size: 0.9em;
+}
+
+.lazyload,
+.lazyloading {
+	filter: blur(25px);
+}
+.lazyloaded {
+	filter: none;
+	transition: filter 1000ms !important;
 }
 
 </style>
@@ -207,13 +217,13 @@ Fancybox.bind('[data-fancybox="{{$galleryId}}"]', getFancyboxOptions() );
 						width="{{- $thumbnail.Width -}}" height="{{- $thumbnail.Height -}}"
 						{{- if (eq $previewType "blur") -}}
 							{{- $preview_b := ($thumbnail.Fit ("24x24 q70 NearestNeighbor webp")) -}}
-							style="filter: blur(25px);"
 							{{- if $embedPreview -}}
 								src="data:image/jpeg;base64,{{- $preview_b.Content | base64Encode -}}"
 							{{- else -}}
 								src="{{- $preview_b.RelPermalink -}}"
 							{{- end -}}
-							class="lazy"
+							xloading="lazy"
+							class="lazyload"
 							data-src="{{- partial "functions/url_encode" $thumbnail.RelPermalink -}}"
 						{{- else if (eq $previewType "color") -}}
 							{{- $preview_1p := ($thumbnail.Resize ("1x1 NearestNeighbor webp")) -}}
@@ -277,13 +287,14 @@ Fancybox.bind('[data-fancybox="{{$galleryId}}"]', getFancyboxOptions() );
 			waitThumbnailsLoad : false,
 			lastRow : {{- $lastRowJustification -}},
 			captions : {{- $captions -}},
-			randomize: {{- eq $sort "random" -}}
+			randomize: {{- eq $sort "random" -}},
+			cssAnimation: true
 			// if there is at least one filter option
 		});
     });
 
 
-// Start the fancybox with a selected image if it is specified in the url
+{{/*  // Start the fancybox with a selected image if it is specified in the url
 //function startFancyboxFromUrl() {
 //  if (!Fancybox.getInstance()) {
 //    const { hash, slug, index } = Fancybox.Plugins.Hash.getParsedURL();
@@ -295,7 +306,47 @@ Fancybox.bind('[data-fancybox="{{$galleryId}}"]', getFancyboxOptions() );
 //  }
 //}
 //window.addEventListener("hashchange", startFancyboxFromUrl, false);
-//startFancyboxFromUrl();
+//startFancyboxFromUrl();  */}}
+{{/*  var observer = new IntersectionObserver(function(entries) {
+	// a single target is specified so entries.length will be 1
+	entries.forEach( entry => {
+		var target = entry.target;
+		var style = window.getComputedStyle(target, null)
+		//debugger;
+		if (entry.isIntersecting && style.opacity > 0) {
+			//debugger;
+			//setTimeout(function() {
+				console.log(target.dataset.src)
+				target.src = target.dataset.src;
+				target.classList.add("lazyloaded");
+				target.classList.remove("lazyloading");
+			//}, 2000);
+		}
+		else {
+			console.log("not loading")
+		}
+	});
+}, {root:null, threshold: [0.01]});
+document.querySelectorAll(".lazyloading").forEach( e => {observer.observe(e) });
+*/}}
+
+var mutationObserver = new MutationObserver(function(mutationList, observer) {
+	mutationList.forEach( mutation => {
+		const target = mutation.target;
+		const src = target.src;
+		if ((mutation.oldValue.startsWith("http") || mutation.oldValue.startsWith("/")) && src.startsWith("data")) {
+			target.src = target.dataset.src;
+		}
+	});
+});
+
+const observerOptions = {
+	subtree: false,
+	attributes: true,
+	attributeOldValue: true,
+	attributeFilter: ["src"],
+}
+document.querySelectorAll(".lazyload").forEach( e => {mutationObserver.observe(e, observerOptions) });
 
 </script>
 
