@@ -4,20 +4,20 @@ This project is an alternative integration for Home Connect enabled home applian
 </br>
 
 # Main features
-Home Assistant already has a built-in integration for Home Connect, however it is quite basic, generates entities that are not always supported by the connected appliances and tends to stop getting status updates after a while.
+Home Assistant already has a built-in integration for Home Connect, however, it is quite basic, generates entities that are not always supported by the connected appliances and tends to stop getting status updates after a while.
 This integration attempts to address those issues and has the following features:
 * All the entities are dynamically read from the API and reflect true capabilities of the appliance.
-* The integration exposes entities that provide complete control over programs, program options, and global settings. These entities are dynamically read from API and therefor are specifically applicable to the connected appliances.
+* The integration exposes entities that provide complete control over programs, program options, and global settings. These entities are dynamically read from API and therefore are specifically applicable to the connected appliances.
 * Configurable options and settings are exposed for easy selection using "Select", "Switch" or "Number" entities, as appropriate.
 * Read only status values, as well as some selectable options are also made available either using "Sensor" or "Binary Sensor" entities for easier use when only wanting to display them.
 * Status events that are published by the Home Connect service are exposed as Home Assistant events.
 * "Program Started" and "Program Finished" events are exposed as triggers for easier building of automation scripts.
-* A "Start Program" Button entity is provided to start operation of the selected program.
+* A "Start Program" Button entity is provided to start the operation of the selected program.
 * Program and option selections are also available as a service for easier integration in scripts.
-* The state of all entities is updated at real time with a cloud push type integration.
+* The state of all entities is updated in real time with a cloud push type integration.
 * Clean handling of appliances disconnecting and reconnecting from the cloud.
 * Clean handling of new appliances being added or removed from the service.
-* All the names support translation but currently only English translation is provided.
+* All the names support translation, but currently only the English translation is provided.
 * Using pure async implementation for reduced load on the platform.
   
 </br>  
@@ -65,9 +65,9 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
   **NOTE:** If you are modifying an existing Home-Connect App then it may take up to 2 hours for the changes to take effect, so make sure you wait long enough. 
 * **Some of my appliances are not showing up after I added the integration**  
   This is most commonly caused by two reasons:
-  1. The appliance must be powered on and connected to the Home Connect service to be dicovered. Once the missing devices are turned on and connected they will automatically be discovered and added by the integration.  
-  This can be verified in the Home Connect mobile app **but only while the wifi on the phone is turned OFF**. If the devices are active in the mobile app while the wifi of the phone is turned off then please open an issue with a debug log to report it.
-  2. Due to some unreasonable rate limits set by BSH there is a limit of about 3 
+  1. The appliance must be powered on and connected to the Home Connect service to be discovered. Once the missing devices are turned on and connected, they will automatically be discovered and added by the integration.  
+  This can be verified in the Home Connect mobile app **but only while the wifi on the phone is turned OFF**. If the devices are active in the mobile app while the phone's wifi is turned off then please open an issue with a debug log to report it.
+  2. Due to some unreasonable rate limits set by BSH, there is a limit of about 3 
   appliances loaded per minute. If you have more, expect the initial load to take longer. The integration will wait for the service to become available and continue loading the rest of the appliances. You may have to refresh your screen to see them in Home Assistant after they were added.
 
 * **I've restarted Home Assistant a few times and now all my appliances are unavilable**  
@@ -97,8 +97,8 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
 </br>
 
 # Known Issues
-* If you have more than 3 connected devices (or you just play a lot with settings) you may hit the daily API rate limit set by the Home Connect API. The limit is set to 1000 calls per day and when it is hit the API is blocked for 24h. During that time the integration will not get updated with new states and you won't be able to select and options or start a program.  
-If you hit this limit frequently please open an issue with a debug log and I'll try to see if there is a way to reduce some calls. Homwever, as of now there is nothing I can do about it and the Home Connect team was unwilling to increase this limit, which hurts their best customers so there is nothing I can do about it. 
+* If you have more than 3 connected devices (or you just play a lot with settings), you may hit the daily API rate limit set by the Home Connect API. The limit is set to 1000 calls per day and when it is hit the API is blocked for 24h. During that time, the integration will not get updated with new states and you won't be able to select and options or start a program.  
+If you hit this limit frequently, please open an issue with a debug log. I'll try to see if there is a way to reduce some calls. However, as of now, there is nothing I can do about it and the Home Connect team was unwilling to increase this limit, which hurts their best customers so there is nothing I can do about it. 
 
 # Reporting issues / bugs
 This integration is in early beta and not stable yet. If you are going to be testing this integration please add this to your configuration.yaml file then restart HA:
@@ -116,8 +116,11 @@ When reporting an issue press the **Home Connect Debug** button and attach the H
 </br>
 
 # Beta Releases
-Major changes will be released in beta versions to reduce the impact on existing users. It is strongly advised not to install beta version unless you are a part of an issues that specifically calls for installing one and when you are, you should only install the specified version (as there may be several issues handled in separate beta versions at the same time).  
-To install a beta version go to the HACS dashboard in the Home Assistant UI, click on Integrations locat the "Home Connect Alt" integration. Click on the three dot menu for the integration and select "Redownload". In the popup dialog make sure "Show beta versions" is enabled and then select the version you need to install.
+Major changes will be released in beta versions to reduce the impact on existing users. It is strongly advised not to install the beta version unless you are a part of an issue that specifically calls for installing one and when you are, you should only install the specified version (as there may be several issues handled in separate beta versions at the same time).  
+To install a beta version go to the HACS dashboard in the Home Assistant UI:
+* Click on Integrations locat the "Home Connect Alt" integration. 
+* Click on the three dot menu for the integration and select "Redownload". 
+* In the popup dialog make sure "Show beta versions" is enabled and then select the version you need to install.
 
 <br>
 
