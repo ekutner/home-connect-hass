@@ -46,7 +46,7 @@ home_connect_alt:
   $brand - The brand name of the appliance ("Bosch", "Siemens", etc.)  
   $appliance - The type of the appliance ("Washing machine", "Dishwasher", etc.)  
   $name - The name of the entity
-* *language* (optoinal - default = "en") - 
+* *language* (optional - default = "en") - 
   Indicates the language to use for entity names. The translation is automatically loaded from the Home Connect service and must  be one of its [supported languages](https://api-docs.home-connect.com/general?#supported-languages).
 * *sensor_value_translation* (optional - default = "local") - Indicates how sensor values shhould be translated to friendly names.  
   When set to **"local"** (the default) the integration will use the raw ENUM values documented in the Home Connect documentation for sensors with string values. In that case the integration relies on the Home Assistant translation mechanism and translation files to translate these values into friendly names. The benefit of this approach is that sensor values used by the integration are language independent and match the values documented in the Home Connect API.  
