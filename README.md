@@ -22,14 +22,48 @@ This integration attempts to address those issues and has the following features
   
 </br>  
 
-# Installing this integration
+# Installation instruction
+## Create a Home Connect app
+Before installing the integration you need to create an "application" in the Home Connect developers website. Note that if you have an existing appliacation, that was created before July 2022 you will most likely have to update the redirect URI to the one specified below. It can take a few hours for the changes to existing applications to apply, so be patiant. 
+  
+1. Navigate to the "[Applications](https://developer.home-connect.com/applications)"
+   page on the Home Connect developers website. You'll be prompted to create an account or sign in if you already have one.
+2. Click the "[Register Application](https://developer.home-connect.com/applications/add)" link. 
+3. Fill in the application creation form:  
+   **Application ID**: A unique ID for the application, can be home-connect-alt, or whatever you like.  
+   **OAuth Flow**: Authorization Code Grant Flow  
+   **Home Connect User Account for Testing**: Leave blank  
+   **Redirect URI**: https://my.home-assistant.io/redirect/oauth  
+   **Add additional redirect URIs**: Leave unchecked  
+   **Enable One Time Token Mode**: Leave unchecked  
+4. Click "Save" then copy the *Client ID* and *Client Secret* and save them for use in the next step.
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+## Update the configuration.yaml file
+At a minimum you need to add the following to your configuration.yaml file:
+```
+home_connect_alt:
+  client_id: < Your Client ID >
+  client_secret: < You Client Secret >
+```
+This configuration should be enough for most people. For more avanced options see the [Configuration options](#configuration-options) section below. 
 
-# Configuration
-Follow the instructions for the default Home Connect integration at https://www.home-assistant.io/integrations/home_connect/  
-**Note:** If you are modifying an existing Home Connect app it may take up to two hours for the changes to take effect.  
-This integration requires the same configuration process and similar settings in configuration.yaml:
+## Install the integraion
+1. The esiest way to install the integration is using HACS. Just click the 
+   button bellow and follow the instructions:  
+  [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ekutner&repository=home-connect-hass)
+2. Nagivate to https://my.home-assistant.io/ and make sure the Home Assistant Instance is configured correctly to point to your local Home Assistant instance.
+3. Power on all your appliances.
+4. Turn **OFF** the wifi on your phone and make sure all the appliances are operational in the Home Connect mobile app.
+5. In your Home Assistant instance navigate to Settings -> Devices & Services then clieck the "Add Integration" button. Search for "Home Connect Alt" and install it.
+6. A new window will popup where you will be asked to login to to your Home Connect 
+   account and allow Home Assistant to access your appliances. After you approve that you will be redirected back to Home Assistant, continue as instructed. 
+7. Congratulations, you're done!  
+   Home Connect Alt will now start downloading the data for your
+   appliances and will add the entities for them to Home Assistant.  
+   Note that the integration dynamically discoveres entities as they are made available by the API, so expect new entities to be added in the first few uses of the appliances.
+
+# Configuration options
+These options are supported in configuration.yaml:
 ```
 home_connect_alt:
   client_id: < Your Client ID >
