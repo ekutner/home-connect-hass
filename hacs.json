@@ -1,5 +1,5 @@
 {
   "name": "Home Connect Alt",
-  "hacs": "1.6.0",
-  "homeassistant": "2021.12.0b0"
+  "hacs": "1.25.0",
+  "homeassistant": "2022.7.0"
 }

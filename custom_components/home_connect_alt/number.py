@@ -69,38 +69,37 @@ class OptionNumber(InteractiveEntityBase, NumberEntity):
         return self.program_option_available
 
     @property
-    def min_value(self) -> float:
+    def native_min_value(self) -> float:
         """Return the minimum value."""
         if self._conf['opt'].min:
             return self._conf['opt'].min
         return 0
 
     @property
-    def max_value(self) -> float:
+    def native_max_value(self) -> float:
         """Return the maximum value."""
         if self._conf['opt'].max:
             return self._conf['opt'].max
         return sys.maxsize
 
     @property
-    def step(self) -> float:
+    def native_step(self) -> float:
         """Return the increment/decrement step."""
         return self._conf['opt'].stepsize
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return self._conf['opt'].unit
 
     @property
-    def value(self) -> float:
+    def native_value(self) -> float:
         """Return the entity value to represent the entity state."""
         option = self._appliance.get_applied_program_option(self._key)
         if option:
             return option.value
         return None
 
-    #TODO: update all methods to use native_ name prefix
-    async def async_set_value(self, value: float) -> None:
+    async def async_set_native_value(self, value: float) -> None:
         """Set new value."""
         try:
             if self._conf['opt'].type == 'Int':
@@ -133,36 +132,36 @@ class SettingsNumber(InteractiveEntityBase, NumberEntity):
         return self._conf.get('icon', 'mdi:tune')
 
     @property
-    def min_value(self) -> float:
+    def native_min_value(self) -> float:
         """Return the minimum value."""
         if self._conf['opt'].min:
             return self._conf['opt'].min
         return 0
 
     @property
-    def max_value(self) -> float:
+    def native_max_value(self) -> float:
         """Return the maximum value."""
         if self._conf['opt'].max:
             return self._conf['opt'].max
         return sys.maxsize
 
     @property
-    def step(self) -> float:
+    def native_step(self) -> float:
         """Return the increment/decrement step."""
         return self._conf['opt'].stepsize
 
     @property
-    def unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str:
         return self._conf['opt'].unit
 
     @property
-    def value(self) -> float:
+    def native_value(self) -> float:
         """Return the entity value to represent the entity state."""
         if self._key in self._appliance.settings:
             return self._appliance.settings[self._key].value
         return None
 
-    async def async_set_value(self, value: float) -> None:
+    async def async_set_native_value(self, value: float) -> None:
         try:
             await self._appliance.async_apply_setting(self._key, value)
         except HomeConnectError as ex:
