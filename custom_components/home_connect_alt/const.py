@@ -2,12 +2,11 @@
 
 
 DOMAIN = "home_connect_alt"
-SIM_HOST = "https://simulator.home-connect.com"
-API_HOST = "https://api.home-connect.com"
+DEFAULT_API_HOST = "https://api.home-connect.com"
 ENDPOINT_AUTHORIZE = "/security/oauth/authorize"
 ENDPOINT_TOKEN = "/security/oauth/token"
 SCOPES = "IdentifyAppliance Monitor Control Settings"
-CONF_SIMULATE = "simulate"
+CONF_API_HOST = "api_host"
 CONF_LANG = "language"
 CONF_CACHE = "cache"
 CONF_SENSORS_TRANSLATION = "sensor_value_translation"

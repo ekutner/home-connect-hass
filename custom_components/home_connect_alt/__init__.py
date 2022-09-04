@@ -30,7 +30,7 @@ CONFIG_SCHEMA = vol.Schema(
             {
                 vol.Required(CONF_CLIENT_ID): cv.string,
                 vol.Required(CONF_CLIENT_SECRET): cv.string,
-                vol.Optional(CONF_SIMULATE, default=False): cv.boolean,
+                vol.Optional(CONF_API_HOST, default=None): vol.Any(str, None),
                 vol.Optional(CONF_CACHE, default=True): cv.boolean,
                 vol.Optional(CONF_LANG, default=None): vol.Any(str, None),
                 vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(str, None),
@@ -54,18 +54,17 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         return True
 
     conf = config[DOMAIN]
-
-    simulate = conf[CONF_SIMULATE]
+    api_host = conf[CONF_API_HOST] if conf[CONF_API_HOST] else DEFAULT_API_HOST
 
     config_flow.OAuth2FlowHandler.async_register_implementation(
         hass,
         HomeConnectOauth2Impl(
             hass,
             DOMAIN,
-            config[DOMAIN][CONF_CLIENT_ID],
-            config[DOMAIN][CONF_CLIENT_SECRET],
-            f'{SIM_HOST if simulate else API_HOST}{ENDPOINT_AUTHORIZE}',
-            f'{SIM_HOST if simulate else API_HOST}{ENDPOINT_TOKEN}',
+            conf[CONF_CLIENT_ID],
+            conf[CONF_CLIENT_SECRET],
+            f'{api_host}{ENDPOINT_AUTHORIZE}',
+            f'{api_host}{ENDPOINT_TOKEN}',
         )
     )
 
@@ -84,16 +83,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     session = config_entry_oauth2_flow.OAuth2Session(hass, entry, implementation)
 
     conf = hass.data[DOMAIN]
-    simulate = conf[CONF_SIMULATE]
+    api_host = conf[CONF_API_HOST] if conf[CONF_API_HOST] else DEFAULT_API_HOST
     lang = conf[CONF_LANG] # if conf[CONF_LANG] != "" else None
-    host = SIM_HOST if simulate else API_HOST
     use_cache = conf[CONF_CACHE]
     logmode = conf[CONF_LOG_MODE] if conf[CONF_LOG_MODE] else ConditionalLogger.LogMode.REQUESTS
     Configuration.set_global_config(conf)
 
     # If using an aiohttp-based API lib
     auth = api.AsyncConfigEntryAuth(
-        aiohttp_client.async_get_clientsession(hass), session, host
+        aiohttp_client.async_get_clientsession(hass), session, api_host
     )
 
     # homeconnect:HomeConnect = None
