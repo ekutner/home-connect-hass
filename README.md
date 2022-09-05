@@ -47,7 +47,7 @@ home_connect_alt:
 ```
 This configuration should be enough for most people. For more avanced options see the [Configuration options](#configuration-options) section below. 
 
-## Install the integraion
+## Install the integration
 1. The esiest way to install the integration is using HACS. Just click the 
    button bellow and follow the instructions:  
   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ekutner&repository=home-connect-hass)
