@@ -47,7 +47,7 @@ home_connect_alt:
 ```
 This configuration should be enough for most people. For more avanced options see the [Configuration options](#configuration-options) section below. 
 
-## Install the integraion
+## Install the integration
 1. The esiest way to install the integration is using HACS. Just click the 
    button bellow and follow the instructions:  
   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ekutner&repository=home-connect-hass)
@@ -129,6 +129,12 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
   Regardless if you decide to use the language parameter or not it would be great if you can report these values so they can be properly translated. Ideally, if you know how, please update the translation files directly (at least the English ones) and create a PR. If you don't know how then you can add them to issue [#26](https://github.com/ekutner/home-connect-hass/issues/26) and I will add them to the translation files.  
 
   **_Note:_** It is expected to see these values in sensor history data. This is currently a limitation/bug in Home Assistant which doesn't translate these values.
+
+* **I install the Integration and finish the login flow successfully, only to come back to an error message in Home Assistant with no explanation about it.**
+  Home Connect recently switched their Account System to Singlekey ID, so now all new users need to create their account via it.
+  While Singlekey ID sets no restrictions on the email format on account creation, Home Connect always compares the Singlekey ID to the entry for "Home Connect user account for testing" set in the Developer account in all lowercase, even if capital letters are entered.
+  This means if the Singlekey ID was created with an email with capital letters, the Home Connect backend will give back a invalid_client response.
+  The current workaround is to create a Singlekey ID account with an all lower case email. (See [here](https://github.com/home-assistant/core/issues/72810#issuecomment-1166293116) ).
 
 </br>
 
