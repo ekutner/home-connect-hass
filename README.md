@@ -51,7 +51,7 @@ This configuration should be enough for most people. For more avanced options se
 1. The esiest way to install the integration is using HACS. Just click the 
    button bellow and follow the instructions:  
   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ekutner&repository=home-connect-hass)
-2. Nagivate to https://my.home-assistant.io/ and make sure the Home Assistant Instance is configured correctly to point to your local Home Assistant instance.
+2. Navigate to https://my.home-assistant.io/ and make sure the Home Assistant Instance is configured correctly to point to your local Home Assistant instance.
 3. Power on all your appliances.
 4. Turn **OFF** the wifi on your phone and make sure all the appliances are operational in the Home Connect mobile app.
 5. In your Home Assistant instance navigate to Settings -> Devices & Services then clieck the "Add Integration" button. Search for "Home Connect Alt" and install it.
@@ -106,7 +106,7 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
   2. Due to some unreasonable rate limits set by BSH, there is a limit of about 3 
   appliances loaded per minute. If you have more, expect the initial load to take longer. The integration will wait for the service to become available and continue loading the rest of the appliances. You may have to refresh your screen to see them in Home Assistant after they were added.
 
-* **I've restarted Home Assistant a few times and now all my appliances are unavilable**  
+* **I've restarted Home Assistant a few times and now all my appliances are unavailable**  
   This is, again, related to the Home Connect rate limits. Every time you restart Home Assistant the integration makes a few API calls to the service and if that happens too often it may block for up to 24 hours. The best way to fix this is to wait a day and restart Home Assistant again.
 
 * **I select a program or option but nothing happens on the appliance**  
@@ -172,7 +172,7 @@ To install a beta version go to the HACS dashboard in the Home Assistant UI:
   * RUNNING - The integration has started running 
   * LOADED - The integration finished loading the initial data from the Home Connect service
   * READY - The integration has successfully subscribed to real time updates from the cloud service and is now fully functional. 
-  * BLOCKED - The Home Connect service has blockde additional API calls for a period of time due to exceeding the service rate limits 
+  * BLOCKED - The Home Connect service has blocked additional API calls for a period of time due to exceeding the service rate limits 
   *It may take up to one minute to go from LOADED to READY*
 
 * The integration exposes the events fired by the service as Home Assistant events under the name: **"home_connect_alt_event"**
