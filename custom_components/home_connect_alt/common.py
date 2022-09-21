@@ -19,7 +19,7 @@ def is_boolean_enum(values:list[str]) -> bool:
 
     for v in values:
         v = v.lower()
-        if not v.endswith(".off") and not v.endswith(".on"):
+        if not v.endswith(".off") and not v.endswith(".on") and not v.endswith(".standby"):
             return False
     return True
 
