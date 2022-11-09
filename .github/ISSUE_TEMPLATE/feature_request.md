@@ -4,6 +4,10 @@ about: Suggest an idea for this project
 
 ---
 
+<!-- 
+Before you open a new feature request, CAREFULLY review the README, especially the FAQ section and search through the existing issues and requests to see if others have had the same issue.
+-->
+
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
 

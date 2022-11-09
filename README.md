@@ -99,12 +99,17 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
   This popup window is trying to log you into the Home Connect website to establish a connection with the integration. If you get an error at this stage it means you didn't follow the setup instuctions carefully enough, so make sure that you do.  
   Also make sure that you open https://my.home-assistant.io/ and configure the URL of your Home-Assistant server.  
   **NOTE:** If you are modifying an existing Home-Connect App then it may take up to 2 hours for the changes to take effect, so make sure you wait long enough. 
+
 * **Some of my appliances are not showing up after I added the integration**  
   This is most commonly caused by two reasons:
   1. The appliance must be powered on and connected to the Home Connect service to be discovered. Once the missing devices are turned on and connected, they will automatically be discovered and added by the integration.  
   This can be verified in the Home Connect mobile app **but only while the wifi on the phone is turned OFF**. If the devices are active in the mobile app while the phone's wifi is turned off then please open an issue with a debug log to report it.
   2. Due to some unreasonable rate limits set by BSH, there is a limit of about 3 
   appliances loaded per minute. If you have more, expect the initial load to take longer. The integration will wait for the service to become available and continue loading the rest of the appliances. You may have to refresh your screen to see them in Home Assistant after they were added.
+
+* **The Home Connect mobile app has some controls/data/events that are missing in Home Assistant**
+  This integration doesn't know anything about any specific appliance, it is using the offical Home Connect API to expole the available options for each appliance and automatically exposes them as appropriate Home Assistant entities. The type of entities is automatically determinted by information received from the API. The the Home Connect mobile app is using a private API that is not available to the public and has more capabilities than those in the official API. Therefor it is expected that there will be some data, controls or events that are available in the app but not in the integration, this is NOT a problem with the integration but a limitation of the API.
+  **DO NOT open bugs or feature requests related to such issues unless you can demontrate that the missing item is actually available in the API**
 
 * **I've restarted Home Assistant a few times and now all my appliances are unavailable**  
   This is, again, related to the Home Connect rate limits. Every time you restart Home Assistant the integration makes a few API calls to the service and if that happens too often it may block for up to 24 hours. The best way to fix this is to wait a day and restart Home Assistant again.
@@ -143,7 +148,11 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
 If you hit this limit frequently, please open an issue with a debug log. I'll try to see if there is a way to reduce some calls. However, as of now, there is nothing I can do about it and the Home Connect team was unwilling to increase this limit, which hurts their best customers so there is nothing I can do about it. 
 
 # Reporting issues / bugs
-This integration is in early beta and not stable yet. If you are going to be testing this integration please add this to your configuration.yaml file then restart HA:
+**CAREFULLY** Read the FAQ before submitting an bug report or opening a feature request, a lot of common issues are already covered there.   
+
+**DO NOT** open bugs or feature requests on missing data, controls or events, unless you can show either in the logs or in the API documentation that the missing item is actually available. Read the FAQ section for more details on this.  
+
+Before submitting any bug report please enable debug logging by adding the following to your configuration.yaml file then restart HA:
 ```
 logger:
   default: warn

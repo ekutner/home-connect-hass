@@ -1,17 +1,16 @@
 ---
 name: Issue
 about: Create a report to help us improve
-
 ---
 
 <!-- 
-Before you open a new issue, CAREFULLY review the README, especially the FAQ section and search through the existing issues to see if others have had the same problem.
+Before you open a new issue, CAREFULLY review the README, especially the FAQ and Bug Reporting sections and search through the existing issues to see if others have had the same problem.
 
-Issues not containing the minimum requirements will be closed:
-
-- Issues without a description (using the header is not good enough) will be closed.
-- Issues without debug logging will be closed.
-- Issues without configuration will be closed
+Issues that do not follow the bug reporting guidelines will be closed:
+- Issues without a description (using the header is not good enough)
+- Issues without a debug log
+- Issues without configuration
+- Issues reporting missing data, control or events without demonstrating that the missing item is available in the API
 
 -->
 ## Describe the bug
@@ -41,6 +40,6 @@ If the bug results in an exception paste it below, in all other cases please att
 -->
 
 ```text
-Add your logs here (or attach the log file).
+Paste the exception info here
 
 ```
