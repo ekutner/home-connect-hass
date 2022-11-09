@@ -297,9 +297,9 @@
       "BSH.Common.EnumType.PowerState.MainsOff": "Mains Off",
       "BSH.Common.EnumType.PowerState.Off": "Off",
       "BSH.Common.EnumType.PowerState.On": "On",
-      "BSH.Common.EnumType.PowerState.Standby": "Standby"
+      "BSH.Common.EnumType.PowerState.Standby": "Standby",
       "Cooking.Hob.EnumType.PowerLevel.Off": "Off",
-      "Cooking.Hob.EnumType.PowerLevel.On": "On",
+      "Cooking.Hob.EnumType.PowerLevel.On": "On"
     },
     "home_connect_alt__settings": {
       "BSH.Common.EnumType.AmbientLightColor.Color30": "Blue",
@@ -346,7 +346,7 @@
       "Cooking.Hob.EnumType.ZoneSelector.FrontLeft": "Front Left",
       "Cooking.Hob.EnumType.ZoneSelector.FrontRight": "Front Right",
       "Cooking.Hob.EnumType.ZoneSelector.RearLeft": "Rear Left",
-      "Cooking.Hob.EnumType.ZoneSelector.RearRight": "Rear Right",      
+      "Cooking.Hob.EnumType.ZoneSelector.RearRight": "Rear Right",
       "Cooking.Oven.Setting.SabbathMode": "Sabbath Mode",
       "Refrigeration.Common.Setting.BottleCooler.SetpointTemperature": "Bottle Cooler",
       "Refrigeration.Common.Setting.ChillerCommon.SetpointTemperature": "Chiller Common",
