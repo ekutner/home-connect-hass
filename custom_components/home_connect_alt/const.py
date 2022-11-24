@@ -1,6 +1,5 @@
 """Constants for the Home Connect New integration."""
 
-
 DOMAIN = "home_connect_alt"
 DEFAULT_API_HOST = "https://api.home-connect.com"
 ENDPOINT_AUTHORIZE = "/security/oauth/authorize"
@@ -17,25 +16,35 @@ CONF_LOG_MODE = "log_mode"
 HOME_CONNECT_DEVICE = {
     "identifiers": {(DOMAIN, "homeconnect")},
     "name": "Home Connect Service",
-    "manufacturer": "BSH"
+    "manufacturer": "BSH",
 }
 
 SPECIAL_ENTITIES = {
-    "ignore": [
-        "BSH.Common.Option.FinishInRelative"
-    ],
+    "ignore": ["BSH.Common.Option.FinishInRelative"],
     "status": {
-        "BSH.Common.Status.DoorState": { "type": "binary_sensor", "class": "door", "icon": None, "on_state": "BSH.Common.EnumType.DoorState.Open" },
+        "BSH.Common.Status.DoorState": {
+            "type": "binary_sensor",
+            "class": "door",
+            "icon": None,
+            "on_state": "BSH.Common.EnumType.DoorState.Open",
+        },
     },
-    "delayed_start": [
-        "BSH.Common.Option.FinishInRelative"
-    ],
+    "delayed_start": ["BSH.Common.Option.FinishInRelative"],
     "options": {
-        "BSH.Common.Option.FinishInRelative": { "unit": None, "class": f"{DOMAIN}__timespan"},
-        "BSH.Common.Option.ElapsedProgramTime": { "unit": None, "class": f"{DOMAIN}__timespan"},
-        "BSH.Common.Option.EstimatedTotalProgramTime": { "unit": None, "class": f"{DOMAIN}__timespan"},
-        "BSH.Common.Option.RemainingProgramTime": {"unit": None, "class": "timestamp" }
-   }
+        "BSH.Common.Option.FinishInRelative": {
+            "unit": None,
+            "class": f"{DOMAIN}__timespan",
+        },
+        "BSH.Common.Option.ElapsedProgramTime": {
+            "unit": None,
+            "class": f"{DOMAIN}__timespan",
+        },
+        "BSH.Common.Option.EstimatedTotalProgramTime": {
+            "unit": None,
+            "class": f"{DOMAIN}__timespan",
+        },
+        "BSH.Common.Option.RemainingProgramTime": {"unit": None, "class": "timestamp"},
+    },
 }
 
 DEVICE_ICON_MAP = {
@@ -49,16 +58,18 @@ DEVICE_ICON_MAP = {
     "Refrigerator": "mdi:fridge",
     "Freezer": "mdi:fridge",
     "CleaningRobot": "mdi:robot-vacuum",
-    "Hood": "mdi:hvac"
+    "Hood": "mdi:hvac",
 }
 
-PUBLISHED_EVENTS = [
-    "BSH.Common.Status.OperationState",
-    "*.event.*"
-]
+PUBLISHED_EVENTS = ["BSH.Common.Status.OperationState", "*.event.*"]
 
 TRIGGERS_CONFIG = {
-    "program_started": { "key": "BSH.Common.Status.OperationState", "value": "BSH.Common.EnumType.OperationState.Run" },
-    "program_finished": { "key": "BSH.Common.Status.OperationState", "value": "BSH.Common.EnumType.OperationState.Finished" }
+    "program_started": {
+        "key": "BSH.Common.Status.OperationState",
+        "value": "BSH.Common.EnumType.OperationState.Run",
+    },
+    "program_finished": {
+        "key": "BSH.Common.Status.OperationState",
+        "value": "BSH.Common.EnumType.OperationState.Finished",
+    },
 }
-

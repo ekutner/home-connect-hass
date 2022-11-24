@@ -19,7 +19,20 @@ from homeassistant.helpers.typing import ConfigType
 
 from . import api, config_flow
 from .common import Configuration
-from .const import *
+from .const import (
+    DOMAIN,
+    DEFAULT_API_HOST,
+    ENDPOINT_AUTHORIZE,
+    ENDPOINT_TOKEN,
+    CONF_API_HOST,
+    CONF_LANG,
+    CONF_CACHE,
+    CONF_SENSORS_TRANSLATION,
+    CONF_NAME_TEMPLATE,
+    CONF_LOG_MODE,
+    PUBLISHED_EVENTS,
+)
+
 from .services import Services
 
 _LOGGER = logging.getLogger(__name__)
@@ -33,9 +46,11 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Optional(CONF_API_HOST, default=None): vol.Any(str, None),
                 vol.Optional(CONF_CACHE, default=True): cv.boolean,
                 vol.Optional(CONF_LANG, default=None): vol.Any(str, None),
-                vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(str, None),
+                vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(
+                    str, None
+                ),
                 vol.Optional(CONF_NAME_TEMPLATE, default=None): vol.Any(str, None),
-                vol.Optional(CONF_LOG_MODE, default=None): vol.Any(int, None)
+                vol.Optional(CONF_LOG_MODE, default=None): vol.Any(int, None),
             }
         )
     },
@@ -43,7 +58,14 @@ CONFIG_SCHEMA = vol.Schema(
 )
 
 # For your initial PR, limit it to 1 platform.
-PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.SELECT, Platform.NUMBER, Platform.BUTTON, Platform.SWITCH]
+PLATFORMS = [
+    Platform.SENSOR,
+    Platform.BINARY_SENSOR,
+    Platform.SELECT,
+    Platform.NUMBER,
+    Platform.BUTTON,
+    Platform.SWITCH,
+]
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
@@ -63,9 +85,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             DOMAIN,
             conf[CONF_CLIENT_ID],
             conf[CONF_CLIENT_SECRET],
-            f'{api_host}{ENDPOINT_AUTHORIZE}',
-            f'{api_host}{ENDPOINT_TOKEN}',
-        )
+            f"{api_host}{ENDPOINT_AUTHORIZE}",
+            f"{api_host}{ENDPOINT_TOKEN}",
+        ),
     )
 
     return True
@@ -84,9 +106,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     conf = hass.data[DOMAIN]
     api_host = conf[CONF_API_HOST] if conf[CONF_API_HOST] else DEFAULT_API_HOST
-    lang = conf[CONF_LANG] # if conf[CONF_LANG] != "" else None
+    lang = conf[CONF_LANG]  # if conf[CONF_LANG] != "" else None
     use_cache = conf[CONF_CACHE]
-    logmode = conf[CONF_LOG_MODE] if conf[CONF_LOG_MODE] else ConditionalLogger.LogMode.REQUESTS
+    logmode = (
+        conf[CONF_LOG_MODE]
+        if conf[CONF_LOG_MODE]
+        else ConditionalLogger.LogMode.REQUESTS
+    )
     Configuration.set_global_config(conf)
 
     # If using an aiohttp-based API lib
@@ -109,25 +135,25 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang)
 
     conf[entry.entry_id] = auth
-    conf['homeconnect'] = homeconnect
-    conf['services'] = register_services(hass, homeconnect)
+    conf["homeconnect"] = homeconnect
+    conf["services"] = register_services(hass, homeconnect)
 
-    #region internal event hadlers
+    # region internal event hadlers
     # async def async_delayed_update_cache(delay:float = 0):
     #     asyncio.sleep(delay)
     #     await async_save_to_cache(hass, homeconnect)
 
-    async def on_data_loaded(homeconnect:HomeConnect):
+    async def on_data_loaded(homeconnect: HomeConnect):
         # Save the state of the HomeConnect object to cache
         # if use_cache:
         #     await async_save_to_cache(hass, homeconnect)
         # else:
         #     _LOGGER.debug("Not saving to cache, it is disabled")
         homeconnect.register_callback(on_device_removed, Events.DEPAIRED)
-        #homeconnect.register_callback(on_device_added, [Events.PAIRED, Events.DATA_CHANGED] )
+        # homeconnect.register_callback(on_device_added, [Events.PAIRED, Events.DATA_CHANGED] )
         homeconnect.subscribe_for_updates()
 
-    async def on_data_load_error(homeconnect:HomeConnect, ex:Exception):
+    async def on_data_load_error(homeconnect: HomeConnect, ex: Exception):
         _LOGGER.error("Failed to load data for the HomeConnect object", exc_info=ex)
 
     # async def on_device_added(appliance:Appliance, event:str):
@@ -136,24 +162,27 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     #     else:
     #         _LOGGER.debug("Not saving to cache, it is disabled")
 
-    async def on_device_removed(appliance:Appliance):
+    async def on_device_removed(appliance: Appliance):
         devreg = dr.async_get(hass)
-        device = devreg.async_get_device({(DOMAIN, appliance.haId.lower().replace('-','_'))})
+        device = devreg.async_get_device(
+            {(DOMAIN, appliance.haId.lower().replace("-", "_"))}
+        )
         devreg.async_remove_device(device.id)
 
         # We need to wait for the appliance to be removed from the HomeConnect data
         # this is not 100% fail-safe but good enough for a cache
         # asyncio.create_task(async_delayed_update_cache(30))
 
-    #endregion
-
+    # endregion
 
     # Setup all the callback listeners before starting to load the data
     hass.config_entries.async_setup_platforms(entry, PLATFORMS)
     register_events_publisher(hass, homeconnect)
 
     # Continue loading the HomeConnect data model and set the callback to be notified when done
-    homeconnect.start_load_data_task(on_complete=on_data_loaded, on_error= on_data_load_error)
+    homeconnect.start_load_data_task(
+        on_complete=on_data_loaded, on_error=on_data_load_error
+    )
 
     return True
 
@@ -161,7 +190,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     conf = hass.data[DOMAIN]
-    homeconnect:HomeConnect = conf['homeconnect']
+    homeconnect: HomeConnect = conf["homeconnect"]
     homeconnect.close()
 
     # await async_save_to_cache(hass, None)
@@ -172,8 +201,11 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     return unload_ok
 
-async def async_load_from_cache(hass:HomeAssistant, auth:api.AsyncConfigEntryAuth, lang:str|None) -> HomeConnect | None:
-    """ Helper function to load cached Home Connect data for storage """
+
+async def async_load_from_cache(
+    hass: HomeAssistant, auth: api.AsyncConfigEntryAuth, lang: str | None
+) -> HomeConnect | None:
+    """Helper function to load cached Home Connect data for storage"""
     cache = storage.Store(hass, version=1, key=f"{DOMAIN}_cache", private=True)
     try:
         refresh = HomeConnect.RefreshMode.ALL
@@ -181,33 +213,41 @@ async def async_load_from_cache(hass:HomeAssistant, auth:api.AsyncConfigEntryAut
 
         cached_data = await cache.async_load()
         if cached_data:
-            json_data = cached_data.get('json_data')
+            json_data = cached_data.get("json_data")
 
-            last_update = datetime.fromisoformat(cached_data['last_update'])
-            delta = (datetime.now()-last_update).total_seconds()
+            last_update = datetime.fromisoformat(cached_data["last_update"])
+            delta = (datetime.now() - last_update).total_seconds()
             if delta < 60:
                 refresh = HomeConnect.RefreshMode.NOTHING
-            elif delta < 3600*24*30:
+            elif delta < 3600 * 24 * 30:
                 refresh = HomeConnect.RefreshMode.DYNAMIC_ONLY
 
-        homeconnect:HomeConnect = await HomeConnect.async_create(auth, json_data=json_data, refresh=refresh, delayed_load=True, lang=lang)
+        homeconnect: HomeConnect = await HomeConnect.async_create(
+            auth, json_data=json_data, refresh=refresh, delayed_load=True, lang=lang
+        )
         _LOGGER.debug("Loaded HomeConnect from cache")
         return homeconnect
     except Exception as ex:
         # If there is any exception when creating the object from cache then clear the cache and continue
         await cache.async_remove()
-        _LOGGER.debug("Exception while loading HomeConnect from cache, clearing cache and contiuing", exc_info=ex)
+        _LOGGER.debug(
+            "Exception while loading HomeConnect from cache, clearing cache and contiuing",
+            exc_info=ex,
+        )
         return None
 
-async def async_save_to_cache(hass:HomeAssistant, homeconnect:HomeConnect, cache:storage.Store=None) -> None:
-    """ Helper function to save the Home Connect data to Home Assistant storage """
+
+async def async_save_to_cache(
+    hass: HomeAssistant, homeconnect: HomeConnect, cache: storage.Store = None
+) -> None:
+    """Helper function to save the Home Connect data to Home Assistant storage"""
     try:
         if not cache:
             cache = storage.Store(hass, version=1, key=f"{DOMAIN}_cache", private=True)
         if homeconnect:
             cached_data = {
-                'last_update': datetime.now().isoformat(),
-                'json_data': homeconnect.to_json()
+                "last_update": datetime.now().isoformat(),
+                "json_data": homeconnect.to_json(),
             }
             await cache.async_save(cached_data)
             _LOGGER.debug("Saved HomeConnect to cache")
@@ -219,97 +259,112 @@ async def async_save_to_cache(hass:HomeAssistant, homeconnect:HomeConnect, cache
         _LOGGER.debug("Exception when saving HomeConnect to cache", exc_info=ex)
 
 
-def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
-    """ Register the services offered by this integration """
+def register_services(hass: HomeAssistant, homeconnect: HomeConnect) -> Services:
+    """Register the services offered by this integration"""
     services = Services(hass, homeconnect)
 
     select_program_scema = vol.Schema(
         {
-            vol.Required('device_id'): cv.string,
-            vol.Required('program_key'): cv.string,
-            vol.Optional('validate', default=True): cv.boolean,
-            vol.Optional('options'): vol.Schema(
+            vol.Required("device_id"): cv.string,
+            vol.Required("program_key"): cv.string,
+            vol.Optional("validate", default=True): cv.boolean,
+            vol.Optional("options"): vol.Schema(
                 [
                     {
-                        vol.Required('key'): cv.string,
-                        vol.Required('value'): vol.Any(str, int, float, bool)
+                        vol.Required("key"): cv.string,
+                        vol.Required("value"): vol.Any(str, int, float, bool),
                     }
                 ]
-            )
+            ),
         }
     )
-    hass.services.async_register(DOMAIN, "select_program", services.async_select_program, schema=select_program_scema)
+    hass.services.async_register(
+        DOMAIN,
+        "select_program",
+        services.async_select_program,
+        schema=select_program_scema,
+    )
 
     start_program_scema = vol.Schema(
         {
-            vol.Required('device_id'): cv.string,
-            vol.Optional('program_key'): cv.string,
-            vol.Optional('validate', default=True): cv.boolean,
-            vol.Optional('options'): vol.Schema(
+            vol.Required("device_id"): cv.string,
+            vol.Optional("program_key"): cv.string,
+            vol.Optional("validate", default=True): cv.boolean,
+            vol.Optional("options"): vol.Schema(
                 [
                     {
-                        vol.Required('key'): cv.string,
-                        vol.Required('value'): vol.Any(str, int, float, bool)
+                        vol.Required("key"): cv.string,
+                        vol.Required("value"): vol.Any(str, int, float, bool),
                     }
                 ]
-            )
+            ),
         }
     )
-    hass.services.async_register(DOMAIN, "start_program", services.async_start_program, schema=start_program_scema)
+    hass.services.async_register(
+        DOMAIN,
+        "start_program",
+        services.async_start_program,
+        schema=start_program_scema,
+    )
 
-    stop_program_schema = vol.Schema(
-        {
-            vol.Required('device_id'): cv.string
-        }
+    stop_program_schema = vol.Schema({vol.Required("device_id"): cv.string})
+    hass.services.async_register(
+        DOMAIN, "stop_program", services.async_stop_program, schema=stop_program_schema
     )
-    hass.services.async_register(DOMAIN, "stop_program", services.async_stop_program, schema=stop_program_schema)
 
     set_program__option_scema = vol.Schema(
         {
-            vol.Required('device_id'): cv.string,
-            vol.Required('key'): cv.string,
-            vol.Required('value'): vol.Any(str, int, float, bool)
+            vol.Required("device_id"): cv.string,
+            vol.Required("key"): cv.string,
+            vol.Required("value"): vol.Any(str, int, float, bool),
         }
     )
-    hass.services.async_register(DOMAIN, "set_program_option", services.async_set_program_option, schema=set_program__option_scema)
+    hass.services.async_register(
+        DOMAIN,
+        "set_program_option",
+        services.async_set_program_option,
+        schema=set_program__option_scema,
+    )
 
     return services
 
 
-def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect):
-    """ Register for publishing events that are offered by this integration """
+def register_events_publisher(hass: HomeAssistant, homeconnect: HomeConnect):
+    """Register for publishing events that are offered by this integration"""
     device_reg = dr.async_get(hass)
-    last_event = { 'key': None, 'value': None}    # Used to filter out duplicate events
+    last_event = {"key": None, "value": None}  # Used to filter out duplicate events
 
-    async def async_handle_event(appliance:Appliance, key:str, value:str):
-        if key != last_event['key'] or value != last_event['value']:
-            last_event['key'] = key
-            last_event['value'] = value
-            device = device_reg.async_get_device({(DOMAIN, appliance.haId.lower().replace('-','_'))})
-            event_data = {
-                "device_id": device.id,
-                "key": key,
-                "value": value
-            }
+    async def async_handle_event(appliance: Appliance, key: str, value: str):
+        if key != last_event["key"] or value != last_event["value"]:
+            last_event["key"] = key
+            last_event["value"] = value
+            device = device_reg.async_get_device(
+                {(DOMAIN, appliance.haId.lower().replace("-", "_"))}
+            )
+            event_data = {"device_id": device.id, "key": key, "value": value}
             hass.bus.async_fire(f"{DOMAIN}_event", event_data)
-            _LOGGER.debug("Published event to Home Assistant event bus: %s = %s", key, str(value))
+            _LOGGER.debug(
+                "Published event to Home Assistant event bus: %s = %s", key, str(value)
+            )
         else:
-            _LOGGER.debug("Skipped publishing of duplicate event to Home Assistant event bus: %s = %s", key, str(value))
+            _LOGGER.debug(
+                "Skipped publishing of duplicate event to Home Assistant event bus: %s = %s",
+                key,
+                str(value),
+            )
 
-
-    def register_appliance(appliance:Appliance):
+    def register_appliance(appliance: Appliance):
         for event in PUBLISHED_EVENTS:
             appliance.register_callback(async_handle_event, event)
-
 
     homeconnect.register_callback(register_appliance, [Events.PAIRED, Events.CONNECTED])
     for appliance in homeconnect.appliances.values():
         register_appliance(appliance)
 
 
-
 class HomeConnectOauth2Impl(config_entry_oauth2_flow.LocalOAuth2Implementation):
-    """" Implement that OAuth2 class """
+    """ " Implement that OAuth2 class"""
+
     @property
     def name(self) -> str:
         """Name of the implementation."""
