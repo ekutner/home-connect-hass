@@ -63,7 +63,7 @@ async def async_setup_entry(
 
 
 class OptionNumber(InteractiveEntityBase, NumberEntity):
-    """Class for numeric options"""
+    """Class for numeric options."""
 
     _attr_device_class = f"{DOMAIN}__options"
 

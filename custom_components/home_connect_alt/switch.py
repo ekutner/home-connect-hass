@@ -121,7 +121,7 @@ class OptionSwitch(InteractiveEntityBase, SwitchEntity):
 
 
 class SettingsSwitch(InteractiveEntityBase, SwitchEntity):
-    """Switch for binary settings"""
+    """Switch for binary settings."""
 
     _attr_device_class = f"{DOMAIN}__settings"
 

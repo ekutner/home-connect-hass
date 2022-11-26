@@ -329,7 +329,7 @@ class SettingsSensor(EntityBase, SensorEntity):
 
 
 class HomeConnectStatusSensor(SensorEntity):
-    """Global Home Connect status sensor"""
+    """Global Home Connect status sensor."""
 
     _attr_should_poll = True
     _attr_device_info = HOME_CONNECT_DEVICE

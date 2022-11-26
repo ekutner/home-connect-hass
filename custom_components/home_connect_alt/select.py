@@ -241,7 +241,7 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
 
 
 class SettingsSelect(InteractiveEntityBase, SelectEntity):
-    """Selection of settings"""
+    """Selection of settings."""
 
     _attr_device_class = f"{DOMAIN}__settings"
 
@@ -296,7 +296,7 @@ class SettingsSelect(InteractiveEntityBase, SelectEntity):
 
 
 class DelayedStartSelect(InteractiveEntityBase, SelectEntity):
-    """Class for delayed start select box"""
+    """Class for delayed start select box."""
 
     def __init__(
         self, appliance: Appliance, key: str = None, conf: dict = None

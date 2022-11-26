@@ -122,7 +122,7 @@ class StartButton(EntityBase, ButtonEntity):
         return "mdi:play"
 
     async def async_press(self) -> None:
-        """Handle button press"""
+        """Handle button press."""
         try:
             op_state = self._appliance.status.get("BSH.Common.Status.OperationState")
             if op_state and op_state.value in [
@@ -179,7 +179,7 @@ class StartButton(EntityBase, ButtonEntity):
 
 
 class StopButton(EntityBase, ButtonEntity):
-    """Class for buttons that start the selected program"""
+    """Class for buttons that start the selected program."""
 
     _attr_icon = "mdi:stop"
 
@@ -285,7 +285,7 @@ class HomeConnecDebugButton(ButtonEntity):
         self._homeconnect = homeconnect
 
     async def async_press(self) -> None:
-        """Handle button press"""
+        """Handle button press."""
         try:
             js = self._homeconnect.to_json(indent=2)
             _LOGGER.error(js)

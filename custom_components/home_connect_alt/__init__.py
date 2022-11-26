@@ -205,7 +205,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_load_from_cache(
     hass: HomeAssistant, auth: api.AsyncConfigEntryAuth, lang: str | None
 ) -> HomeConnect | None:
-    """Helper function to load cached Home Connect data for storage"""
+    """Helper function to load cached Home Connect data for storage."""
     cache = storage.Store(hass, version=1, key=f"{DOMAIN}_cache", private=True)
     try:
         refresh = HomeConnect.RefreshMode.ALL
@@ -260,7 +260,7 @@ async def async_save_to_cache(
 
 
 def register_services(hass: HomeAssistant, homeconnect: HomeConnect) -> Services:
-    """Register the services offered by this integration"""
+    """Register the services offered by this integration."""
     services = Services(hass, homeconnect)
 
     select_program_scema = vol.Schema(
@@ -330,7 +330,7 @@ def register_services(hass: HomeAssistant, homeconnect: HomeConnect) -> Services
 
 
 def register_events_publisher(hass: HomeAssistant, homeconnect: HomeConnect):
-    """Register for publishing events that are offered by this integration"""
+    """Register for publishing events that are offered by this integration."""
     device_reg = dr.async_get(hass)
     last_event = {"key": None, "value": None}  # Used to filter out duplicate events
 
@@ -363,7 +363,7 @@ def register_events_publisher(hass: HomeAssistant, homeconnect: HomeConnect):
 
 
 class HomeConnectOauth2Impl(config_entry_oauth2_flow.LocalOAuth2Implementation):
-    """ " Implement that OAuth2 class"""
+    """Implement that OAuth2 class."""
 
     @property
     def name(self) -> str:

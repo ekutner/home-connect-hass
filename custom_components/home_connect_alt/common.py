@@ -67,7 +67,7 @@ class EntityBase(ABC):
 
     @property
     def unique_id(self) -> str:
-        """The unique ID oif the entity."""
+        """The unique ID of the entity."""
         return f"{self.haId}_{self._key.lower().replace('.','_')}"
 
     @property
@@ -104,7 +104,7 @@ class EntityBase(ABC):
     # If an entity is offline (return False), the UI will refelect this.
     @property
     def available(self) -> bool:
-        """Avilability of the enity."""
+        """Avilability of the entity."""
         return self._appliance.connected
 
     @property
@@ -206,7 +206,7 @@ class EntityManager:
         self._pending_entities = {}
 
     def remove_appliance(self, appliance: Appliance):
-        """Remove an appliance and all its registered entities."""
+        """Remove an appliance and all of its registered entities."""
         if appliance.haId in self._entity_appliance_map:
             self._existing_ids -= self._entity_appliance_map[appliance.haId]
             del self._entity_appliance_map[appliance.haId]
