@@ -6,8 +6,8 @@ pip3 install isort colorlog
 
 SCRIPT_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # This chmod is a safety measure for scripts that are added after the container was first created
-chmod +x $SCRIPT_PATH/*
-$SCRIPT_PATH/install-ha.sh
+sudo chmod +x $SCRIPT_PATH/*
+sudo $SCRIPT_PATH/install-ha.sh
 
 
 

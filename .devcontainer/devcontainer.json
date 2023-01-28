@@ -4,7 +4,7 @@
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
-			"VARIANT": "3.9",
+			"VARIANT": "3.10",
       "LOCAL_INTEGRATION_FOLDER": "${localWorkspaceFolder}"
 		},
 		"context": ".."
@@ -21,6 +21,7 @@
     "source=${localWorkspaceFolderBasename}_config,target=/config,type=volume",  // create a persistent named volume for the configuration folder
 		"source=${localWorkspaceFolder}/../home-connect-async,target=${containerWorkspaceFolder}/../home-connect-async,type=bind,consistency=consistent"
 	],
+  "remoteUser": "root",
 	"postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-create.sh",
   "postStartCommand":  "${containerWorkspaceFolder}/.devcontainer/scripts/post-start.sh",
 	"extensions": [

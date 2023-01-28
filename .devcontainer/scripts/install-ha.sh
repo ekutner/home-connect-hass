@@ -7,5 +7,5 @@ if [ "$hassver" = "" ]; then
 fi
 
 # Update Home Assistant to the latest version
-python3 -m pip --disable-pip-version-check install --upgrade git+https://github.com/home-assistant/home-assistant.git@$hassver
-hass --script ensure_config -c /config
+sudo python3 -m pip --disable-pip-version-check install --upgrade git+https://github.com/home-assistant/home-assistant.git@$hassver
+sudo hass --script ensure_config -c /config

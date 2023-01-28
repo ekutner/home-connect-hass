@@ -11,11 +11,12 @@ tts:
 
 # Dev config starts here
 logger:
-  default: warn
+  default: info
   logs:
-    home_connect_async: debug
-    home_connect_alt: debug
-    custom_components.home_connect_alt: debug
+    home_connect_async: error
+    home_connect_alt: error
+    custom_components.home_connect_alt: error
+    homeassistant.helpers.config_entry_oauth2_flow: debug
 
 # If you need to debug uncomment the line below (doc: https://www.home-assistant.io/integrations/debugpy/)
 #debugpy:
