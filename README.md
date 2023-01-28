@@ -1,5 +1,7 @@
 # Alternative Home Connect Integration for Home Assistant
 This project is an alternative integration for Home Connect enabled home appliances manufactured by BSH under the Bosch, Siemens, Constructa and Neff brands.  
+  
+*If you're using this integration please star it on Github*
 
 </br>
 

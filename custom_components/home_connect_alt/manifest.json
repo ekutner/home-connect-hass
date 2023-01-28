@@ -1,7 +1,7 @@
 {
   "domain": "home_connect_alt",
   "name": "Home Connect Alt",
-  "version": "0.5.9",
+  "version": "0.5.10",
   "config_flow": true,
   "documentation": "https://github.com/ekutner/home-connect-hass",
   "issue_tracker": "https://github.com/ekutner/home-connect-hass/issues",
