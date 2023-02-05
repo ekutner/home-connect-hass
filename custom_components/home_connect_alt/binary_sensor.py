@@ -7,7 +7,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
 from .common import Configuration, EntityBase, EntityManager
-from .const import DOMAIN, SPECIAL_ENTITIES
+from .const import DOMAIN, ENTITY_SETTINGS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -20,32 +20,37 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
 
     def add_appliance(appliance:Appliance) -> None:
         for (key, status) in appliance.status.items():
+            conf = Configuration()
             device = None
-            if key in SPECIAL_ENTITIES['status']:
-                conf = Configuration(SPECIAL_ENTITIES['status'][key])
-                if conf['type'] == 'binary_sensor':
-                    device = StatusBinarySensor(appliance, key, conf)
-            else:
-                if isinstance(status.value, bool): # should be a binary sensor if it has a boolean value
-                    device = StatusBinarySensor(appliance, key)
-            entity_manager.add(device)
+            if isinstance(status.value, bool) or conf.get_entity_setting(key, "type") == "Boolean": # should be a binary sensor if it has a boolean value
+                device = StatusBinarySensor(appliance, key, conf)
+                entity_manager.add(device)
+
+            # if key in ENTITY_SETTINGS['status']:
+            #     conf = Configuration(ENTITY_SETTINGS['status'][key])
+            #     if conf['type'] == 'binary_sensor':
+            #         device = StatusBinarySensor(appliance, key, conf)
+            # else:
+            #     if isinstance(status.value, bool): # should be a binary sensor if it has a boolean value
+            #         device = StatusBinarySensor(appliance, key)
+            # entity_manager.add(device)
 
         if appliance.selected_program and appliance.selected_program.options:
             for option in appliance.selected_program.options.values():
-                if isinstance(option.value, bool):
-                    device = ProgramOptionBinarySensor(appliance, option.key)
+                if isinstance(option.value, bool) or conf.get_entity_setting(option.key, "type") == "Boolean":
+                    device = ProgramOptionBinarySensor(appliance, option.key, conf)
                     entity_manager.add(device)
 
         if appliance.active_program and appliance.active_program.options:
             for option in appliance.active_program.options.values():
-                if isinstance(option.value, bool):
-                    device = ProgramOptionBinarySensor(appliance, option.key, SPECIAL_ENTITIES['options'].get(option.key, {}))
+                if isinstance(option.value, bool) or conf.get_entity_setting(option.key, "type") == "Boolean":
+                    device = ProgramOptionBinarySensor(appliance, option.key, conf)
                     entity_manager.add(device)
 
         if appliance.settings:
             for setting in appliance.settings.values():
-                if setting.type == "Boolean" or isinstance(setting.value, bool):
-                    device = SettingsBinarySensor(appliance, setting.key)
+                if setting.type == "Boolean" or isinstance(setting.value, bool) or conf.get_entity_setting(option.key, "type") == "Boolean":
+                    device = SettingsBinarySensor(appliance, setting.key, conf)
                     entity_manager.add(device)
 
         entity_manager.add(ConnectionBinarySensor(appliance, "Connected"))
@@ -78,7 +83,7 @@ class ProgramOptionBinarySensor(EntityBase, BinarySensorEntity):
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:office-building-cog')
+        return self.get_entity_setting('icon', 'mdi:office-building-cog')
 
     @property
     def available(self) -> bool:
@@ -113,7 +118,7 @@ class StatusBinarySensor(EntityBase, BinarySensorEntity):
     """ Status binary sensor """
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:gauge-full')
+        return self.get_entity_setting('icon', 'mdi:gauge-full')
 
     @property
     def name_ext(self) -> str:
@@ -126,8 +131,8 @@ class StatusBinarySensor(EntityBase, BinarySensorEntity):
     @property
     def is_on(self) -> bool:
         if self._key in self._appliance.status:
-            if 'on_state' in self._conf:
-                return self._appliance.status[self._key].value == self._conf['on_state']
+            if self.has_entity_setting("on_state"):
+                return self._appliance.status[self._key].value == self.get_entity_setting("on_state")
             else:
                 return self._appliance.status[self._key].value
         return None
@@ -152,13 +157,13 @@ class SettingsBinarySensor(EntityBase, BinarySensorEntity):
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:tune')
+        return self.get_entity_setting('icon', 'mdi:tune')
 
     @property
     def is_on(self):
         if self._key in self._appliance.settings:
-            if 'on_state' in self._conf:
-                return self._appliance.settings[self._key].value == self._conf['on_state']
+            if self.has_entity_setting("on_state"):
+                return self._appliance.settings[self._key].value == self.get_entity_setting("on_state")
             else:
                 return self._appliance.settings[self._key].value
         return None

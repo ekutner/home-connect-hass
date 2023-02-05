@@ -11,8 +11,8 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
-from .common import InteractiveEntityBase, EntityManager, is_boolean_enum
-from .const import DOMAIN, SPECIAL_ENTITIES
+from .common import InteractiveEntityBase, EntityManager, is_boolean_enum, Configuration
+from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -22,19 +22,21 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     entity_manager = EntityManager(async_add_entities)
 
     def add_appliance(appliance:Appliance) -> None:
+        conf = Configuration()
         if appliance.available_programs:
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if option.key not in SPECIAL_ENTITIES['ignore'] and (option.type == "Boolean" or isinstance(option.value, bool)):
-                            device = OptionSwitch(appliance, option.key)
+                        if not conf.get_entity_setting(option.key, "ignore") \
+                            and (option.type == "Boolean" or isinstance(option.value, bool) or conf.get_entity_setting(option.key, "type") == "Boolean" ):
+                            device = OptionSwitch(appliance, option.key, conf)
                             entity_manager.add(device)
 
         if appliance.settings:
             for setting in appliance.settings.values():
-                if setting.key not in SPECIAL_ENTITIES['ignore'] and \
-                    ( setting.type == "Boolean" or isinstance(setting.value, bool) or is_boolean_enum(setting.allowedvalues) ):
-                    device = SettingsSwitch(appliance, setting.key)
+                if not conf.get_entity_setting(setting.key, "ignore") \
+                    and ( setting.type == "Boolean" or isinstance(setting.value, bool) or is_boolean_enum(setting.allowedvalues) or conf.get_entity_setting(setting.key, "type") == "Boolean" ):
+                    device = SettingsSwitch(appliance, setting.key, conf)
                     entity_manager.add(device)
 
         entity_manager.register()
@@ -65,7 +67,7 @@ class OptionSwitch(InteractiveEntityBase, SwitchEntity):
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:office-building-cog')
+        return self.get_entity_setting('icon', 'mdi:office-building-cog')
 
     @property
     def available(self) -> bool:
@@ -118,7 +120,7 @@ class SettingsSwitch(InteractiveEntityBase, SwitchEntity):
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:tune')
+        return self.get_entity_setting('icon', 'mdi:tune')
 
     @property
     def available(self) -> bool:

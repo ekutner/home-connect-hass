@@ -2,13 +2,12 @@ from __future__ import annotations
 import logging
 import re
 from abc import ABC, abstractmethod
-from typing import Sequence
 
 from home_connect_async import Appliance, Events
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_NAME_TEMPLATE, DOMAIN
+from .const import CONF_NAME_TEMPLATE, DOMAIN, ENTITY_SETTINGS, CONF_ENTITY_SETTINGS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -29,13 +28,22 @@ class EntityBase(ABC):
     should_poll = False
     _appliance: Appliance = None
 
-    def __init__(self, appliance:Appliance, key:str=None, conf:dict=None) -> None:
+    def __init__(self, appliance:Appliance, key:str=None, conf:dict=None, hc_obj=None) -> None:
         """Initialize the sensor."""
         self._appliance = appliance
         self._homeconnect = appliance._homeconnect
         self._key = key
         self._conf = conf if conf else Configuration()
         self.entity_id = f'home_connect.{self.unique_id}'
+        self._hc_obj = hc_obj
+
+    def get_entity_setting(self, option, default=None):
+        """ Gets the specified configuration option for the entity """
+        return self._conf.get_entity_setting(self._key, option, default)
+
+    def has_entity_setting(self, option, default=None) -> bool:
+        """ Checks if the specified configuration option exists for the entity """
+        return self._conf.has_entity_setting(self._key, option)
 
     @property
     def haId(self) -> str:
@@ -57,7 +65,7 @@ class EntityBase(ABC):
     def device_class(self) -> str:
         """ Return the device class, if defined """
         if self._conf:
-            return self._conf.get('class')
+            return self._conf.get_entity_setting(self._key, "class")
         else:
             return None
 
@@ -127,6 +135,7 @@ class EntityBase(ABC):
         parts = re.findall('[A-Z0-9]+[^A-Z]*', name)
         return' '.join(parts)
 
+
 class InteractiveEntityBase(EntityBase):
     """ Base class for interactive entities (select, switch and number) """
 
@@ -139,6 +148,7 @@ class InteractiveEntityBase(EntityBase):
         await super().async_will_remove_from_hass()
         if self._key != "BSH.Common.Status.RemoteControlActive":
             self._appliance.deregister_callback(self.async_on_update, "BSH.Common.Status.RemoteControlActive")
+
 
 class EntityManager():
     """ Helper class for managing entity registration
@@ -185,8 +195,46 @@ class Configuration(dict):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.update(ENTITY_SETTINGS)
         if Configuration._global_config:
-            self.update(Configuration._global_config)
+            self.update(self.__merge(self,Configuration._global_config))
+
+    def __merge(self, destination:dict, source:dict ):
+        for key, value in source.items():
+            if isinstance(value, dict):
+                # get node or create one
+                node = destination.setdefault(key, {})
+                self.__merge(node, value)
+            else:
+                destination[key] = value
+
+        return destination
+
+    def get_entity_setting(self, key:str, option:str, default=None):
+        """ Retrun an entity config setting or None if it doesn't exist """
+        if CONF_ENTITY_SETTINGS in self and  key in self[CONF_ENTITY_SETTINGS] and option in self[CONF_ENTITY_SETTINGS][key]:
+            return self[CONF_ENTITY_SETTINGS][key][option]
+        return default
+
+    def has_entity_setting(self, key:str, option:str) -> bool:
+        """Checks if the entity config setting exist """
+        if CONF_ENTITY_SETTINGS in self and  key in self[CONF_ENTITY_SETTINGS] and option in self[CONF_ENTITY_SETTINGS][key]:
+            return True
+        return False
+
+    def set_entity_setting(self, key:str, option:str, value):
+        """ Retrun an entity config setting or None if it doesn't exist """
+        if CONF_ENTITY_SETTINGS not in self:
+            self[CONF_ENTITY_SETTINGS] = {}
+        if key not in self[CONF_ENTITY_SETTINGS]:
+            self[CONF_ENTITY_SETTINGS][key] = {}
+        self[CONF_ENTITY_SETTINGS][key][option] = value
+
+    def get_entity_settings(self, key:str):
+        """ Retrun an entity config setting or None if it doesn't exist """
+        if CONF_ENTITY_SETTINGS in self and  key in self[CONF_ENTITY_SETTINGS]:
+            return self[key]
+        return None
 
     @classmethod
     def set_global_config(cls, global_config:dict):

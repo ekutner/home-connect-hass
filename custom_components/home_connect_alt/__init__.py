@@ -35,7 +35,8 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Optional(CONF_LANG, default=None): vol.Any(str, None),
                 vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(str, None),
                 vol.Optional(CONF_NAME_TEMPLATE, default=None): vol.Any(str, None),
-                vol.Optional(CONF_LOG_MODE, default=None): vol.Any(int, None)
+                vol.Optional(CONF_LOG_MODE, default=None): vol.Any(int, None),
+                vol.Optional(CONF_ENTITY_SETTINGS, default=None): vol.Any(dict, None)
             }
         )
     },

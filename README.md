@@ -73,7 +73,8 @@ home_connect_alt:
   name_template: $brand $appliance - $name
   language: < Supported langage code >  
   sensor_value_translation: <server | local>  
-  api_host: <Home Connect API host name (only use for China)>
+  entity_settings: <custom entity settings>
+  api_host: <Home Connect API host name (only use for China)>  
 ```
 ## Parameters:
 * *client_id* (required) - The Client ID of your Home Connect app.
@@ -90,7 +91,20 @@ home_connect_alt:
   When set to **"server"** sensor values are translated to friendly names using the Home Connect service. In this mode the internal values of string sensors will be translated and the translated values must be used in scripts referring to those sensors.  
 
   **_Note:_** Select box values are always translated localy so they require the trsnalation files to contain all the possible values.
-* *api_host* (optional) - If you are based in China, and only then, set this to *https://api.home-connect.cn*  
+* *api_host* (optional) - If you are based in China, and only then, set this to *https://api.home-connect.cn*    
+* *entity_settings* (optional) - Overrides internal entity settings.   
+  Currently supported settings to override are:  
+  **unit**: The units to use for numeric values  
+  **icon**: The [Material Design icon](https://pictogrammers.com/library/mdi/) to use for the entity in the format "mdi:\<icon name>  
+  For example:
+  ```
+  enttity_settings:
+    ConsumerProducts.CoffeeMaker.Status.BeverageCounterCoffee:
+      unit: cups
+      icon: mdi:coffee
+  ```
+  **_Note_**: This is an advanced setting and should not be used unless you know what you're doing.
+
 
 After the integration is configured READ THE FAQ then add it from the Home-Assistant UI.  
 

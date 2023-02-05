@@ -8,8 +8,8 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
-from .common import InteractiveEntityBase, EntityManager, is_boolean_enum
-from .const import DEVICE_ICON_MAP, DOMAIN, SPECIAL_ENTITIES
+from .common import InteractiveEntityBase, EntityManager, is_boolean_enum, Configuration
+from .const import DEVICE_ICON_MAP, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -23,21 +23,22 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             device = ProgramSelect(appliance)
             entity_manager.add(device)
 
+        conf = Configuration()
         if appliance.available_programs:
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if option.key in SPECIAL_ENTITIES['delayed_start']:
-                            device = DelayedStartSelect(appliance, option.key)
+                        if conf.get_entity_setting(option.key, "delayed_start"):
+                            device = DelayedStartSelect(appliance, option.key, conf)
                             entity_manager.add(device)
-                        elif option.key not in SPECIAL_ENTITIES['ignore'] and option.allowedvalues and len(option.allowedvalues)>1:
-                            device = OptionSelect(appliance, option.key)
+                        elif not conf.get_entity_setting(option.key, "ignore") and option.allowedvalues and len(option.allowedvalues)>1:
+                            device = OptionSelect(appliance, option.key, conf)
                             entity_manager.add(device)
 
         if appliance.settings:
             for setting in appliance.settings.values():
-                if setting.key not in SPECIAL_ENTITIES['ignore'] and setting.allowedvalues and len(setting.allowedvalues)>1 and not is_boolean_enum(setting.allowedvalues):
-                    device = SettingsSelect(appliance, setting.key)
+                if not conf.get_entity_setting(setting.key, "ignore") and setting.allowedvalues and len(setting.allowedvalues)>1 and not is_boolean_enum(setting.allowedvalues):
+                    device = SettingsSelect(appliance, setting.key, conf)
                     entity_manager.add(device)
 
         entity_manager.register()
@@ -131,7 +132,7 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:office-building-cog')
+        return self.get_entity_setting('icon', 'mdi:office-building-cog')
 
     @property
     def available(self) -> bool:
@@ -201,7 +202,7 @@ class SettingsSelect(InteractiveEntityBase, SelectEntity):
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:tune')
+        return self.get_entity_setting('icon', 'mdi:tune')
 
     @property
     def available(self) -> bool:
@@ -247,7 +248,7 @@ class DelayedStartSelect(InteractiveEntityBase, SelectEntity):
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:clock-outline')
+        return self.get_entity_setting('icon', 'mdi:clock-outline')
 
     @property
     def available(self) -> bool:
