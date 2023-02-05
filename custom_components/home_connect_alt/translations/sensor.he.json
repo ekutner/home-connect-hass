@@ -200,6 +200,7 @@
       "Dishcare.Dishwasher.Option.SilenceOnDemand":  "שתיקה לפי דרישה",
       "Dishcare.Dishwasher.Option.VarioSpeedPlus":  "מהירות משתנה פלוס",
       "LaundryCare.Common.EnumType.ProcessPhase.Drying":  "יִבּוּשׁ",
+      "LaundryCare.Common.EnumType.VarioPerfect.EcoPerfect": "EcoPerfect",
       "LaundryCare.Common.EnumType.VarioPerfect.Off":  "כבוי",
       "LaundryCare.Common.EnumType.VarioPerfect.SpeedPerfect":  "SpeedPerfect",
       "LaundryCare.Dryer.EnumType.DryingTarget.CupboardDry":  "יבש ארון",

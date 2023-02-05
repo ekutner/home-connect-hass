@@ -207,6 +207,7 @@
       "Dishcare.Dishwasher.Option.SilenceOnDemand": "Silence On Demand",
       "Dishcare.Dishwasher.Option.VarioSpeedPlus": "Vario Speed Plus",
       "LaundryCare.Common.EnumType.ProcessPhase.Drying": "Drying",
+      "LaundryCare.Common.EnumType.VarioPerfect.EcoPerfect": "EcoPerfect",
       "LaundryCare.Common.EnumType.VarioPerfect.Off": "Off",
       "LaundryCare.Common.EnumType.VarioPerfect.SpeedPerfect": "SpeedPerfect",
       "LaundryCare.Dryer.EnumType.DryingTarget.CupboardDry": "Cupboard Dry",
