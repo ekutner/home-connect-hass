@@ -145,7 +145,7 @@
     "home_connect_alt__options": {
       "BSH.Common.Option.Duration": "מֶשֶׁך",
       "BSH.Common.Option.ElapsedProgramTime":  "זמן תוכנית שחלף",
-      "BSH.Common.Option.FinishInRelative":  "סיים באופן יחסי",
+      "BSH.Common.Option.FinishInRelative": "סיום בעוד (הפעלה דחויה)",
       "BSH.Common.Option.ProgramProgress":  "התקדמות התוכנית",
       "BSH.Common.Option.RemainingProgramTime":  "זמן התוכנית שנותר",
       "BSH.Common.Option.StartInRelative":  "התחל באופן יחסי",

@@ -197,7 +197,7 @@ class Configuration(dict):
         super().__init__(*args, **kwargs)
         self.update(ENTITY_SETTINGS)
         if Configuration._global_config:
-            self.update(self.__merge(self,Configuration._global_config))
+            self.update(self.__merge(self, Configuration._global_config))
 
     def __merge(self, destination:dict, source:dict ):
         for key, value in source.items():
@@ -212,13 +212,13 @@ class Configuration(dict):
 
     def get_entity_setting(self, key:str, option:str, default=None):
         """ Retrun an entity config setting or None if it doesn't exist """
-        if CONF_ENTITY_SETTINGS in self and  key in self[CONF_ENTITY_SETTINGS] and option in self[CONF_ENTITY_SETTINGS][key]:
+        if CONF_ENTITY_SETTINGS in self and  self[CONF_ENTITY_SETTINGS] and key in self[CONF_ENTITY_SETTINGS] and option in self[CONF_ENTITY_SETTINGS][key]:
             return self[CONF_ENTITY_SETTINGS][key][option]
         return default
 
     def has_entity_setting(self, key:str, option:str) -> bool:
         """Checks if the entity config setting exist """
-        if CONF_ENTITY_SETTINGS in self and  key in self[CONF_ENTITY_SETTINGS] and option in self[CONF_ENTITY_SETTINGS][key]:
+        if CONF_ENTITY_SETTINGS in self and self[CONF_ENTITY_SETTINGS] and key in self[CONF_ENTITY_SETTINGS] and option in self[CONF_ENTITY_SETTINGS][key]:
             return True
         return False
 

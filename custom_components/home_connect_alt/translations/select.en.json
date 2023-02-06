@@ -147,7 +147,7 @@
     "home_connect_alt__options": {
       "BSH.Common.Option.Duration": "Duration",
       "BSH.Common.Option.ElapsedProgramTime": "Elapsed Program Time",
-      "BSH.Common.Option.FinishInRelative": "Finish In Relative",
+      "BSH.Common.Option.FinishInRelative": "Finish In (Delayed Operation)",
       "BSH.Common.Option.ProgramProgress": "Program Progress",
       "BSH.Common.Option.RemainingProgramTime": "Remaining Program Time",
       "BSH.Common.Option.StartInRelative": "Start In Relative",

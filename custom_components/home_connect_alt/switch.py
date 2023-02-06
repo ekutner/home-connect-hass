@@ -27,15 +27,16 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if not conf.get_entity_setting(option.key, "ignore") \
-                            and (option.type == "Boolean" or isinstance(option.value, bool) or conf.get_entity_setting(option.key, "type") == "Boolean" ):
+                        if ( not conf.has_entity_setting(option.key, "type") and (option.type == "Boolean" or isinstance(option.value, bool))) \
+                             or conf.get_entity_setting(option.key, "type") == "Boolean" :
                             device = OptionSwitch(appliance, option.key, conf)
                             entity_manager.add(device)
 
         if appliance.settings:
             for setting in appliance.settings.values():
-                if not conf.get_entity_setting(setting.key, "ignore") \
-                    and ( setting.type == "Boolean" or isinstance(setting.value, bool) or is_boolean_enum(setting.allowedvalues) or conf.get_entity_setting(setting.key, "type") == "Boolean" ):
+                if (not conf.has_entity_setting(setting.key, "type")
+                    and ( setting.type == "Boolean" or isinstance(setting.value, bool) or is_boolean_enum(setting.allowedvalues))) \
+                    or conf.get_entity_setting(setting.key, "type") == "Boolean":
                     device = SettingsSwitch(appliance, setting.key, conf)
                     entity_manager.add(device)
 

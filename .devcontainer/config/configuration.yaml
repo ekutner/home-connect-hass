@@ -13,8 +13,8 @@ tts:
 logger:
   default: info
   logs:
-    home_connect_async: error
-    home_connect_alt: error
+    home_connect_async: debug
+    home_connect_alt: debug
     custom_components.home_connect_alt: error
     homeassistant.helpers.config_entry_oauth2_flow: debug
 
@@ -36,9 +36,9 @@ home_connect_alt:
   language: en
   sensor_value_translation: local
   name_template: $appliance $name ($brand)
-  log_mode: 5
+  log_mode: 7
   #api_host: https://simulator.home-connect.com
-  entity_settings:
-    LaundryCare.Washer.Setting.IDos2BaseLevel:
-      unit: xx
-      icon: mdi:waves-arrow-up
+  # entity_settings:
+  #   LaundryCare.Washer.Setting.IDos2BaseLevel:
+  #     unit: xx
+  #     icon: mdi:waves-arrow-up

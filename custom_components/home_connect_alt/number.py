@@ -19,18 +19,19 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     entity_manager = EntityManager(async_add_entities)
 
     conf = Configuration()
+    number_types = ["Int", "Float", "Double"]
     def add_appliance(appliance:Appliance) -> None:
         if appliance.available_programs:
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if not conf.get_entity_setting(option.key, "ignore") and option.type in ["Int", "Float", "Double"]:
+                        if (not conf.has_entity_setting(option.key, "type") and option.type in number_types) or conf.has_entity_setting(option.key, "type") in number_types:
                             device = OptionNumber(appliance, option.key, hc_obj=option)
                             entity_manager.add(device)
 
         if appliance.settings:
             for setting in appliance.settings.values():
-                if not conf.get_entity_setting(setting.key, "ignore") and setting.type in ["Int", "Float", "Double"]:
+                if (not conf.has_entity_setting(setting.key, "type") and setting.type in number_types) or conf.has_entity_setting(setting.key, "type") in number_types:
                     device = SettingsNumber(appliance, setting.key, hc_obj=setting)
                     entity_manager.add(device)
 

@@ -23,7 +23,7 @@ HOME_CONNECT_DEVICE = {
 
 ENTITY_SETTINGS = {
     CONF_ENTITY_SETTINGS: {
-        "BSH.Common.Option.FinishInRelative": { "unit": None, "class": f"{DOMAIN}__timespan", "delayed_start": True},
+        "BSH.Common.Option.FinishInRelative": { "type": "DelayedOperation", "unit": None, "class": f"{DOMAIN}__timespan", "delayed_start": True},
         "BSH.Common.Option.ElapsedProgramTime": { "unit": None, "class": f"{DOMAIN}__timespan"},
         "BSH.Common.Option.EstimatedTotalProgramTime": { "unit": None, "class": f"{DOMAIN}__timespan"},
         "BSH.Common.Option.RemainingProgramTime": {"unit": None, "class": "timestamp" },
