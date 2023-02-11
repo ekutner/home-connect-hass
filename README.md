@@ -90,7 +90,7 @@ home_connect_alt:
   When set to **"local"** (the default) the integration will use the raw ENUM values documented in the Home Connect documentation for sensors with string values. In that case the integration relies on the Home Assistant translation mechanism and translation files to translate these values into friendly names. The benefit of this approach is that sensor values used by the integration are language independent and match the values documented in the Home Connect API.  
   When set to **"server"** sensor values are translated to friendly names using the Home Connect service. In this mode the internal values of string sensors will be translated and the translated values must be used in scripts referring to those sensors.  
 
-  **_Note:_** Select box values are always translated localy so they require the trsnalation files to contain all the possible values.
+  **_Note:_** Select box values are always translated localy so they require the translation files to contain all the possible values.
 * *api_host* (optional) - If you are based in China, and only then, set this to *https://api.home-connect.cn*    
 * *entity_settings* (optional) - Overrides internal entity settings.   
   Currently supported settings to override are:  
@@ -98,7 +98,7 @@ home_connect_alt:
   **icon**: The [Material Design icon](https://pictogrammers.com/library/mdi/) to use for the entity in the format "mdi:\<icon name>  
   For example:
   ```
-  enttity_settings:
+  entity_settings:
     ConsumerProducts.CoffeeMaker.Status.BeverageCounterCoffee:
       unit: cups
       icon: mdi:coffee
