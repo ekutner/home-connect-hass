@@ -269,7 +269,7 @@ class DelayedOperationSelect(InteractiveEntityBase, SelectEntity):
 
         if self._appliance.selected_program and self._appliance.selected_program.options and self._key in self._appliance.selected_program.options:
             selected_program_time = self._appliance.selected_program.options[self._key].value
-            start = selected_program_time//1800 + (selected_program_time % 1800 > 0)
+            start = 1 if "StartInRelative" in self._key else selected_program_time//1800 + (selected_program_time % 1800 > 0)
             #end = self._appliance.available_programs[self._appliance.selected_program.key].options[self._key].max
             end = 49
             for t in range(start, end):
