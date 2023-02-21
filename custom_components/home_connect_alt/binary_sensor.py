@@ -49,7 +49,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
 
         if appliance.settings:
             for setting in appliance.settings.values():
-                if setting.type == "Boolean" or isinstance(setting.value, bool) or conf.get_entity_setting(option.key, "type") == "Boolean":
+                if setting.type == "Boolean" or isinstance(setting.value, bool) or conf.get_entity_setting(setting.key, "type") == "Boolean":
                     device = SettingsBinarySensor(appliance, setting.key, conf)
                     entity_manager.add(device)
 
