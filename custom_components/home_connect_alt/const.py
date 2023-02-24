@@ -29,6 +29,7 @@ ENTITY_SETTINGS = {
         "BSH.Common.Option.EstimatedTotalProgramTime": { "unit": None, "class": f"{DOMAIN}__timespan"},
         "BSH.Common.Option.RemainingProgramTime": {"unit": None, "class": "timestamp" },
         "BSH.Common.Status.DoorState": { "type": "Boolean", "class": "door", "icon": None, "on_state": "BSH.Common.EnumType.DoorState.Open" },
+        "Connected": { "class": "connectivity" },
     }
 }
 

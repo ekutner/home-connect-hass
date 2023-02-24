@@ -96,6 +96,7 @@ home_connect_alt:
   Currently supported settings to override are:  
   **unit**: The units to use for numeric values  
   **icon**: The [Material Design icon](https://pictogrammers.com/library/mdi/) to use for the entity in the format "mdi:\<icon name>  
+  **class**: The Home Assistant class of the entity (must be a class which is already supported for that entity type)  
   For example:
   ```
   entity_settings:
