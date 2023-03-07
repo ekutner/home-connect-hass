@@ -120,6 +120,7 @@ class ProgramSensor(EntityBase, SensorEntity):
         return None
 
     async def async_on_update(self, appliance: Appliance, key: str, value) -> None:
+        _LOGGER.debug("Updating sensor %s => %s", self.unique_id, self.native_value)
         self.async_write_ha_state()
 
 
