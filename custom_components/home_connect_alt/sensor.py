@@ -111,7 +111,7 @@ class ProgramSensor(EntityBase, SensorEntity):
     @property
     def native_value(self):
         """Return the state of the sensor."""
-        prog = self._appliance.selected_program if self._conf["program_type"] != "selected" else self._appliance.active_program
+        prog = self._appliance.selected_program if self._conf["program_type"] == "selected" else self._appliance.active_program
         if prog:
             if (prog.name and self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER):
                 return prog.name
