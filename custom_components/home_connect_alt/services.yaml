@@ -131,3 +131,32 @@ set_program_option:
       required: true
       selector:
         text:
+
+apply_setting:
+  name: Apply setting
+  description: Applies a Home Connect setting
+  fields:
+    device_id:
+      description: The ID of the appliance to start the program on
+      name: device_id
+      required: true
+      selector:
+        device:
+          integration: home_connect_alt
+    key:
+      name: Setting key
+      description: >
+        The ENUM key of a setting which is available for the specified appliance
+      example: ConsumerProducts.CoffeeMaker.Setting.CupWarmer
+      required: true
+      selector:
+        text:
+    value:
+      name: Setting value
+      description: >
+        An allowed value for the specified setting.
+        Note that if the setting type is not ENUM (eg. Boolean) it must be specified in YAML in the correct format
+      example: true
+      required: true
+      selector:
+        text:

@@ -62,6 +62,19 @@ class Services():
             except ValueError as ex:
                 raise HomeAssistantError(str(ex))
 
+
+    async def async_apply_setting(self, call) -> None:
+        """ Service for applying an appliance setting """
+        data = call.data
+        appliance = self.get_appliance_from_device_id(data['device_id'])
+        if appliance:
+            try:
+                await appliance.async_apply_setting(data['key'], data['value'])
+            except HomeConnectError as ex:
+                raise HomeAssistantError(ex.error_description if ex.error_description else ex.msg)
+            except ValueError as ex:
+                raise HomeAssistantError(str(ex))
+
     def get_appliance_from_device_id(self, device_id):
         """ Helper function to get an appliance from the Home Assistant device_id """
         device = self.dr.devices[device_id]
