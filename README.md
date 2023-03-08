@@ -193,6 +193,8 @@ To install a beta version go to the HACS dashboard in the Home Assistant UI:
 <br>
 
 # Automation Notes
+
+## Integration state
 * There is a special sensor called **Home Connect Status** which shows the status of the integration. It has the following values:
   * INIT - The integration is initializing
   * RUNNING - The integration has started running 
@@ -201,10 +203,26 @@ To install a beta version go to the HACS dashboard in the Home Assistant UI:
   * BLOCKED - The Home Connect service has blocked additional API calls for a period of time due to exceeding the service rate limits 
   *It may take up to one minute to go from LOADED to READY*
 
-* The integration exposes the events fired by the service as Home Assistant events under the name: **"home_connect_alt_event"**
-* The integration exposes two triggers for easy automation:
+## Services
+The following services are available for use with automations:  
+**select_program** - Selects a program and optionally set its options  
+**start_program** - Starts a program and optionally set its options  
+**stop_program** - Stops the active program  
+**set_program_option** - Sets an option on the active program if one exists or on the selected program otherwise  
+
+## Events
+The integration exposes the events fired by the service as Home Assistant events under the name: **"home_connect_alt_event"**
+The published events values are:
+**BSH.Common.Status.OperationState**
+**All the events with the keyword "Event" in their names**
+
+## Triggers
+The integration exposes two triggers for easy automation:
   * select_program
   * start_program 
+
+
+<br>
 
 # Legal Notice
 This integration is not built, maintained, provided or associated with BSH in any way.
