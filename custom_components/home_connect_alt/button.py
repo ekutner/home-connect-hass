@@ -113,7 +113,7 @@ class StartButton(EntityBase, ButtonEntity):
                    Events.PROGRAM_SELECTED,
                    Events.PROGRAM_STARTED,
                    Events.PROGRAM_FINISHED,
-                   "BSH.Common.Status.*"
+                   "BSH.Common.Status.*",
                    "BSH.Common.Setting.PowerState"
         ]
         self._appliance.register_callback(self.async_on_update, events)
@@ -125,7 +125,7 @@ class StartButton(EntityBase, ButtonEntity):
                    Events.PROGRAM_SELECTED,
                    Events.PROGRAM_STARTED,
                    Events.PROGRAM_FINISHED,
-                   "BSH.Common.Status.*"
+                   "BSH.Common.Status.*",
                    "BSH.Common.Setting.PowerState"
         ]
         self._appliance.deregister_callback(self.async_on_update, events)
@@ -174,7 +174,7 @@ class StopButton(EntityBase, ButtonEntity):
                    Events.PROGRAM_SELECTED,
                    Events.PROGRAM_STARTED,
                    Events.PROGRAM_FINISHED,
-                   "BSH.Common.Status.*"
+                   "BSH.Common.Status.*",
                    "BSH.Common.Setting.PowerState"
         ]
         self._appliance.register_callback(self.async_on_update, events)
@@ -186,7 +186,7 @@ class StopButton(EntityBase, ButtonEntity):
                    Events.PROGRAM_SELECTED,
                    Events.PROGRAM_STARTED,
                    Events.PROGRAM_FINISHED,
-                   "BSH.Common.Status.*"
+                   "BSH.Common.Status.*",
                    "BSH.Common.Setting.PowerState"
         ]
         self._appliance.deregister_callback(self.async_on_update, events)
