@@ -24,43 +24,47 @@
   "remoteUser": "root",
 	"postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-create.sh",
   "postStartCommand":  "${containerWorkspaceFolder}/.devcontainer/scripts/post-start.sh",
-	"extensions": [
-		"github.vscode-pull-request-github",
-		"ms-python.vscode-pylance",
-    "visualstudioexptteam.vscodeintellicode",
-    "redhat.vscode-yaml",
-    "esbenp.prettier-vscode",
-    "eamodio.gitlens",
-    "mhutchie.git-graph"
-	],
-  "settings": {
-    "python.defaultInterpreterPath": "/usr/local/bin/python",
-    "python.autoComplete.extraPaths": [
-      "${containerWorkspaceFolder}",
-      "${containerWorkspaceFolder}/../home-connect-async"
-    ],
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
-    "python.formatting.provider": "black",
-    "python.testing.pytestArgs": ["--no-cov"],
-    "editor.formatOnPaste": false,
-    "editor.formatOnSave": true,
-    "editor.formatOnType": true,
-    "files.trimTrailingWhitespace": true,
-    "terminal.integrated.profiles.linux": {
-      "zsh": {
-        "path": "/usr/bin/zsh"
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "github.vscode-pull-request-github",
+        "ms-python.vscode-pylance",
+        "visualstudioexptteam.vscodeintellicode",
+        "redhat.vscode-yaml",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens",
+        "mhutchie.git-graph"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.autoComplete.extraPaths": [
+          "${containerWorkspaceFolder}",
+          "${containerWorkspaceFolder}/../home-connect-async"
+        ],
+        "python.linting.pylintEnabled": true,
+        "python.linting.enabled": true,
+        "python.formatting.provider": "black",
+        "python.testing.pytestArgs": ["--no-cov"],
+        "editor.formatOnPaste": false,
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "files.trimTrailingWhitespace": true,
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/usr/bin/zsh"
+          }
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "yaml.customTags": [
+          "!input scalar",
+          "!secret scalar",
+          "!include_dir_named scalar",
+          "!include_dir_list scalar",
+          "!include_dir_merge_list scalar",
+          "!include_dir_merge_named scalar"
+        ]
       }
-    },
-    "terminal.integrated.defaultProfile.linux": "zsh",
-    "yaml.customTags": [
-      "!input scalar",
-      "!secret scalar",
-      "!include_dir_named scalar",
-      "!include_dir_list scalar",
-      "!include_dir_merge_list scalar",
-      "!include_dir_merge_named scalar"
-    ]
+    }
   }
 
 }
