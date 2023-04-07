@@ -99,6 +99,10 @@ class ProgramSensor(EntityBase, SensorEntity):
         return f"{self._conf['program_type'].capitalize()} Program"
 
     @property
+    def translation_key(self) -> str:
+        return "programs"
+
+    @property
     def icon(self) -> str:
         if self._appliance.type in DEVICE_ICON_MAP:
             return DEVICE_ICON_MAP[self._appliance.type]
@@ -133,6 +137,10 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
             return self.get_entity_setting("class")
         return f"{DOMAIN}__options"
 
+    @property
+    def translation_key(self) -> str:
+        return "options"
+    
     @property
     def icon(self) -> str:
         return self.get_entity_setting("icon", "mdi:office-building-cog")
@@ -240,6 +248,10 @@ class StatusSensor(EntityBase, SensorEntity):
         return f"{DOMAIN}__status"
 
     @property
+    def translation_key(self) -> str:
+        return "statuses"
+
+    @property
     def name_ext(self) -> str:
         if self._key in self._appliance.status:
             status = self._appliance.status[self._key]
@@ -275,11 +287,15 @@ class StatusSensor(EntityBase, SensorEntity):
 
 
 class SettingsSensor(EntityBase, SensorEntity):
-    """Status sensor"""
+    """Settings sensor"""
 
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__settings"
+
+    @property
+    def translation_key(self) -> str:
+        return "settings"
 
     @property
     def name_ext(self) -> str:

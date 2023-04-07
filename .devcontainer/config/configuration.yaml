@@ -18,22 +18,11 @@ logger:
     custom_components.home_connect_alt: error
     homeassistant.helpers.config_entry_oauth2_flow: debug
 
-# If you need to debug uncomment the line below (doc: https://www.home-assistant.io/integrations/debugpy/)
-#debugpy:
-input_select:
-  who_cooks:
-    name: Who cooks today
-    options:
-      - Paulus
-      - Anne Therese
-    initial: Anne Therese
-    icon: mdi:panda
-
 home_connect_alt:
   client_id: !secret home_connect_client_id
   client_secret: !secret home_connect_client_secret
   # cache: false
-  language: en
+  language: en-GB
   sensor_value_translation: local
   name_template: $appliance $name ($brand)
   log_mode: 7

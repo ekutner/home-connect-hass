@@ -60,6 +60,10 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
         return f'{self.haId}_programs'
 
     @property
+    def translation_key(self) -> str:
+        return "programs"
+
+    @property
     def name_ext(self) -> str:
         return "Programs"
 
@@ -122,6 +126,10 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__options"
+
+    @property
+    def translation_key(self) -> str:
+        return "options"
 
     @property
     def name_ext(self) -> str|None:
@@ -194,6 +202,10 @@ class SettingsSelect(InteractiveEntityBase, SelectEntity):
     @property
     def device_class(self) -> str:
         return f"{DOMAIN}__settings"
+
+    @property
+    def translation_key(self) -> str:
+        return "settings"
 
     @property
     def name_ext(self) -> str|None:
