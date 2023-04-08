@@ -230,7 +230,7 @@ To install a beta version go to the HACS dashboard in the Home Assistant UI:
 You are welcome to create PRs for new language translations or updates to existing ones however please note the following requirements:
 * To add a new language translation **always** start by copying the English translation file and edit it.
 * New ENUM value translations **will not be accepted** if they are not added to the English translation file first.
-* Translations **MUST** be added and modified **ONLY**** under the "entity.sensor" node of the translation file because those values will also be used to automatically overwrite the values under the "enity.select" node.
+* Translations **MUST** be added and modified **ONLY** under the "entity.sensor" node of the translation file because those values will also be used to automatically overwrite the values under the "enity.select" node.
 * The translated ENUM values must be added in the correct section (programs/options/settings/statuses)
 
 <br>

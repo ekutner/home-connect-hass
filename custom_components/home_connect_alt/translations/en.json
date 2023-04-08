@@ -26,7 +26,6 @@
   "entity": {
     "select": {
       "options": {
-        "name": "test",
         "state": {
           "BSH.Common.Option.Duration": "Duration",
           "BSH.Common.Option.ElapsedProgramTime": "Elapsed Program Time",
