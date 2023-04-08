@@ -140,7 +140,7 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
     @property
     def translation_key(self) -> str:
         return "options"
-    
+
     @property
     def icon(self) -> str:
         return self.get_entity_setting("icon", "mdi:office-building-cog")
