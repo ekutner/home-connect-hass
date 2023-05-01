@@ -30,6 +30,7 @@ Before installing the integration you need to create an "application" in the Hom
 
 1. Navigate to the "[Applications](https://developer.home-connect.com/applications)"
    page on the Home Connect developers website. You'll be prompted to create an account or sign in if you already have one.
+   **➠ NOTE: You MUST use ONLY lowercase letters in the email addresses of both your regular user account and developer account or the integration won't work!**
 2. Click the "[Register Application](https://developer.home-connect.com/applications/add)" link.
 3. Fill in the application creation form:
    **Application ID**: A unique ID for the application, can be home-connect-alt, or whatever you like.
@@ -114,7 +115,7 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
 # FAQ
 * **I get errors on the browser window that pops-up after installing the integration for the first time**
   This popup window is trying to log you into the Home Connect website to establish a connection with the integration. If you get an error at this stage it means you didn't follow the setup instuctions carefully enough, so make sure that you do.
-  Also make sure that you open https://my.home-assistant.io/ and configure the URL of your Home-Assistant server.
+  Also make sure that you open https://my.home-assistant.io/ and configure the URL of your Home-Assistant server.  
   **NOTE:** If you are modifying an existing Home-Connect App then it may take up to 2 hours for the changes to take effect, so make sure you wait long enough.
 
 * **Some of my appliances are not showing up after I added the integration**
@@ -152,11 +153,9 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
 
   **_Note:_** It is expected to see these values in sensor history data. This is currently a limitation/bug in Home Assistant which doesn't translate these values.
 
-* **I install the Integration and finish the login flow successfully, only to come back to an error message in Home Assistant with no explanation about it.**
-  Home Connect recently switched their Account System to Singlekey ID, so now all new users need to create their account via it.
-  While Singlekey ID sets no restrictions on the email format on account creation, Home Connect always compares the Singlekey ID to the entry for "Home Connect user account for testing" set in the Developer account in all lowercase, even if capital letters are entered.
-  This means if the Singlekey ID was created with an email with capital letters, the Home Connect backend will give back a invalid_client response.
-  The current workaround is to create a Singlekey ID account with an all lower case email. (See [here](https://github.com/home-assistant/core/issues/72810#issuecomment-1166293116) ).
+* **Home Assistant display "Error" popup after installing the integration and completing the login flow to Home Connect**  
+  When this issue occurs the log file will show a "Bad Request" "400" error.  
+  Make sure the email address you used when registereting your Home Connect account has ONLY lowercase letters.
 
 </br>
 
