@@ -167,6 +167,7 @@
       },
       "programs": {
         "state": {
+          "ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeGrande": "Caffe Grande",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeLatte": "קפה לאטה",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Cappuccino": "קפוצ'ינו",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Coffee": "קפה",
@@ -568,6 +569,7 @@
       },
       "programs": {
         "state": {
+          "ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeGrande": "Caffe Grande",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeLatte": "קפה לאטה",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Cappuccino": "קפוצ'ינו",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Coffee": "קפה",

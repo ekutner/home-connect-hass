@@ -167,6 +167,7 @@
       },
       "programs": {
         "state": {
+          "ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeGrande": "Caffe Grande",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeLatte": "Milchkaffee",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Cappuccino": "Cappuccino",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Coffee": "Caffè Crema",
@@ -570,6 +571,7 @@
       },
       "programs": {
         "state": {
+          "ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeGrande": "Caffe Grande",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeLatte": "Milchkaffee",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Cappuccino": "Cappuccino",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Coffee": "Caffè Crema",
