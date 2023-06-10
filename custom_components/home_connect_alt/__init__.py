@@ -267,6 +267,21 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
     )
     hass.services.async_register(DOMAIN, "stop_program", services.async_stop_program, schema=stop_program_schema)
 
+    pause_program_schema = vol.Schema(
+        {
+            vol.Required('device_id'): cv.string
+        }
+    )
+    hass.services.async_register(DOMAIN, "pause_program", services.async_pause_program, schema=pause_program_schema)
+
+    resume_program_schema = vol.Schema(
+        {
+            vol.Required('device_id'): cv.string
+        }
+    )
+    hass.services.async_register(DOMAIN, "resume_program", services.async_resume_program, schema=resume_program_schema)
+
+
     set_program_option_schema = vol.Schema(
         {
             vol.Required('device_id'): cv.string,

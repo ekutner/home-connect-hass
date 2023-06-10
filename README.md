@@ -171,18 +171,20 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
   *It may take up to one minute to go from LOADED to READY*
 
 ## Services
-The following services are available for use with automations:
-**select_program** - Selects a program and optionally set its options
-**start_program** - Starts a program and optionally set its options
-**stop_program** - Stops the active program
-**set_program_option** - Sets an option on the active program if one exists or on the selected program otherwise
-**apply_setting** - Applies the sepecified setting
+The following services are available for use with automations:  
+**select_program** - Selects a program and optionally set its options  
+**start_program** - Starts a program and optionally set its options  
+**stop_program** - Stops the active program  
+**pause_program** - Pauses the active program (if and when supported by the appliance)  
+**resume_program** - Resumes a paused program (if and when supported by the appliance)  
+**set_program_option** - Sets an option on the active program if one exists or on the selected program otherwise  
+**apply_setting** - Applies the sepecified setting  
 
 ## Events
-The integration exposes the events fired by the service as Home Assistant events under the name: **"home_connect_alt_event"**
-The published events values are:
-**BSH.Common.Status.OperationState**
-**All the events with the keyword "Event" in their names**
+The integration exposes the events fired by the service as Home Assistant events under the name: **"home_connect_alt_event"**  
+The published events values are:  
+* **BSH.Common.Status.OperationState**  
+* **All the events with the keyword "Event" in their names**
 
 ## Triggers
 The integration exposes two triggers for easy automation:

@@ -104,6 +104,30 @@ stop_program:
         device:
           integration: home_connect_alt
 
+pause_program:
+  name: Pause program
+  description: Pause the currently active program (if and when supported by the appliance)
+  fields:
+    device_id:
+      description: The ID of the appliance to pause the program on
+      name: device_id
+      required: true
+      selector:
+        device:
+          integration: home_connect_alt
+
+resume_program:
+  name: Resume program
+  description: Resumes a paused program (if and when supported by the appliance)
+  fields:
+    device_id:
+      description: The ID of the appliance to resume the program on
+      name: device_id
+      required: true
+      selector:
+        device:
+          integration: home_connect_alt
+
 set_program_option:
   name: Set program option
   description: Sets an option for the currently selected or active program
