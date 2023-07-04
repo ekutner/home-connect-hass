@@ -4,7 +4,7 @@
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
-			"VARIANT": "3.10",
+			"VARIANT": "3.11",
       "LOCAL_INTEGRATION_FOLDER": "${localWorkspaceFolder}"
 		},
 		"context": ".."
