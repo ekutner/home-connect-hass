@@ -29,16 +29,16 @@ This integration attempts to address those issues and has the following features
 Before installing the integration you need to create an "application" in the Home Connect developers website. Note that if you have an existing appliacation, that was created before July 2022 you will most likely have to update the redirect URI to the one specified below. It can take a few hours for the changes to existing applications to apply, so be patiant.
 
 1. Navigate to the "[Applications](https://developer.home-connect.com/applications)"
-   page on the Home Connect developers website. You'll be prompted to create an account or sign in if you already have one.
+   page on the Home Connect developers website. You'll be prompted to create an account or sign in if you already have one.  
    **➠ NOTE: You MUST use ONLY lowercase letters in the email addresses of both your regular user account and developer account or the integration won't work!**
 2. Click the "[Register Application](https://developer.home-connect.com/applications/add)" link.
-3. Fill in the application creation form:
-   **Application ID**: A unique ID for the application, can be home-connect-alt, or whatever you like.
-   **OAuth Flow**: Authorization Code Grant Flow
-   **Home Connect User Account for Testing**: Leave blank
-   **Redirect URI**: https://my.home-assistant.io/redirect/oauth
-   **Add additional redirect URIs**: Leave unchecked
-   **Enable One Time Token Mode**: Leave unchecked
+3. Fill in the application creation form:  
+   **Application ID**: A unique ID for the application, can be home-connect-alt, or whatever you like.  
+   **OAuth Flow**: Authorization Code Grant Flow  
+   **Home Connect User Account for Testing**: Leave blank  
+   **Redirect URI**: https://my.home-assistant.io/redirect/oauth  
+   **Add additional redirect URIs**: Leave unchecked  
+   **Enable One Time Token Mode**: Leave unchecked  
 4. Click "Save" then copy the *Client ID* and *Client Secret* and save them for use in the next step.
 
 ## Update the configuration.yaml file
@@ -60,9 +60,9 @@ This configuration should be enough for most people. For more avanced options se
 5. In your Home Assistant instance navigate to Settings -> Devices & Services then clieck the "Add Integration" button. Search for "Home Connect Alt" and install it.
 6. A new window will popup where you will be asked to login to to your Home Connect
    account and allow Home Assistant to access your appliances. After you approve that you will be redirected back to Home Assistant, continue as instructed.
-7. Congratulations, you're done!
+7. Congratulations, you're done!  
    Home Connect Alt will now start downloading the data for your
-   appliances and will add the entities for them to Home Assistant.
+   appliances and will add the entities for them to Home Assistant.  
    Note that the integration dynamically discoveres entities as they are made available by the API, so expect new entities to be added in the first few uses of the appliances.
 
 # Configuration options
@@ -75,29 +75,50 @@ home_connect_alt:
   language: < Supported langage code >
   sensor_value_translation: <server | local>
   entity_settings: <custom entity settings>
+  appliance_settings: <custom appliance settings>
   api_host: <Home Connect API host name (only use for China)>
 ```
 ## Parameters:
-* *client_id* (required) - The Client ID of your Home Connect app.
-* *client_secret* (required) - The Client Secret of your Home Connect app.
-* *name_template* (optional - default = "$brand $appliance - $name") -
-  Defines the template used for rendering entity names. The following placeholders are supported and will be replaced dynamically when rendering the name:
-  $brand - The brand name of the appliance ("Bosch", "Siemens", etc.)
-  $appliance - The type of the appliance ("Washing machine", "Dishwasher", etc.)
-  $name - The name of the entity
-* *language* (optional - default = "en") -
+* **client_id** (required) - The Client ID of your Home Connect app.
+
+* **client_secret** (required) - The Client Secret of your Home Connect app.
+
+* **name_template** (optional - default = "$brand $appliance - $name") -  
+  Defines the template used for rendering entity names. The following placeholders are supported and will be replaced dynamically when rendering the name:  
+  $brand - The brand name of the appliance ("Bosch", "Siemens", etc.)  
+  $appliance - The type of the appliance ("Washing machine", "Dishwasher", etc.)  
+  $name - The name of the entity  
+
+* **language** (optional - default = "en") -  
   Indicates the language to use for entity names. The translation is automatically loaded from the Home Connect service and must  be one of its [supported languages](https://api-docs.home-connect.com/general?#supported-languages).
-* *sensor_value_translation* (optional - default = "local") - Indicates how sensor values shhould be translated to friendly names.
-  When set to **"local"** (the default) the integration will use the raw ENUM values documented in the Home Connect documentation for sensors with string values. In that case the integration relies on the Home Assistant translation mechanism and translation files to translate these values into friendly names. The benefit of this approach is that sensor values used by the integration are language independent and match the values documented in the Home Connect API.
+
+* **sensor_value_translation** (optional - default = "local") - Indicates how sensor values shhould be translated to friendly names.  
+  When set to **"local"** (the default) the integration will use the raw ENUM values documented in the Home Connect documentation for sensors with string values. In that case the integration relies on the Home Assistant translation mechanism and translation files to translate these values into friendly names. The benefit of this approach is that sensor values used by the integration are language independent and match the values documented in the Home Connect API.  
   When set to **"server"** sensor values are translated to friendly names using the Home Connect service. In this mode the internal values of string sensors will be translated and the translated values must be used in scripts referring to those sensors.
 
   **_Note:_** Select box values are always translated localy so they require the translation files to contain all the possible values.
-* *api_host* (optional) - If you are based in China, and only then, set this to *https://api.home-connect.cn*
-* *entity_settings* (optional) - Overrides internal entity settings.
-  Currently supported settings to override are:
-  **unit**: The units to use for numeric values
-  **icon**: The [Material Design icon](https://pictogrammers.com/library/mdi/) to use for the entity in the format "mdi:\<icon name>
-  **class**: The Home Assistant class of the entity (must be a class which is already supported for that entity type)
+
+* **api_host** (optional) - If you are based in China, and only then, set this to *https://api.home-connect.cn*
+
+* **appliance_settings** (optional) - Overrides some settings for specific appliances.    
+  This setting requires specifying the identifier (HAID) of the appliance. The easiest way to find it is to look at the entity ID of the "Connected" sensor of the appliance. 
+  This would look something like ```binary_sensor.bosch_wat286h0gb_68a64f51deb_connected```, and the ID in this case is ```bosch_wat286h0gb_68a64f51deb```.
+
+  Currently supported settings:  
+  **_name_template_** - override the global name_template setting
+
+  For example:
+  ```
+  appliance_settings:
+    bosch_wat286h0gb_68a64f51deb:
+      name_template: My appliance $name
+  ```
+
+* **entity_settings** (optional) - Overrides internal entity settings.  
+  Currently supported settings to override are:  
+  **_unit_**: The units to use for numeric values  
+  **_icon_**: The [Material Design icon](https://pictogrammers.com/library/mdi/) to use for the entity in the format "mdi:\<icon name>  
+  **_class_**: The Home Assistant class of the entity (must be a class which is already supported for that entity type)
   For example:
   ```
   entity_settings:
