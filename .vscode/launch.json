@@ -13,7 +13,6 @@
         "args": ["--debug", "-c", "/config"] //, "--skip-pip"]
       },
       {
-        // Example of attaching to local debug server
         "name": "Tools - Sync Translations",
         "type": "python",
         "request": "launch",
@@ -21,7 +20,7 @@
         //"module": "tools.sync-translations",
         "args": [],
         "program": "tools/sync-translations.py",
-        
+
       },
       {
         // Example of attaching to local debug server

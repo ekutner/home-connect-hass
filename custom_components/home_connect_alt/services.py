@@ -49,6 +49,25 @@ class Services():
             except HomeConnectError as ex:
                 raise HomeAssistantError(ex.error_description if ex.error_description else ex.msg)
 
+    async def async_pause_program(self, call) -> None:
+        """ Service for pausing the currently active program """
+        data = call.data
+        appliance = self.get_appliance_from_device_id(data['device_id'])
+        if appliance:
+            try:
+                await appliance.async_pause_active_program()
+            except HomeConnectError as ex:
+                raise HomeAssistantError(ex.error_description if ex.error_description else ex.msg)
+
+    async def async_resume_program(self, call) -> None:
+        """ Service for stopping the currently active program """
+        data = call.data
+        appliance = self.get_appliance_from_device_id(data['device_id'])
+        if appliance:
+            try:
+                await appliance.async_resume_paused_program()
+            except HomeConnectError as ex:
+                raise HomeAssistantError(ex.error_description if ex.error_description else ex.msg)
 
     async def async_set_program_option(self, call) -> None:
         """ Service for setting an option on the current program """

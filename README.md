@@ -29,16 +29,16 @@ This integration attempts to address those issues and has the following features
 Before installing the integration you need to create an "application" in the Home Connect developers website. Note that if you have an existing appliacation, that was created before July 2022 you will most likely have to update the redirect URI to the one specified below. It can take a few hours for the changes to existing applications to apply, so be patiant.
 
 1. Navigate to the "[Applications](https://developer.home-connect.com/applications)"
-   page on the Home Connect developers website. You'll be prompted to create an account or sign in if you already have one.
+   page on the Home Connect developers website. You'll be prompted to create an account or sign in if you already have one.  
    **➠ NOTE: You MUST use ONLY lowercase letters in the email addresses of both your regular user account and developer account or the integration won't work!**
 2. Click the "[Register Application](https://developer.home-connect.com/applications/add)" link.
-3. Fill in the application creation form:
-   **Application ID**: A unique ID for the application, can be home-connect-alt, or whatever you like.
-   **OAuth Flow**: Authorization Code Grant Flow
-   **Home Connect User Account for Testing**: Leave blank
-   **Redirect URI**: https://my.home-assistant.io/redirect/oauth
-   **Add additional redirect URIs**: Leave unchecked
-   **Enable One Time Token Mode**: Leave unchecked
+3. Fill in the application creation form:  
+   **Application ID**: A unique ID for the application, can be home-connect-alt, or whatever you like.  
+   **OAuth Flow**: Authorization Code Grant Flow  
+   **Home Connect User Account for Testing**: Leave blank  
+   **Redirect URI**: https://my.home-assistant.io/redirect/oauth  
+   **Add additional redirect URIs**: Leave unchecked  
+   **Enable One Time Token Mode**: Leave unchecked  
 4. Click "Save" then copy the *Client ID* and *Client Secret* and save them for use in the next step.
 
 ## Update the configuration.yaml file
@@ -60,9 +60,9 @@ This configuration should be enough for most people. For more avanced options se
 5. In your Home Assistant instance navigate to Settings -> Devices & Services then clieck the "Add Integration" button. Search for "Home Connect Alt" and install it.
 6. A new window will popup where you will be asked to login to to your Home Connect
    account and allow Home Assistant to access your appliances. After you approve that you will be redirected back to Home Assistant, continue as instructed.
-7. Congratulations, you're done!
+7. Congratulations, you're done!  
    Home Connect Alt will now start downloading the data for your
-   appliances and will add the entities for them to Home Assistant.
+   appliances and will add the entities for them to Home Assistant.  
    Note that the integration dynamically discoveres entities as they are made available by the API, so expect new entities to be added in the first few uses of the appliances.
 
 # Configuration options
@@ -75,29 +75,50 @@ home_connect_alt:
   language: < Supported langage code >
   sensor_value_translation: <server | local>
   entity_settings: <custom entity settings>
+  appliance_settings: <custom appliance settings>
   api_host: <Home Connect API host name (only use for China)>
 ```
 ## Parameters:
-* *client_id* (required) - The Client ID of your Home Connect app.
-* *client_secret* (required) - The Client Secret of your Home Connect app.
-* *name_template* (optional - default = "$brand $appliance - $name") -
-  Defines the template used for rendering entity names. The following placeholders are supported and will be replaced dynamically when rendering the name:
-  $brand - The brand name of the appliance ("Bosch", "Siemens", etc.)
-  $appliance - The type of the appliance ("Washing machine", "Dishwasher", etc.)
-  $name - The name of the entity
-* *language* (optional - default = "en") -
+* **client_id** (required) - The Client ID of your Home Connect app.
+
+* **client_secret** (required) - The Client Secret of your Home Connect app.
+
+* **name_template** (optional - default = "$brand $appliance - $name") -  
+  Defines the template used for rendering entity names. The following placeholders are supported and will be replaced dynamically when rendering the name:  
+  $brand - The brand name of the appliance ("Bosch", "Siemens", etc.)  
+  $appliance - The type of the appliance ("Washing machine", "Dishwasher", etc.)  
+  $name - The name of the entity  
+
+* **language** (optional - default = "en") -  
   Indicates the language to use for entity names. The translation is automatically loaded from the Home Connect service and must  be one of its [supported languages](https://api-docs.home-connect.com/general?#supported-languages).
-* *sensor_value_translation* (optional - default = "local") - Indicates how sensor values shhould be translated to friendly names.
-  When set to **"local"** (the default) the integration will use the raw ENUM values documented in the Home Connect documentation for sensors with string values. In that case the integration relies on the Home Assistant translation mechanism and translation files to translate these values into friendly names. The benefit of this approach is that sensor values used by the integration are language independent and match the values documented in the Home Connect API.
+
+* **sensor_value_translation** (optional - default = "local") - Indicates how sensor values shhould be translated to friendly names.  
+  When set to **"local"** (the default) the integration will use the raw ENUM values documented in the Home Connect documentation for sensors with string values. In that case the integration relies on the Home Assistant translation mechanism and translation files to translate these values into friendly names. The benefit of this approach is that sensor values used by the integration are language independent and match the values documented in the Home Connect API.  
   When set to **"server"** sensor values are translated to friendly names using the Home Connect service. In this mode the internal values of string sensors will be translated and the translated values must be used in scripts referring to those sensors.
 
   **_Note:_** Select box values are always translated localy so they require the translation files to contain all the possible values.
-* *api_host* (optional) - If you are based in China, and only then, set this to *https://api.home-connect.cn*
-* *entity_settings* (optional) - Overrides internal entity settings.
-  Currently supported settings to override are:
-  **unit**: The units to use for numeric values
-  **icon**: The [Material Design icon](https://pictogrammers.com/library/mdi/) to use for the entity in the format "mdi:\<icon name>
-  **class**: The Home Assistant class of the entity (must be a class which is already supported for that entity type)
+
+* **api_host** (optional) - If you are based in China, and only then, set this to *https://api.home-connect.cn*
+
+* **appliance_settings** (optional) - Overrides some settings for specific appliances.    
+  This setting requires specifying the identifier (HAID) of the appliance. The easiest way to find it is to look at the entity ID of the "Connected" sensor of the appliance. 
+  This would look something like ```binary_sensor.bosch_wat286h0gb_68a64f51deb_connected```, and the ID in this case is ```bosch_wat286h0gb_68a64f51deb```.
+
+  Currently supported settings:  
+  **_name_template_** - override the global name_template setting
+
+  For example:
+  ```
+  appliance_settings:
+    bosch_wat286h0gb_68a64f51deb:
+      name_template: My appliance $name
+  ```
+
+* **entity_settings** (optional) - Overrides internal entity settings.  
+  Currently supported settings to override are:  
+  **_unit_**: The units to use for numeric values  
+  **_icon_**: The [Material Design icon](https://pictogrammers.com/library/mdi/) to use for the entity in the format "mdi:\<icon name>  
+  **_class_**: The Home Assistant class of the entity (must be a class which is already supported for that entity type)
   For example:
   ```
   entity_settings:
@@ -126,8 +147,8 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
   appliances loaded per minute. If you have more, expect the initial load to take longer. The integration will wait for the service to become available and continue loading the rest of the appliances. You may have to refresh your screen to see them in Home Assistant after they were added.
 
 * **The Home Connect mobile app has some controls/data/events that are missing in Home Assistant**
-  This integration doesn't know anything about any specific appliance, it is using the official Home Connect API to explore the available options for each appliance and automatically exposes them as appropriate Home Assistant entities. The type of entities is automatically determined by information received from the API. The the Home Connect mobile app is using a private API that is not available to the public and has more capabilities than those in the official API. Therefor it is expected that there will be some data, controls or events that are available in the app but not in the integration, this is NOT a problem with the integration but a limitation of the API.
-  **DO NOT open bugs or feature requests related to such issues unless you can demontrate that the missing item is actually available in the API**
+  This integration doesn't know anything about any specific appliance, it is using the official Home Connect API to explore the available options for each appliance and automatically exposes them as appropriate Home Assistant entities. The type of entities is automatically determined by information received from the API. The Home Connect mobile app is using a private API that is not available to the public and has more capabilities than those in the official API. Therefor it is expected that there will be some data, controls or events that are available in the app but not in the integration, this is NOT a problem with the integration but a limitation of the API.
+  **DO NOT open bugs or feature requests related to such issues unless you can demonstrate that the missing item is actually available in the API**
 
 * **I've restarted Home Assistant a few times and now all my appliances are unavailable**
   This is, again, related to the Home Connect rate limits. Every time you restart Home Assistant the integration makes a few API calls to the service and if that happens too often it may block for up to 24 hours. The best way to fix this is to wait a day and restart Home Assistant again.
@@ -171,18 +192,20 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
   *It may take up to one minute to go from LOADED to READY*
 
 ## Services
-The following services are available for use with automations:
-**select_program** - Selects a program and optionally set its options
-**start_program** - Starts a program and optionally set its options
-**stop_program** - Stops the active program
-**set_program_option** - Sets an option on the active program if one exists or on the selected program otherwise
-**apply_setting** - Applies the sepecified setting
+The following services are available for use with automations:  
+**select_program** - Selects a program and optionally set its options  
+**start_program** - Starts a program and optionally set its options  
+**stop_program** - Stops the active program  
+**pause_program** - Pauses the active program (if and when supported by the appliance)  
+**resume_program** - Resumes a paused program (if and when supported by the appliance)  
+**set_program_option** - Sets an option on the active program if one exists or on the selected program otherwise  
+**apply_setting** - Applies the sepecified setting  
 
 ## Events
-The integration exposes the events fired by the service as Home Assistant events under the name: **"home_connect_alt_event"**
-The published events values are:
-**BSH.Common.Status.OperationState**
-**All the events with the keyword "Event" in their names**
+The integration exposes the events fired by the service as Home Assistant events under the name: **"home_connect_alt_event"**  
+The published events values are:  
+* **BSH.Common.Status.OperationState**  
+* **All the events with the keyword "Event" in their names**
 
 ## Triggers
 The integration exposes two triggers for easy automation:
