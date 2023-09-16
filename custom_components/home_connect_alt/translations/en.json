@@ -463,6 +463,7 @@
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.VeryStrongPlus": "Very Strong +",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Left": "Left",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Right": "Right",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio": "Coffee Milk Ratio",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.88C": "88°C",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.90C": "90°C",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.92C": "92°C",
