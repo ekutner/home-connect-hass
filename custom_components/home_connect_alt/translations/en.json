@@ -502,6 +502,7 @@
           "LaundryCare.Common.EnumType.ProcessPhase.RinsingSoftener": "Rinsing Softener",
           "LaundryCare.Common.EnumType.ProcessPhase.SpinningFinal": "Spinning Final",
           "LaundryCare.Common.EnumType.ProcessPhase.Washing": "Washing",
+          "LaundryCare.Common.EnumType.ProcessPhase.Prewash": "Prewash",
           "LaundryCare.Common.EnumType.VarioPerfect.EcoPerfect": "EcoPerfect",
           "LaundryCare.Common.EnumType.VarioPerfect.Off": "Off",
           "LaundryCare.Common.EnumType.VarioPerfect.SpeedPerfect": "SpeedPerfect",
