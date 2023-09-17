@@ -553,6 +553,7 @@
           "LaundryCare.Washer.EnumType.SpinSpeed.UlOff": "Off",
           "LaundryCare.Washer.EnumType.Stains.Off": "Off",
           "LaundryCare.Washer.EnumType.Stains.On": "On",
+          "LaundryCare.Washer.EnumType.Stains.Perspiration": "Perspiration",
           "LaundryCare.Washer.EnumType.Temperature.Auto": "Auto",
           "LaundryCare.Washer.EnumType.Temperature.Cold": "Cold",
           "LaundryCare.Washer.EnumType.Temperature.GC20": "20°C",
