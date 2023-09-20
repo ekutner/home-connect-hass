@@ -161,7 +161,7 @@ apply_setting:
   description: Applies a Home Connect setting
   fields:
     device_id:
-      description: The ID of the appliance to start the program on
+      description: The ID of the appliance to apply the settings on
       name: device_id
       required: true
       selector:
@@ -179,7 +179,36 @@ apply_setting:
       name: Setting value
       description: >
         An allowed value for the specified setting.
-        Note that if the setting type is not ENUM (eg. Boolean) it must be specified in YAML in the correct format
+        Note that if the setting type is not a string or ENUM (eg. Boolean), it must be specified in YAML in the correct format for its data type
+      example: true
+      required: true
+      selector:
+        text:
+
+run_command:
+  name: Rum command
+  description: Runs a command on the appliance (must be available to run on the appliance)
+  fields:
+    device_id:
+      description: The ID of the appliance to run the command on
+      name: device_id
+      required: true
+      selector:
+        device:
+          integration: home_connect_alt
+    key:
+      name: Command key
+      description: >
+        The key of the command to run
+      example: BSH.Common.Command.OpenDoor
+      required: true
+      selector:
+        text:
+    value:
+      name: The command value
+      description: >
+        An allowed value for the specified command.
+        Note that if the setting type is not a string or ENUM (eg. Boolean), it must be specified in YAML in the correct format for its data type
       example: true
       required: true
       selector:

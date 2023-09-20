@@ -199,7 +199,8 @@ The following services are available for use with automations:
 **pause_program** - Pauses the active program (if and when supported by the appliance)  
 **resume_program** - Resumes a paused program (if and when supported by the appliance)  
 **set_program_option** - Sets an option on the active program if one exists or on the selected program otherwise  
-**apply_setting** - Applies the sepecified setting  
+**apply_setting** - Applies the sepecified setting on an appliance  
+**run_command** - Runs the specified command on an appliance  
 
 ## Events
 The integration exposes the events fired by the service as Home Assistant events under the name: **"home_connect_alt_event"**  

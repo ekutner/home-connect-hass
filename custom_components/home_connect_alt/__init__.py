@@ -301,6 +301,16 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
     )
     hass.services.async_register(DOMAIN, "apply_setting", services.async_apply_setting, schema=apply_setting_schema)
 
+    run_command_schema = vol.Schema(
+        {
+            vol.Required('device_id'): cv.string,
+            vol.Required('key'): cv.string,
+            vol.Required('value'): vol.Any(str, int, float, bool)
+        }
+    )
+    hass.services.async_register(DOMAIN, "run_command", services.async_run_command, schema=run_command_schema)
+
+
     return services
 
 
