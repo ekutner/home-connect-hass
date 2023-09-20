@@ -105,13 +105,15 @@ home_connect_alt:
   This would look something like ```binary_sensor.bosch_wat286h0gb_68a64f51deb_connected```, and the ID in this case is ```bosch_wat286h0gb_68a64f51deb```.
 
   Currently supported settings:  
-  **_name_template_** - override the global name_template setting
+  **_name_template_** - override the global name_template setting  
+  **_disabled_** - set to *true* to disable loading the specified appliance (default=false)
 
   For example:
   ```
   appliance_settings:
     bosch_wat286h0gb_68a64f51deb:
       name_template: My appliance $name
+      disabled: false
   ```
 
 * **entity_settings** (optional) - Overrides internal entity settings.  

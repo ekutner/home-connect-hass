@@ -31,3 +31,6 @@ home_connect_alt:
   #   LaundryCare.Washer.Setting.IDos2BaseLevel:
   #     unit: xx
   #     icon: mdi:waves-arrow-up
+  appliance_settings:
+    bosch_wat286h0gb_68a40e3587eb:
+      disabled: true

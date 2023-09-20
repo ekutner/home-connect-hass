@@ -108,11 +108,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     #         _LOGGER.warning("Failed to create the HomeConnect object", exc_info=ex)
     #         return False
     ConditionalLogger.mode(logmode)
-    homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang)
+    disabled_appliances = [haid for haid in conf[CONF_APPLIANCE_SETTINGS] if "disabled" in conf[CONF_APPLIANCE_SETTINGS][haid] and conf[CONF_APPLIANCE_SETTINGS][haid]["disabled"] ] if conf[CONF_APPLIANCE_SETTINGS] else []
+    homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang, disabled_appliances=disabled_appliances)
 
     conf[entry.entry_id] = auth
-    conf['homeconnect'] = homeconnect
-    conf['services'] = register_services(hass, homeconnect)
+    conf["homeconnect"] = homeconnect
+    conf["services"] = register_services(hass, homeconnect)
 
     #region internal event hadlers
     # async def async_delayed_update_cache(delay:float = 0):
