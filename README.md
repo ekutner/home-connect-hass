@@ -212,8 +212,8 @@ The published events values are:
 
 ## Triggers
 The integration exposes two triggers for easy automation:
-  * select_program
-  * start_program
+  * program_started
+  * program_finished
 
 
 <br>
