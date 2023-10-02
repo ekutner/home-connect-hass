@@ -181,6 +181,7 @@ class EntityManager():
             if entity.haId not in self._entity_appliance_map:
                 self._entity_appliance_map[entity.haId] = set()
             self._entity_appliance_map[entity.haId].add(entity.unique_id)
+        _LOGGER.debug("Registring new entities: %s", new_ids)
         self._async_add_entities(new_entities)
         self._existing_ids |= new_ids
         self._pending_entities = {}
