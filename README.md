@@ -1,3 +1,17 @@
+# Personal note
+![Flag of Isael](assets/Flag_of_Israel.svg)  
+Normally this section wouldn't exist here. However, on Oct. 7th Israel was attacked by Hamas, the terrorist organization that controls the Gaza strip. They invaded dozens of border communities, murdered, raped, burned, tortured and mutilated nearly 1400 Israelis and kidnapped at least another 200. Most of them civilians, including women, children, elderly and people with disabilities. The atrocities they committed are unspeakable, but the scope of affected people is actually much larger than those directly murdered or kidnapped. There are thousands of survivers, victim's families and over 100,000 people who were displaced from their homes due to constant rocket attacks. As an Israeli, I am spending most of my time since the massacre volunteering to help the victims as best I can, so expect my response time here to be longer than usual.
+
+Since I started this project some of you offered to buy me coffee as a token of appreciation, I always refused because I'm doing it for fun, but if you still want to show your support, a donation to the [Brothers and Sisters for Israel](https://www.brothersandsistersforisrael.org/) organization would be a great place to do that. This organization formed about 10 months ago, as a part of a coalition of pro-democracy civil organizations in Israel, protesting against the government's "judicial reform", which was meant to remove most checks and balances from the government and give it unchecked power, as happened in other countries such as Hungary. At this time of crisis the organization has transformed its infrastructure to a full fledged civic support and relief organization and is a worthy recipient of donations. 
+
+I hope the ISIS-like Hamas terrorist organization, who is responsible for the killing of countless Israelis and Palestinians, will soon be destroyed, peace will be restored and both parties can be free to build a better future.
+
+[DONATION LINK](https://www.brothersandsistersforisrael.org/)
+
+P.S. If you don't like this note then a) check your morale compass and b) feel free to not use this integration. 
+
+
+
 # Alternative Home Connect Integration for Home Assistant
 This project is an alternative integration for Home Connect enabled home appliances manufactured by BSH under the Bosch, Siemens, Constructa and Neff brands.
 
