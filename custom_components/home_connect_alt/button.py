@@ -150,7 +150,7 @@ class StopButton(EntityBase, ButtonEntity):
         and self._appliance.active_program \
         and (
             "BSH.Common.Status.RemoteControlStartAllowed" not in self._appliance.status or
-            self._appliance.status["BSH.Common.Status.RemoteControlStartAllowed"]
+            self._appliance.status["BSH.Common.Status.RemoteControlStartAllowed"].value
         )
 
     @property

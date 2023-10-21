@@ -83,7 +83,7 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
             and self._appliance.available_programs \
             and  (
                 "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
-                self._appliance.status["BSH.Common.Status.RemoteControlActive"]
+                self._appliance.status["BSH.Common.Status.RemoteControlActive"].value
             )
 
     @property
@@ -222,7 +222,7 @@ class SettingsSelect(InteractiveEntityBase, SelectEntity):
         return super().available \
         and (
             "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
-            self._appliance.status["BSH.Common.Status.RemoteControlActive"]
+            self._appliance.status["BSH.Common.Status.RemoteControlActive"].value
         )
 
     @property
