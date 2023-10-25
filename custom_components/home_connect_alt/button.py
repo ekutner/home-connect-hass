@@ -103,8 +103,7 @@ class StartButton(EntityBase, ButtonEntity):
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to start the selected program: {ex.error_description} ({ex.code})")
-            else:
-                raise HomeAssistantError(f"Failed to start the selected program ({ex.code})")
+            raise HomeAssistantError(f"Failed to start the selected program ({ex.code})")
 
     async def async_added_to_hass(self):
         """Run when this Entity has been added to HA."""
@@ -164,8 +163,7 @@ class StopButton(EntityBase, ButtonEntity):
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to stop the selected program: {ex.error_description} ({ex.code})")
-            else:
-                raise HomeAssistantError(f"Failed to stop the selected program ({ex.code})")
+            raise HomeAssistantError(f"Failed to stop the selected program ({ex.code})")
 
     async def async_added_to_hass(self):
         """Run when this Entity has been added to HA."""
@@ -229,8 +227,7 @@ class HomeConnectRefreshButton(ButtonEntity):
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to refresh the Home Connect data: {ex.error_description} ({ex.code})")
-            else:
-                raise HomeAssistantError(f"Failed to refresh the Home Connect data ({ex.code})")
+            raise HomeAssistantError(f"Failed to refresh the Home Connect data ({ex.code})")
 
 
 class HomeConnecDebugButton(ButtonEntity):

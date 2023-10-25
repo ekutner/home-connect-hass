@@ -66,8 +66,7 @@ class EntityBase(ABC):
         """ Return the device class, if defined """
         if self._conf:
             return self._conf.get_entity_setting(self._key, "class")
-        else:
-            return None
+        return None
 
     @property
     def unique_id(self) -> str:

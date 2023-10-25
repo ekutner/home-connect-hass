@@ -104,8 +104,7 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
                 # The API sometimes returns programs which are not one of the avilable programs so we ignore it
                 CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Current selected program is %s", current_program.key)
                 return current_program.name if current_program.name and self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER else current_program.key
-            else:
-                CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Current program %s is not in available_programs", current_program.key)
+            CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Current program %s is not in available_programs", current_program.key)
         else:
             CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Current program is None")
         return None
@@ -121,8 +120,7 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to set the selected program: {ex.error_description} ({ex.code} - {self._key}={option})")
-            else:
-                raise HomeAssistantError(f"Failed to set the selected program ({ex.code} - {self._key}={option})")
+            raise HomeAssistantError(f"Failed to set the selected program ({ex.code} - {self._key}={option})")
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
@@ -191,8 +189,7 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
                 available_option = self._appliance.get_applied_program_available_option(self._key)
                 idx = available_option.allowedvalues.index(option.value)
                 return available_option.allowedvaluesdisplay[idx]
-            else:
-                return option.value
+            return option.value
         CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Option %s current value is None", self._key)
         return None
 
@@ -209,8 +206,7 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to set the selected option: {ex.error_description} ({ex.code})")
-            else:
-                raise HomeAssistantError(f"Failed to set the selected option: ({ex.code})")
+            raise HomeAssistantError(f"Failed to set the selected option: ({ex.code})")
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
@@ -264,8 +260,7 @@ class SettingsSelect(InteractiveEntityBase, SelectEntity):
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to apply the setting: {ex.error_description} ({ex.code})")
-            else:
-                raise HomeAssistantError(f"Failed to apply the setting: ({ex.code})")
+            raise HomeAssistantError(f"Failed to apply the setting: ({ex.code})")
 
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:

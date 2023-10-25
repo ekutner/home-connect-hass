@@ -119,8 +119,7 @@ class ProgramSensor(EntityBase, SensorEntity):
         if prog:
             if (prog.name and self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER):
                 return prog.name
-            else:
-                return prog.key
+            return prog.key
         return None
 
     async def async_on_update(self, appliance: Appliance, key: str, value) -> None:
@@ -149,7 +148,7 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
     def name_ext(self) -> str:
         if self._appliance.selected_program and self._key in self._appliance.selected_program.options:
             return self._appliance.selected_program.options[self._key].name
-        elif self._appliance.active_program and self._key in self._appliance.active_program.options:
+        if self._appliance.active_program and self._key in self._appliance.active_program.options:
             return self._appliance.active_program.options[self._key].name
         return None
 
