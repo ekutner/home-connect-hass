@@ -133,8 +133,7 @@ class StatusBinarySensor(EntityBase, BinarySensorEntity):
         if self._key in self._appliance.status:
             if self.has_entity_setting("on_state"):
                 return self._appliance.status[self._key].value == self.get_entity_setting("on_state")
-            else:
-                return self._appliance.status[self._key].value
+            return self._appliance.status[self._key].value
         return None
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
@@ -164,8 +163,7 @@ class SettingsBinarySensor(EntityBase, BinarySensorEntity):
         if self._key in self._appliance.settings:
             if self.has_entity_setting("on_state"):
                 return self._appliance.settings[self._key].value == self.get_entity_setting("on_state")
-            else:
-                return self._appliance.settings[self._key].value
+            return self._appliance.settings[self._key].value
         return None
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
