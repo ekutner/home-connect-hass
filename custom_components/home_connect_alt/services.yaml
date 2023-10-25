@@ -186,7 +186,7 @@ apply_setting:
         text:
 
 run_command:
-  name: Rum command
+  name: Run command
   description: Runs a command on the appliance (must be available to run on the appliance)
   fields:
     device_id:
