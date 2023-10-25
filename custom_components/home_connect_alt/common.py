@@ -134,7 +134,7 @@ class EntityBase(ABC):
         pass
 
     def pretty_enum(self, val:str) -> str:
-        """ Extract display string from a Home COnnect Enum string """
+        """Extract display string from a Home Connect Enum string."""
         name = val.split('.')[-1]
         parts = re.findall('[A-Z0-9]+[^A-Z]*', name)
         return' '.join(parts)
