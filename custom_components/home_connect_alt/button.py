@@ -233,7 +233,7 @@ class HomeConnectRefreshButton(ButtonEntity):
                 raise HomeAssistantError(f"Failed to refresh the Home Connect data ({ex.code})")
 
 
-class HomeConnecDebugButton(ButtonEntity):
+class HomeConnectDebugButton(ButtonEntity):
     """ Class for a button to trigger a global refresh of Home Connect data  """
 
     def __init__(self, homeconnect:HomeConnect) -> None:

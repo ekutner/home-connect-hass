@@ -99,7 +99,7 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
         current_program = self._appliance.get_applied_program()
         if current_program:
             if self._appliance.available_programs and current_program.key in self._appliance.available_programs:
-                # The API sometimes returns programs which are not one of the avilable programs so we ignore it
+                # The API sometimes returns programs which are not one of the available programs so we ignore it
                 CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Current selected program is %s", current_program.key)
                 return current_program.key
             else:
