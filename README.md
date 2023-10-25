@@ -1,3 +1,17 @@
+# Personal note
+![Flag of Isael](assets/Flag_of_Israel.svg)  
+Normally this section wouldn't exist here. However, on Oct. 7th Israel was attacked by Hamas, the terrorist organization that controls the Gaza strip. They invaded dozens of border communities, murdered, raped, burned, tortured and mutilated nearly 1400 Israelis and kidnapped at least another 200. Most of them civilians, including women, children, elderly and people with disabilities. The atrocities they committed are unspeakable, but the scope of affected people is actually much larger than those directly murdered or kidnapped. There are thousands of survivers, victim's families and over 100,000 people who were displaced from their homes due to constant rocket attacks. As an Israeli, I am spending most of my time since the massacre volunteering to help the victims as best I can, so expect my response time here to be longer than usual.
+
+Since I started this project some of you offered to buy me coffee as a token of appreciation, I always refused because I'm doing it for fun, but if you still want to show your support, a donation to the [Brothers and Sisters for Israel](https://www.brothersandsistersforisrael.org/) organization would be a great place to do that. This organization formed about 10 months ago, as a part of a coalition of pro-democracy civil organizations in Israel, protesting against the government's "judicial reform", which was meant to remove most checks and balances from the government and give it unchecked power, as happened in other countries such as Hungary. At this time of crisis the organization has transformed its infrastructure to a full fledged civic support and relief organization and is a worthy recipient of donations. 
+
+I hope the ISIS-like Hamas terrorist organization, who is responsible for the killing of countless Israelis and Palestinians, will soon be destroyed, peace will be restored and both parties can be free to build a better future.
+
+[DONATION LINK](https://www.brothersandsistersforisrael.org/)
+
+P.S. If you don't like this note then a) check your morale compass and b) feel free to not use this integration. 
+
+
+
 # Alternative Home Connect Integration for Home Assistant
 This project is an alternative integration for Home Connect enabled home appliances manufactured by BSH under the Bosch, Siemens, Constructa and Neff brands.
 
@@ -133,6 +147,50 @@ home_connect_alt:
 
 After the integration is configured READ THE FAQ then add it from the Home-Assistant UI.
 
+<br>
+
+# Automation Notes
+
+## Integration state
+* There is a special sensor called **Home Connect Status** which shows the status of the integration. It has the following values:
+  * INIT - The integration is initializing
+  * RUNNING - The integration has started running
+  * LOADED - The integration finished loading the initial data from the Home Connect service
+  * READY - The integration has successfully subscribed to real time updates from the cloud service and is now fully functional.
+  * BLOCKED - The Home Connect service has blocked additional API calls for a period of time due to exceeding the service rate limits
+  *It may take up to one minute to go from LOADED to READY*
+
+## Services
+The following services are available for use with automations:  
+**select_program** - Selects a program and optionally set its options  
+**start_program** - Starts a program and optionally set its options  
+**stop_program** - Stops the active program  
+**pause_program** - Pauses the active program (if and when supported by the appliance)  
+**resume_program** - Resumes a paused program (if and when supported by the appliance)  
+**set_program_option** - Sets an option on the active program if one exists or on the selected program otherwise  
+**apply_setting** - Applies the sepecified setting on an appliance  
+**run_command** - Runs the specified command on an appliance  
+
+## Events
+The integration exposes the events fired by the service as Home Assistant events under the name: **"home_connect_alt_event"**  
+The published events values are:  
+* **BSH.Common.Status.OperationState**  
+* **All the events with the keyword "Event" in their names**
+
+## Triggers
+The integration exposes two triggers for easy automation:
+  * program_started
+  * program_finished
+
+## Local vs. Server translation
+The default behavior of this integration is to use "local" value translation. That means that all string sensors keep their internal value in a raw, language independant format. Those values are "translated" in the UI to a human friendly text by using local translation files.  
+This method is different than most other Home Assistant integration but it has three important benefits:
+1. It makes automation code language independent. As a developer I strongly believe that code shouldn't relay on the specific human language currently selected by the user.
+2. It allows users to look up possible values in the Home Connect developer documentation. So you can know in advance which values to epxect for a given sensor.
+3. It allows add translation for languages which are not supported by the Home COnnect API.
+
+In contrast, setting ```sensor_value_translation: server``` will override this behavior and use translations provided by the Home Connect API. This is limited to languages supported by the API but it does make sensor have the actual textual values displayed in the UI. So you can use that if you prefer,
+
 </br>
 
 # FAQ
@@ -181,43 +239,6 @@ After the integration is configured READ THE FAQ then add it from the Home-Assis
   Make sure the email address you used when registereting your Home Connect account has ONLY lowercase letters.
 
 </br>
-
-# Automation Notes
-
-## Integration state
-* There is a special sensor called **Home Connect Status** which shows the status of the integration. It has the following values:
-  * INIT - The integration is initializing
-  * RUNNING - The integration has started running
-  * LOADED - The integration finished loading the initial data from the Home Connect service
-  * READY - The integration has successfully subscribed to real time updates from the cloud service and is now fully functional.
-  * BLOCKED - The Home Connect service has blocked additional API calls for a period of time due to exceeding the service rate limits
-  *It may take up to one minute to go from LOADED to READY*
-
-## Services
-The following services are available for use with automations:  
-**select_program** - Selects a program and optionally set its options  
-**start_program** - Starts a program and optionally set its options  
-**stop_program** - Stops the active program  
-**pause_program** - Pauses the active program (if and when supported by the appliance)  
-**resume_program** - Resumes a paused program (if and when supported by the appliance)  
-**set_program_option** - Sets an option on the active program if one exists or on the selected program otherwise  
-**apply_setting** - Applies the sepecified setting on an appliance  
-**run_command** - Runs the specified command on an appliance  
-
-## Events
-The integration exposes the events fired by the service as Home Assistant events under the name: **"home_connect_alt_event"**  
-The published events values are:  
-* **BSH.Common.Status.OperationState**  
-* **All the events with the keyword "Event" in their names**
-
-## Triggers
-The integration exposes two triggers for easy automation:
-  * program_started
-  * program_finished
-
-
-<br>
-
 
 # Known Issues
 * If you have more than 3 connected devices (or you just play a lot with settings), you may hit the daily API rate limit set by the Home Connect API. The limit is set to 1000 calls per day and when it is hit the API is blocked for 24h. During that time, the integration will not get updated with new states and you won't be able to select and options or start a program.
