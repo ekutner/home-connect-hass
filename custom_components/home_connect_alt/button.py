@@ -29,7 +29,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     async_add_entities([HomeConnectRefreshButton(homeconnect), HomeConnecDebugButton(homeconnect)])
 
     # Subscribe for events and register existing appliances
-    homeconnect.register_callback(add_appliance, Events.PAIRED)
+    homeconnect.register_callback(add_appliance, [Events.PAIRED, Events.DATA_CHANGED, Events.PROGRAM_STARTED, Events.PROGRAM_SELECTED])
     homeconnect.register_callback(remove_appliance, Events.DEPAIRED)
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)

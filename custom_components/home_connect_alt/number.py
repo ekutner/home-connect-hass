@@ -42,7 +42,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
-    homeconnect.register_callback(add_appliance, [Events.PAIRED, Events.PROGRAM_SELECTED, Events.PROGRAM_STARTED ,Events.PROGRAM_FINISHED])
+    homeconnect.register_callback(add_appliance,[Events.PAIRED, Events.DATA_CHANGED, Events.PROGRAM_STARTED, Events.PROGRAM_SELECTED])
     homeconnect.register_callback(remove_appliance, Events.DEPAIRED)
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
