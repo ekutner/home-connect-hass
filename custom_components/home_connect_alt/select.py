@@ -9,7 +9,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
 from .common import InteractiveEntityBase, EntityManager, is_boolean_enum, Configuration
-from .const import CONF_SENSORS_TRANSLATION, CONF_SENSORS_TRANSLATION_SERVER, DEVICE_ICON_MAP, DOMAIN
+from .const import CONF_TRANSLATION_MODE, CONF_TRANSLATION_MODE_SERVER, DEVICE_ICON_MAP, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
-    homeconnect.register_callback(add_appliance, [Events.PAIRED, Events.PROGRAM_SELECTED, Events.PROGRAM_STARTED ,Events.PROGRAM_FINISHED])
+    homeconnect.register_callback(add_appliance, [Events.PAIRED, Events.PROGRAM_SELECTED, Events.PROGRAM_STARTED ,Events.PROGRAM_FINISHED, Events.DATA_CHANGED])
     homeconnect.register_callback(remove_appliance, Events.DEPAIRED)
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
@@ -90,7 +90,7 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
     def options(self) -> list[str]:
         """Return a set of selectable options."""
         if self._appliance.available_programs:
-            if self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER:
+            if self._conf[CONF_TRANSLATION_MODE] == CONF_TRANSLATION_MODE_SERVER:
                 return [program.name if program.name else program.key for program in self._appliance.available_programs.values()]
             return list(self._appliance.available_programs.keys())
         return []
@@ -103,7 +103,7 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
             if self._appliance.available_programs and current_program.key in self._appliance.available_programs:
                 # The API sometimes returns programs which are not one of the avilable programs so we ignore it
                 CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Current selected program is %s", current_program.key)
-                return current_program.name if current_program.name and self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER else current_program.key
+                return current_program.name if current_program.name and self._conf[CONF_TRANSLATION_MODE] == CONF_TRANSLATION_MODE_SERVER else current_program.key
             CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Current program %s is not in available_programs", current_program.key)
         else:
             CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Current program is None")
@@ -112,7 +112,7 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         try:
-            if self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER:
+            if self._conf[CONF_TRANSLATION_MODE] == CONF_TRANSLATION_MODE_SERVER:
                 program = next((p for p in self._appliance.available_programs.values() if p.name == option), None)
                 await self._appliance.async_select_program(program_key=program.key)
             else:
@@ -168,7 +168,7 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
         # #_LOGGER.info("Allowed values for %s : %s", self._key, None)
         option = self._appliance.get_applied_program_available_option(self._key)
         if option:
-            if self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER:
+            if self._conf[CONF_TRANSLATION_MODE] == CONF_TRANSLATION_MODE_SERVER:
                 vals = option.allowedvaluesdisplay.copy() if option.allowedvaluesdisplay else option.allowedvalues.copy()
             else:
                 vals = option.allowedvalues.copy()
@@ -185,10 +185,11 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
         option = self._appliance.get_applied_program_option(self._key)
         if option:
             CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Option %s current value: %s", self._key, option.value)
-            if self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER:
+            if self._conf[CONF_TRANSLATION_MODE] == CONF_TRANSLATION_MODE_SERVER:
                 available_option = self._appliance.get_applied_program_available_option(self._key)
-                idx = available_option.allowedvalues.index(option.value)
-                return available_option.allowedvaluesdisplay[idx]
+                if (available_option.allowedvaluesdisplay):
+                    idx = available_option.allowedvalues.index(option.value)
+                    return available_option.allowedvaluesdisplay[idx]
             return option.value
         CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Option %s current value is None", self._key)
         return None
@@ -198,10 +199,11 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
             _LOGGER.debug('Tried to set an empty option')
             return
         try:
-            if self._conf[CONF_SENSORS_TRANSLATION] == CONF_SENSORS_TRANSLATION_SERVER:
+            if self._conf[CONF_TRANSLATION_MODE] == CONF_TRANSLATION_MODE_SERVER:
                 available_option = self._appliance.get_applied_program_available_option(self._key)
-                idx = available_option.allowedvaluesdisplay.index(option)
-                option = available_option.allowedvalues[idx]
+                if (available_option.allowedvaluesdisplay):
+                    idx = available_option.allowedvaluesdisplay.index(option)
+                    option = available_option.allowedvalues[idx]
             await self._appliance.async_set_option(self._key, option)
         except HomeConnectError as ex:
             if ex.error_description:

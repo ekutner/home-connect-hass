@@ -21,9 +21,8 @@ logger:
 home_connect_alt:
   client_id: !secret home_connect_client_id
   client_secret: !secret home_connect_client_secret
-  # cache: false
   language: en-GB
-  sensor_value_translation: server
+  translation_mode: server
   name_template: $appliance $name ($brand)
   log_mode: 7
   #api_host: https://simulator.home-connect.com

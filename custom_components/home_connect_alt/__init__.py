@@ -3,13 +3,16 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import aiohttp
 from datetime import datetime
 
 import voluptuous as vol
 from home_connect_async import Appliance, HomeConnect, Events, ConditionalLogger
+from homeassistant.components.application_credentials import ClientCredential, async_import_client_credential
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_CLIENT_ID, CONF_CLIENT_SECRET, Platform
 from homeassistant.core import Event, HomeAssistant, HomeAssistantError
+from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import aiohttp_client, config_entry_oauth2_flow
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import device_registry as dr
@@ -24,22 +27,23 @@ from .services import Services
 
 _LOGGER = logging.getLogger(__name__)
 
+HC_CONFIG_SCHEMA = vol.Schema(
+    {
+        vol.Optional(CONF_CLIENT_ID): cv.string,
+        vol.Optional(CONF_CLIENT_SECRET): cv.string,
+        vol.Optional(CONF_API_HOST, default=DEFAULT_API_HOST): vol.Any(str, None),
+        vol.Optional(CONF_CACHE, default=False): vol.Coerce(bool),
+        vol.Optional(CONF_LANG, default=CONF_LANG_DEFAULT): vol.Any(str, None),
+        vol.Optional(CONF_TRANSLATION_MODE, default="local"): vol.Any(str, None),
+        vol.Optional(CONF_NAME_TEMPLATE, default=CONF_NAME_TEMPLATE_DEFAULT): str,
+        vol.Optional(CONF_LOG_MODE, default=0): int,
+        vol.Optional(CONF_ENTITY_SETTINGS, default={}): vol.Any(dict, None),
+        vol.Optional(CONF_APPLIANCE_SETTINGS, default={}): vol.Any(dict, None)
+    }
+)
 CONFIG_SCHEMA = vol.Schema(
     {
-        DOMAIN: vol.Schema(
-            {
-                vol.Required(CONF_CLIENT_ID): cv.string,
-                vol.Required(CONF_CLIENT_SECRET): cv.string,
-                vol.Optional(CONF_API_HOST, default=None): vol.Any(str, None),
-                vol.Optional(CONF_CACHE, default=True): cv.boolean,
-                vol.Optional(CONF_LANG, default=None): vol.Any(str, None),
-                vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(str, None),
-                vol.Optional(CONF_NAME_TEMPLATE, default=None): vol.Any(str, None),
-                vol.Optional(CONF_LOG_MODE, default=None): vol.Any(int, None),
-                vol.Optional(CONF_ENTITY_SETTINGS, default={}): vol.Any(dict, None),
-                vol.Optional(CONF_APPLIANCE_SETTINGS, default={}): vol.Any(dict, None)
-            }
-        )
+        DOMAIN: HC_CONFIG_SCHEMA
     },
     extra=vol.ALLOW_EXTRA,
 )
@@ -50,41 +54,72 @@ PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.SELECT, Platform.
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the Home Connect New component."""
-    hass.data[DOMAIN] = config[DOMAIN]
 
     if DOMAIN not in config:
+        hass.data[DOMAIN] = HC_CONFIG_SCHEMA({})
         return True
 
-    conf = config[DOMAIN]
-    api_host = conf[CONF_API_HOST] if conf[CONF_API_HOST] else DEFAULT_API_HOST
+    hass.data[DOMAIN] = config[DOMAIN]
 
-    config_flow.OAuth2FlowHandler.async_register_implementation(
-        hass,
-        HomeConnectOauth2Impl(
+    # conf = config[DOMAIN]
+    # api_host = conf[CONF_API_HOST] if conf[CONF_API_HOST] else DEFAULT_API_HOST
+
+    # config_flow.OAuth2FlowHandler.async_register_implementation(
+    #     hass,
+    #     HomeConnectOauth2Impl(
+    #         hass,
+    #         DOMAIN,
+    #         conf[CONF_CLIENT_ID],
+    #         conf[CONF_CLIENT_SECRET],
+    #         f'{api_host}{ENDPOINT_AUTHORIZE}',
+    #         f'{api_host}{ENDPOINT_TOKEN}',
+    #     )
+    # )
+
+    if (CONF_CLIENT_ID in config[DOMAIN] and CONF_CLIENT_SECRET in config[DOMAIN]):
+        await async_import_client_credential(
             hass,
             DOMAIN,
-            conf[CONF_CLIENT_ID],
-            conf[CONF_CLIENT_SECRET],
-            f'{api_host}{ENDPOINT_AUTHORIZE}',
-            f'{api_host}{ENDPOINT_TOKEN}',
+            ClientCredential(
+                config[DOMAIN][CONF_CLIENT_ID],
+                config[DOMAIN][CONF_CLIENT_SECRET],
+            ),
         )
-    )
-
     return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     """Set up Home Connect New from a config entry."""
-    implementation = (
-        await config_entry_oauth2_flow.async_get_config_entry_implementation(
-            hass, entry
-        )
-    )
 
+
+    if DOMAIN in hass.data:
+        conf = hass.data[DOMAIN]
+    else:
+        conf = HC_CONFIG_SCHEMA({})
+
+    if CONF_API_HOST in entry.data:
+        conf[CONF_API_HOST] = entry.data[CONF_API_HOST]
+
+    if entry.options:
+        conf.update(entry.options)
+
+    hass.data[DOMAIN] = conf
+
+    # Add event listener to reload the integration when the config entry options change (because the user edited them in the UI)
+    entry.async_on_unload(entry.add_update_listener(lambda hass, entry: hass.config_entries.async_reload(entry.entry_id)))
+
+
+    implementation = await config_entry_oauth2_flow.async_get_config_entry_implementation(hass, entry)
     session = config_entry_oauth2_flow.OAuth2Session(hass, entry, implementation)
+    try:
+        await session.async_ensure_token_valid()
+    except aiohttp.ClientResponseError as ex:
+        _LOGGER.debug("API error: %s (%s)", ex.code, ex.message)
+        if ex.code in (401, 403):
+            raise ConfigEntryAuthFailed("Token not valid, trigger renewal") from ex
+        raise ConfigEntryNotReady from ex
 
-    conf = hass.data[DOMAIN]
     api_host = conf[CONF_API_HOST] if conf[CONF_API_HOST] else DEFAULT_API_HOST
     lang = conf[CONF_LANG] # if conf[CONF_LANG] != "" else None
     use_cache = conf[CONF_CACHE]

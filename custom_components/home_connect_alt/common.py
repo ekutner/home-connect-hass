@@ -7,7 +7,7 @@ from home_connect_async import Appliance, Events
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_NAME_TEMPLATE, DOMAIN, ENTITY_SETTINGS, CONF_ENTITY_SETTINGS, CONF_APPLIANCE_SETTINGS
+from .const import CONF_NAME_TEMPLATE, CONF_NAME_TEMPLATE_DEFAULT, DOMAIN, ENTITY_SETTINGS, CONF_ENTITY_SETTINGS, CONF_APPLIANCE_SETTINGS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -88,7 +88,7 @@ class EntityBase(ABC):
         elif self._conf and CONF_NAME_TEMPLATE in self._conf and self._conf[CONF_NAME_TEMPLATE]:
             template = self._conf[CONF_NAME_TEMPLATE]
         else:
-            template = "$brand $appliance - $name"
+            template = CONF_NAME_TEMPLATE_DEFAULT
 
         appliance_name = self._appliance.name if self._appliance.name else self._appliance.type
         name = self.name_ext if self.name_ext else self.pretty_enum(self._key)

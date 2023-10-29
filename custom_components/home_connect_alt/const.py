@@ -2,19 +2,26 @@
 
 
 DOMAIN = "home_connect_alt"
+NAME = "Home Connect Alt"
 DEFAULT_API_HOST = "https://api.home-connect.com"
+
 ENDPOINT_AUTHORIZE = "/security/oauth/authorize"
 ENDPOINT_TOKEN = "/security/oauth/token"
 SCOPES = "IdentifyAppliance Monitor Control Settings"
 CONF_API_HOST = "api_host"
+CONF_API_HOST_OPTIONS = [ {"label": "default", "value": "https://api.home-connect.com"}, {"label": "china", "value": "https://api.home-connect.cn"}]
 CONF_LANG = "language"
+CONF_LANG_DEFAULT = "en-GB"
 CONF_CACHE = "cache"
-CONF_SENSORS_TRANSLATION = "sensor_value_translation"
-CONF_SENSORS_TRANSLATION_SERVER = "server"
+CONF_TRANSLATION_MODE = "translation_mode"
+CONF_TRANSLATION_MODES = ["local", "server"]
+CONF_TRANSLATION_MODE_SERVER = "server"
 CONF_NAME_TEMPLATE = "name_template"
+CONF_NAME_TEMPLATE_DEFAULT = "$brand $appliance - $name"
 CONF_LOG_MODE = "log_mode"
 CONF_ENTITY_SETTINGS = "entity_settings"
 CONF_APPLIANCE_SETTINGS = "appliance_settings"
+
 
 HOME_CONNECT_DEVICE = {
     "identifiers": {(DOMAIN, "homeconnect")},

@@ -6,7 +6,8 @@
   ],
   "config_flow": true,
   "dependencies": [
-    "http"
+    "http",
+    "application_credentials"
   ],
   "documentation": "https://github.com/ekutner/home-connect-hass",
   "homekit": {},
