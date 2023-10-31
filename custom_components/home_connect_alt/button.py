@@ -1,6 +1,8 @@
+import json
 import logging
 from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events
 from homeassistant.components.button import ButtonEntity
+from homeassistant.const import CONF_CLIENT_ID, CONF_CLIENT_SECRET
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -43,15 +45,23 @@ class StartButton(EntityBase, ButtonEntity):
 
     @property
     def name_ext(self) -> str:
+        match self.translation_key:
+            case "pause_program":
+                return "Pause"
+            case "resume_program":
+                return "Resume"
+        return "Start"
+
+    @property
+    def translation_key(self) -> str:
         op_state = self._appliance.status.get("BSH.Common.Status.OperationState")
         if op_state and op_state.value == "BSH.Common.EnumType.OperationState.Run" \
             and  "BSH.Common.Command.PauseProgram" in self._appliance.commands:
-            return "Pause"
+            return "pause_program"
         if op_state and op_state.value == "BSH.Common.EnumType.OperationState.Pause" \
             and "BSH.Common.Command.ResumeProgram" in self._appliance.commands:
-            return "Resume"
-        return "Start"
-
+            return "resume_program"
+        return "start_program"
 
     @property
     def available(self) -> bool:
@@ -142,6 +152,9 @@ class StopButton(EntityBase, ButtonEntity):
     def name_ext(self) -> str:
         return "Stop"
 
+    @property
+    def translation_key(self) -> str:
+        return "stop_program"
 
     @property
     def available(self) -> bool:
@@ -195,9 +208,11 @@ class StopButton(EntityBase, ButtonEntity):
 
 class HomeConnectRefreshButton(ButtonEntity):
     """ Class for a button to trigger a global refresh of Home Connect data  """
+    _attr_has_entity_name = True
 
     def __init__(self, homeconnect:HomeConnect) -> None:
         self._homeconnect = homeconnect
+        self.entity_id = f'home_connect.{self.unique_id}'
 
     @property
     def device_info(self):
@@ -206,11 +221,11 @@ class HomeConnectRefreshButton(ButtonEntity):
 
     @property
     def unique_id(self) -> str:
-        return 'homeconnect_refresh'
+        return "homeconnect_refresh"
 
     @property
-    def name(self) -> str:
-        return "Home Connect Refresh"
+    def translation_key(self) -> str:
+        return "homeconnect_refresh"
 
     @property
     def icon(self) -> str:
@@ -232,9 +247,11 @@ class HomeConnectRefreshButton(ButtonEntity):
 
 class HomeConnecDebugButton(ButtonEntity):
     """ Class for a button to trigger a global refresh of Home Connect data  """
+    _attr_has_entity_name = True
 
     def __init__(self, homeconnect:HomeConnect) -> None:
         self._homeconnect = homeconnect
+        self.entity_id = f'home_connect.{self.unique_id}'
 
     @property
     def device_info(self):
@@ -243,11 +260,17 @@ class HomeConnecDebugButton(ButtonEntity):
 
     @property
     def unique_id(self) -> str:
-        return 'homeconnect_debug'
+        return "homeconnect_debug"
+
+    # @property
+    # def name(self) -> str:
+    #     return "homeconnect_debug"
+    #     return None
+        #return "Home Connect Debug Info"
 
     @property
-    def name(self) -> str:
-        return "Home Connect Debug Info"
+    def translation_key(self) -> str:
+        return "homeconnect_debug"
 
     @property
     def icon(self) -> str:
@@ -260,6 +283,10 @@ class HomeConnecDebugButton(ButtonEntity):
     async def async_press(self) -> None:
         """ Handle button press """
         try:
+            conf = {k:v for (k,v) in self.hass.data[DOMAIN].items() if isinstance(v, (str, int, float, dict, list)) and k not in [CONF_CLIENT_ID, CONF_CLIENT_SECRET] }
+            js=json.dumps(conf, indent=2, default=lambda o: '<not serializable>')
+            #js=json.dumps(self.hass.data[DOMAIN], indent=2, default=lambda o: '<not serializable>')
+            _LOGGER.error(js)
             js=self._homeconnect.to_json(indent=2)
             _LOGGER.error(js)
         except Exception as ex:

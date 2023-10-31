@@ -56,7 +56,7 @@ class OAuth2FlowHandler(config_entry_oauth2_flow.AbstractOAuth2FlowHandler, doma
         implementations = await config_entry_oauth2_flow.async_get_implementations(self.hass, self.DOMAIN)
         if user_input is None and not implementations:
             data_schema = vol.Schema({
-                vol.Required(CONF_API_HOST, default=CONF_API_HOST_OPTIONS[0]["value"]):
+                vol.Required(CONF_API_HOST, default=CONF_API_HOST_OPTIONS[0]):
                     selector(
                     {
                         "select": {
@@ -106,9 +106,7 @@ class OAuth2FlowHandler(config_entry_oauth2_flow.AbstractOAuth2FlowHandler, doma
         return self.async_create_entry(
             title=NAME,
             data=data,
-            options={
-                CONF_LANG: self.default_language_code(self.hass),
-            },
+
         )
 
 
@@ -147,14 +145,14 @@ class OptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
                         "mode": "dropdown",
                         "translation_key": CONF_TRANSLATION_MODE
                     },
-                }
-            ),
+                }),
         }
         if self.context.get("show_advanced_options"):
             data_schema.update(
                 {
                     vol.Optional(CONF_NAME_TEMPLATE, default=CONF_NAME_TEMPLATE_DEFAULT): str,
-                    vol.Optional(CONF_LOG_MODE, default=0): int,
+                    vol.Optional(CONF_LOG_MODE, default=0): vol.All(int, vol.Range(min=0, max=7)),
+
                     # vol.Optional(CONF_APPLIANCE_SETTINGS): selector({
                     #     "device": {
                     #         "entity": [ {"integration": DOMAIN}],

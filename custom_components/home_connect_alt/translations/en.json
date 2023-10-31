@@ -15,6 +15,15 @@
       "default": "[%key:common::config_flow::create_entry::authenticated%]"
     },
     "step": {
+      "user": {
+        "title": "Select Server",
+        "data": {
+          "api_host": "Home Connect Server"
+        },
+        "data_description": {
+          "api_host": "Use China only if you are located there, otherwise use Default"
+        }
+      },
       "pick_implementation": {
         "title": "[%key:common::config_flow::title::oauth2_pick_implementation%]"
       },
@@ -36,11 +45,12 @@
           "language": "Language code",
           "translation_mode": "Translation mode",
           "name_template": "Entity name template",
-          "log_mode": "Log mode"
+          "log_mode": "Verbose log mode"
 
         },
         "data_description": {
-          "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect"
+          "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
+          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply"
         }
       }
     }
@@ -51,8 +61,8 @@
   "selector": {
     "api_host": {
       "options": {
-        "default": "Default",
-        "china": "China"
+        "https://api.home-connect.com": "Default",
+        "https://api.home-connect.cn": "China"
       }
     },
     "translation_mode": {
@@ -69,6 +79,14 @@
     }
   },
   "entity": {
+    "button": {
+      "start_program":  { "name": "Start Program" },
+      "pause_program":  { "name": "Pause Program" },
+      "resume_program": { "name": "Resume Program" },
+      "stop_program":   { "name": "Stop Program" },
+      "homeconnect_refresh": { "name": "Home Connect Refresh Data EN" },
+      "homeconnect_debug":   { "name": "Home Connect Dump Debug Info EN" }
+    },
     "select": {
       "options": {
         "state": {
@@ -487,6 +505,7 @@
       }
     },
     "sensor": {
+      "homeconnect_status": { "name": "Home Connect Status" },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "Duration",

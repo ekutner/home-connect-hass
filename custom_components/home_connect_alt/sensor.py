@@ -336,9 +336,11 @@ class HomeConnectStatusSensor(SensorEntity):
     """Global Home Connect status sensor"""
 
     should_poll = True
+    _attr_has_entity_name = True
 
     def __init__(self, homeconnect: HomeConnect) -> None:
         self._homeconnect = homeconnect
+        self.entity_id = f'home_connect.{self.unique_id}'
 
     @property
     def device_info(self):
@@ -350,8 +352,8 @@ class HomeConnectStatusSensor(SensorEntity):
         return "homeconnect_status"
 
     @property
-    def name(self) -> str:
-        return "Home Connect Status"
+    def translation_key(self) -> str:
+        return "homeconnect_status"
 
     @property
     def available(self) -> bool:

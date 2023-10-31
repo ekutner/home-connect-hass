@@ -25,7 +25,9 @@ def is_boolean_enum(values:list[str]) -> bool:
 class EntityBase(ABC):
     """Base class with common methods for all the entities """
 
+   #_attr_has_entity_name = True
     should_poll = False
+
     _appliance: Appliance = None
 
     def __init__(self, appliance:Appliance, key:str=None, conf:dict=None, hc_obj=None) -> None:

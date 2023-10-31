@@ -61,21 +61,6 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
     hass.data[DOMAIN] = config[DOMAIN]
 
-    # conf = config[DOMAIN]
-    # api_host = conf[CONF_API_HOST] if conf[CONF_API_HOST] else DEFAULT_API_HOST
-
-    # config_flow.OAuth2FlowHandler.async_register_implementation(
-    #     hass,
-    #     HomeConnectOauth2Impl(
-    #         hass,
-    #         DOMAIN,
-    #         conf[CONF_CLIENT_ID],
-    #         conf[CONF_CLIENT_SECRET],
-    #         f'{api_host}{ENDPOINT_AUTHORIZE}',
-    #         f'{api_host}{ENDPOINT_TOKEN}',
-    #     )
-    # )
-
     if (CONF_CLIENT_ID in config[DOMAIN] and CONF_CLIENT_SECRET in config[DOMAIN]):
         await async_import_client_credential(
             hass,

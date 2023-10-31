@@ -3,17 +3,72 @@
     "abort": {
       "already_configured": "[%key:common::config_flow::abort::already_configured_account%]",
       "already_in_progress": "[%key:common::config_flow::abort::already_in_progress%]",
-      "authorize_url_timeout": "[%key:common::config_flow::abort::oauth2_authorize_url_timeout%]",
-      "missing_configuration": "這個套件尚未設定完成。請依照說明文件完成設定。",
-      "no_url_available": "[%key:common::config_flow::abort::oauth2_no_url_available%]",
-      "oauth_error": "[%key:common::config_flow::abort::oauth2_error%]"
+      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+      "timeout_connect": "[%key:common::config_flow::error::timeout_connect%]",
+      "oauth_error": "[%key:common::config_flow::abort::oauth2_error%]",
+      "missing_configuration": "[%key:common::config_flow::abort::oauth2_missing_configuration%]",
+      "reauth_successful": "[%key:common::config_flow::abort::reauth_successful%]",
+      "invalid_access_token": "[%key:common::config_flow::error::invalid_access_token%]",
+      "unknown": "[%key:common::config_flow::error::unknown%]"
     },
     "create_entry": {
-      "default": "已成功認證完成"
+      "default": "[%key:common::config_flow::create_entry::authenticated%]"
     },
     "step": {
+      "user": {
+        "title": "Select Server",
+        "data": {
+          "api_host": "Home Connect Server"
+        },
+        "data_description": {
+          "api_host": "Use China only if you are located there, otherwise use Default"
+        }
+      },
       "pick_implementation": {
         "title": "[%key:common::config_flow::title::oauth2_pick_implementation%]"
+      },
+      "auth": {
+        "title": "Link Home Connect Account"
+      },
+      "reauth_confirm": {
+        "title": "[%key:common::config_flow::title::reauth%]",
+        "description": "The Home Connect integration needs to re-authenticate your account"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Advanced settings",
+        "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
+        "data": {
+          "language": "Language code",
+          "translation_mode": "Translation mode",
+          "name_template": "Entity name template",
+          "log_mode": "Verbose log mode"
+
+        },
+        "data_description": {
+          "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
+          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply"
+        }
+      }
+    }
+  },
+  "application_credentials": {
+    "description": "Follow the setup instructions in the integration's [README]({more_info_url}) file before continuing\n\n"
+  },
+  "selector": {
+    "api_host": {
+      "options": {
+        "https://api.home-connect.com": "Default",
+        "https://api.home-connect.cn": "China"
+      }
+    },
+    "translation_mode": {
+      "options": {
+        "local": "Local",
+        "server": "Server"
       }
     }
   },
@@ -24,6 +79,14 @@
     }
   },
   "entity": {
+    "button": {
+      "start_program":  { "name": "Start Program" },
+      "pause_program":  { "name": "Pause Program" },
+      "resume_program": { "name": "Resume Program" },
+      "stop_program":   { "name": "Stop Program" },
+      "hc_refresh":     { "name": "Home Connect Refresh" },
+      "hc_debug_info":  { "name": "Home Connect Dump Debug Info" }
+    },
     "select": {
       "options": {
         "state": {
