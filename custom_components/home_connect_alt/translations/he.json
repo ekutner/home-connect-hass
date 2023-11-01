@@ -1,62 +1,59 @@
 {
   "config": {
     "abort": {
-      "already_configured": "[%key:common::config_flow::abort::already_configured_account%]",
-      "already_in_progress": "[%key:common::config_flow::abort::already_in_progress%]",
-      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
-      "timeout_connect": "[%key:common::config_flow::error::timeout_connect%]",
-      "oauth_error": "[%key:common::config_flow::abort::oauth2_error%]",
-      "missing_configuration": "[%key:common::config_flow::abort::oauth2_missing_configuration%]",
-      "reauth_successful": "[%key:common::config_flow::abort::reauth_successful%]",
-      "invalid_access_token": "[%key:common::config_flow::error::invalid_access_token%]",
-      "unknown": "[%key:common::config_flow::error::unknown%]"
+      "already_configured": "החשבון כבר מוגדר",
+      "already_in_progress": "תהליך ההגדרות כבר התחיל",
+      "cannot_connect": "החיבור נכשל",
+      "timeout_connect": "החיבור לקח יותר מידי זמן",
+      "oauth_error": "התקבל אסימון הזדהות לא תקין",
+      "missing_configuration": "חסרה קונפיגורציה. יש לעקוב אחר הוראות ההתקנה.",
+      "reauth_successful": "ההזדהות מחדש הושלמה בהצלחה",
+      "invalid_access_token": "אסימון הזדהות לא תקין",
+      "unknown": "שגיאה לא ידועה"
     },
     "create_entry": {
-      "default": "[%key:common::config_flow::create_entry::authenticated%]"
+      "default": "ההזדהות הושלמה בהצלחה"
     },
     "step": {
       "user": {
-        "title": "Select Server",
+        "title": "בחירת שרת",
         "data": {
-          "api_host": "Home Connect Server"
+          "api_host": "שרת Home Connect"
         },
         "data_description": {
-          "api_host": "Use China only if you are located there, otherwise use Default"
+          "api_host": "הבחירה בסין מיועדת רק למי שנמצא שם אחרת יש לבחור בברירת המחדל"
         }
       },
-      "pick_implementation": {
-        "title": "[%key:common::config_flow::title::oauth2_pick_implementation%]"
-      },
       "auth": {
-        "title": "Link Home Connect Account"
+        "title": "חבר חשבון Home Connect"
       },
       "reauth_confirm": {
-        "title": "[%key:common::config_flow::title::reauth%]",
-        "description": "The Home Connect integration needs to re-authenticate your account"
+        "title": "הזדהות מחודשת",
+        "description": "האינטגרציה צריכה לחדש את ההזדהות לחשבון ה-Home Connect"
       }
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Advanced settings",
-        "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
+        "title": "הגדרות מתקדמות",
+        "description": "מידע נוסף על הגדרות אלו ניתן למצוא בקובץ ה-[README](https://github.com/ekutner/home-connect-hass)",
         "data": {
-          "language": "Language code",
-          "translation_mode": "Translation mode",
-          "name_template": "Entity name template",
-          "log_mode": "Verbose log mode"
+          "language": "קוד שפה",
+          "translation_mode": "מצב תרגום",
+          "name_template": "תבנית שמות ישויות",
+          "log_mode": "מצב כתיבת לוג"
 
         },
         "data_description": {
-          "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
-          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply"
+          "language": "יש להשתמש רק [בקודי שפה](https://api-docs.home-connect.com/general/#supported-languages) הנתמכים על ידי Home Connect",
+          "log_mode": "יש להפעיל כתיבת לוג דיבאג בקובץ configuration.yaml כדי שהגדרה זו תפעל"
         }
       }
     }
   },
   "application_credentials": {
-    "description": "Follow the setup instructions in the integration's [README]({more_info_url}) file before continuing\n\n"
+    "description": "יש לעקוב אחרי הוראות ההתקנה בקובץ ה-[README]({more_info_url}) לפני המעבר לשלב הבא\n\n"
   },
   "selector": {
     "api_host": {
