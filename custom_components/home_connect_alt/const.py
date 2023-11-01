@@ -20,6 +20,7 @@ CONF_CACHE = "cache"
 CONF_TRANSLATION_MODE = "translation_mode"
 CONF_TRANSLATION_MODES = ["local", "server"]
 CONF_TRANSLATION_MODE_SERVER = "server"
+CONF_SENSORS_TRANSLATION = "sensor_value_translation"
 CONF_NAME_TEMPLATE = "name_template"
 CONF_NAME_TEMPLATE_DEFAULT = "$brand $appliance - $name"
 CONF_LOG_MODE = "log_mode"

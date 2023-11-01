@@ -31,10 +31,11 @@ HC_CONFIG_SCHEMA = vol.Schema(
     {
         vol.Optional(CONF_CLIENT_ID): cv.string,
         vol.Optional(CONF_CLIENT_SECRET): cv.string,
-        vol.Optional(CONF_API_HOST, default=DEFAULT_API_HOST): vol.Any(str, None),
+        vol.Optional(CONF_API_HOST, default=DEFAULT_API_HOST): str,
         vol.Optional(CONF_CACHE, default=False): vol.Coerce(bool),
-        vol.Optional(CONF_LANG, default=CONF_LANG_DEFAULT): vol.Any(str, None),
-        vol.Optional(CONF_TRANSLATION_MODE, default="local"): vol.Any(str, None),
+        vol.Optional(CONF_LANG, default=CONF_LANG_DEFAULT): str,
+        vol.Optional(CONF_TRANSLATION_MODE, default="local"): str,
+        vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(str, None),
         vol.Optional(CONF_NAME_TEMPLATE, default=CONF_NAME_TEMPLATE_DEFAULT): str,
         vol.Optional(CONF_LOG_MODE, default=0): int,
         vol.Optional(CONF_ENTITY_SETTINGS, default={}): vol.Any(dict, None),
@@ -60,6 +61,10 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         return True
 
     hass.data[DOMAIN] = config[DOMAIN]
+    # Migrate the old CONF_SENSORS_TRANSLATION to the new CONF_TRANSLATION_MODE
+    if CONF_SENSORS_TRANSLATION in config[DOMAIN] and CONF_TRANSLATION_MODE not in config[DOMAIN]:
+        hass.data[DOMAIN][CONF_TRANSLATION_MODE] = config[DOMAIN][CONF_SENSORS_TRANSLATION]
+
 
     if (CONF_CLIENT_ID in config[DOMAIN] and CONF_CLIENT_SECRET in config[DOMAIN]):
         await async_import_client_credential(
