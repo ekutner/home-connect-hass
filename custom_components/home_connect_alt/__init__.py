@@ -115,7 +115,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     conf["homeconnect"] = homeconnect
     conf["services"] = register_services(hass, homeconnect)
 
-    # region internal event handlers
+    #region internal event handlers
     # async def async_delayed_update_cache(delay:float = 0):
     #     asyncio.sleep(delay)
     #     await async_save_to_cache(hass, homeconnect)
