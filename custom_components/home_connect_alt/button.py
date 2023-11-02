@@ -26,7 +26,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
         entity_manager.remove_appliance(appliance)
 
     # First add the integration button
-    async_add_entities([HomeConnectRefreshButton(homeconnect), HomeConnecDebugButton(homeconnect)])
+    async_add_entities([HomeConnectRefreshButton(homeconnect), HomeConnectDebugButton(homeconnect)])
 
     # Subscribe for events and register existing appliances
     homeconnect.register_callback(add_appliance, Events.PAIRED)
