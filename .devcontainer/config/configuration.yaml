@@ -13,14 +13,14 @@ tts:
 logger:
   default: info
   logs:
-    home_connect_async: debug
-    home_connect_alt: debug
-    custom_components.home_connect_alt: error
+    # home_connect_async: debug
+    # home_connect_alt: debug
+    # custom_components.home_connect_alt: debug
     homeassistant.helpers.config_entry_oauth2_flow: debug
 
 home_connect_alt:
-  client_id: !secret home_connect_client_id
-  client_secret: !secret home_connect_client_secret
+  # client_id: !secret home_connect_client_id
+  # client_secret: !secret home_connect_client_secret
   language: en-GB
   translation_mode: server
   name_template: $appliance $name ($brand)

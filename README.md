@@ -10,7 +10,8 @@ I hope the ISIS-like Hamas terrorist organization, who is responsible for the ki
 
 P.S. If you don't like this note then a) check your morale compass and b) feel free to not use this integration. 
 
-
+</br>
+</br>
 
 # Alternative Home Connect Integration for Home Assistant
 This project is an alternative integration for Home Connect enabled home appliances manufactured by BSH under the Bosch, Siemens, Constructa and Neff brands.
@@ -18,6 +19,38 @@ This project is an alternative integration for Home Connect enabled home applian
 *If you're using this integration please star it on Github*
 
 </br>
+
+# Table of contents
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+
+- [Main features](#main-features)
+- [Installation instructions](#installation-instructions)
+   * [Creating a Home Connect developer app](#creating-a-home-connect-developer-app)
+   * [Installing the integration](#installing-the-integration)
+      + [Pre-installation steps](#pre-installation-steps)
+      + [Installation](#installation)
+- [Configuration options](#configuration-options)
+   * [Options settable in the UI](#options-settable-in-the-ui)
+      + [Regular options](#regular-options)
+      + [Advanced options](#advanced-options)
+   * [Options settable in configuration.yaml:](#options-settable-in-configurationyaml)
+- [Automation Notes](#automation-notes)
+   * [Integration state](#integration-state)
+   * [Services](#services)
+   * [Events](#events)
+   * [Triggers](#triggers)
+   * [Local vs. Server translation](#local-vs-server-translation)
+- [Troubleshooting and FAQ](#troubleshooting-and-faq)
+- [Known Issues](#known-issues)
+- [Reporting issues / bugs](#reporting-issues-and-bugs)
+    + [Bug report requirements](#bug-report-requirements)
+    + [Enabling debug logging](#enabling-debug-logging)
+    + [Setting Log Mode](#setting-log-mode)
+- [Beta Releases](#beta-releases)
+- [Contributing Translations](#contributing-translations)
+- [Legal Notice](#legal-notice)
+
+<!-- TOC end -->
 
 # Main features
 Home Assistant already has a built-in integration for Home Connect, however, it is quite basic, generates entities that are not always supported by the connected appliances and tends to stop getting status updates after a while.
@@ -38,8 +71,8 @@ This integration attempts to address those issues and has the following features
 
 </br>
 
-# Installation instruction
-## Create a Home Connect app
+# Installation instructions
+## Creating a Home Connect developer app
 Before installing the integration you need to create an "application" in the Home Connect developers website. Note that if you have an existing appliacation, that was created before July 2022 you will most likely have to update the redirect URI to the one specified below. It can take a few hours for the changes to existing applications to apply, so be patiant.
 
 1. Navigate to the "[Applications](https://developer.home-connect.com/applications)"
@@ -55,64 +88,69 @@ Before installing the integration you need to create an "application" in the Hom
    **Enable One Time Token Mode**: Leave unchecked  
 4. Click "Save" then copy the *Client ID* and *Client Secret* and save them for use in the next step.
 
-## Update the configuration.yaml file
-At a minimum you need to add the following to your configuration.yaml file:
-```
-home_connect_alt:
-  client_id: < Your Client ID >
-  client_secret: < You Client Secret >
-```
-This configuration should be enough for most people. For more avanced options see the [Configuration options](#configuration-options) section below.
+## Installing the integration
 
-## Install the integration
+### Pre-installation steps
+1. Navigate to https://my.home-assistant.io/ and make sure the Home Assistant Instance
+   is configured correctly to point to your local Home Assistant instance.
+2. Power on all your appliances.
+3. Turn **OFF** the wifi on your phone and make sure all the appliances are operational in the Home Connect mobile app.
+4. If this is **not** the first time you are installing the integration and anything changed with your credentials you should go the the Settings -> Devices & Services page on Home Assistant, then click the three-dot-menu on the top righthand corner and select "Application credentials". Locate the previous credentials row for this integration and delete it.
+
+### Installation
 1. The esiest way to install the integration is using HACS. Just click the
    button bellow and follow the instructions:
-  [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ekutner&repository=home-connect-hass)
-2. Navigate to https://my.home-assistant.io/ and make sure the Home Assistant Instance is configured correctly to point to your local Home Assistant instance.
-3. Power on all your appliances.
-4. Turn **OFF** the wifi on your phone and make sure all the appliances are operational in the Home Connect mobile app.
-5. In your Home Assistant instance navigate to Settings -> Devices & Services then clieck the "Add Integration" button. Search for "Home Connect Alt" and install it.
-6. A new window will popup where you will be asked to login to to your Home Connect
+   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ekutner&repository=home-connect-hass)  
+   Alternatively, go to Settings -> Devices & Services in Home Assistance and click the "Add Integration" button. Search for "Home Connect Alt" and install it.
+2. A dialog box will popup asking you to select your preferred Home Connect server. 
+   Select "China" if you are located in China and "Default" for any other location.
+   ![api_host dialog](assets/api_host_dialog.png)
+3. Next you will be asked to provide the Home Connect developer app credentials you 
+   created erlier. Give these credetials set a name that will make it easy for you to reference them in the Home Assistant credentials manager :
+   ![api_host dialog](assets/credentials_dialog.png)
+
+4. Finnaly, a new window will popup where you will be asked to login to to your Home Connect
    account and allow Home Assistant to access your appliances. After you approve that you will be redirected back to Home Assistant, continue as instructed.
-7. Congratulations, you're done!  
+5. Congratulations, you're done!  
    Home Connect Alt will now start downloading the data for your
    appliances and will add the entities for them to Home Assistant.  
    Note that the integration dynamically discoveres entities as they are made available by the API, so expect new entities to be added in the first few uses of the appliances.
 
 # Configuration options
-These options are supported in configuration.yaml:
-```
-home_connect_alt:
-  client_id: < Your Client ID >
-  client_secret: < You Client Secret >
-  name_template: $brand $appliance - $name
-  language: < Supported langage code >
-  sensor_value_translation: <server | local>
-  entity_settings: <custom entity settings>
-  appliance_settings: <custom appliance settings>
-  api_host: <Home Connect API host name (only use for China)>
-```
-## Parameters:
-* **client_id** (required) - The Client ID of your Home Connect app.
+Starting with version 0.7.0 the integration supports the UI configuration flow for most configuration options. Existing config values will be read however, once the options are saved in the UI they will override the values from the config file.
 
-* **client_secret** (required) - The Client Secret of your Home Connect app.
+## Options settable in the UI
+### Regular options
+These options will show up for all users.
+* **Language** (optional - default = "en") - 
+  Indicates the language to use for entity names and values. The translation is automatically loaded from the Home Connect service and must  be one of its [supported languages](https://api-docs.home-connect.com/general?#supported-languages).
 
-* **name_template** (optional - default = "$brand $appliance - $name") -  
+* **Translation Mode** - 
+  Indicates how sensor values and select boxes should be translated to friendly names:  
+  * **Local** - The integration will use the raw ENUM values documented in the Home Connect documentation for sensors with string values. In that case the integration relies on the Home Assistant translation mechanism and translation files to translate these values into friendly names. The benefit of this approach is that the values used by the integration are language independent and match the values documented in the Home Connect API.  
+  * **Server** - Sensor values are translated to friendly names using the Home Connect service. In this mode the internal values of string sensors will be translated and the translated values must be used in scripts referring to those sensors.
+
+### Advanced options
+These options will only show up when the user has enablde "Advanced mode" in the user profile.
+* **Name Template**  - 
   Defines the template used for rendering entity names. The following placeholders are supported and will be replaced dynamically when rendering the name:  
   $brand - The brand name of the appliance ("Bosch", "Siemens", etc.)  
   $appliance - The type of the appliance ("Washing machine", "Dishwasher", etc.)  
-  $name - The name of the entity  
+  $name - The name of the entity   
+  The default template is "$brand $appliance - $name"
 
-* **language** (optional - default = "en") -  
-  Indicates the language to use for entity names. The translation is automatically loaded from the Home Connect service and must  be one of its [supported languages](https://api-docs.home-connect.com/general?#supported-languages).
+* **Log mode** - 
+  Defines the log verbosity level. Should normally be set to 0. Don't change this unless asked to do so while working on a bug you reported.
 
-* **sensor_value_translation** (optional - default = "local") - Indicates how sensor values shhould be translated to friendly names.  
-  When set to **"local"** (the default) the integration will use the raw ENUM values documented in the Home Connect documentation for sensors with string values. In that case the integration relies on the Home Assistant translation mechanism and translation files to translate these values into friendly names. The benefit of this approach is that sensor values used by the integration are language independent and match the values documented in the Home Connect API.  
-  When set to **"server"** sensor values are translated to friendly names using the Home Connect service. In this mode the internal values of string sensors will be translated and the translated values must be used in scripts referring to those sensors.
+## Options settable in configuration.yaml:
+These very advanced options are only settable in the configuration.yaml file.
+Generally you should not change them unless you know what you're doing.
 
-  **_Note:_** Select box values are always translated localy so they require the translation files to contain all the possible values.
-
-* **api_host** (optional) - If you are based in China, and only then, set this to *https://api.home-connect.cn*
+```
+home_connect_alt:
+  appliance_settings: <custom appliance settings>
+  entity_settings:  <custom entity settings>
+```
 
 * **appliance_settings** (optional) - Overrides some settings for specific appliances.    
   This setting requires specifying the identifier (HAID) of the appliance. The easiest way to find it is to look at the entity ID of the "Connected" sensor of the appliance. 
@@ -142,8 +180,6 @@ home_connect_alt:
       unit: cups
       icon: mdi:coffee
   ```
-  **_Note_**: This is an advanced setting and should not be used unless you know what you're doing.
-
 
 After the integration is configured READ THE FAQ then add it from the Home-Assistant UI.
 
@@ -193,7 +229,10 @@ In contrast, setting ```sensor_value_translation: server``` will override this b
 
 </br>
 
-# FAQ
+# Troubleshooting and FAQ
+* **I don't get the installation dialogs mentioned in the [Installation](#installation) section above***
+  These dialogs will only show up the first time you install the integration and only if you do not have the *client_id* and *client_secret* configured in your configuration.yaml file.
+  The make it appear again make sure the integration is uninstlled, then go to the *Settings -> Devices & Services* page on Home Assistant, then click the three-dot-menu on the top righthand corner and select "Application credentials". Locate the previous credentials row for this integration and delete it.
 * **I get errors on the browser window that pops-up after installing the integration for the first time**
   This popup window is trying to log you into the Home Connect website to establish a connection with the integration. If you get an error at this stage it means you didn't follow the setup instuctions carefully enough, so make sure that you do.
   Also make sure that you open https://my.home-assistant.io/ and configure the URL of your Home-Assistant server.  
@@ -244,22 +283,44 @@ In contrast, setting ```sensor_value_translation: server``` will override this b
 * If you have more than 3 connected devices (or you just play a lot with settings), you may hit the daily API rate limit set by the Home Connect API. The limit is set to 1000 calls per day and when it is hit the API is blocked for 24h. During that time, the integration will not get updated with new states and you won't be able to select and options or start a program.
 If you hit this limit frequently, please open an issue with a debug log. I'll try to see if there is a way to reduce some calls. However, as of now, there is nothing I can do about it and the Home Connect team was unwilling to increase this limit, which hurts their best customers so there is nothing I can do about it.
 
-# Reporting issues / bugs
-**CAREFULLY** Read the FAQ before submitting an bug report or opening a feature request, a lot of common issues are already covered there.
+</br>
 
-**DO NOT** open bugs or feature requests on missing data, controls or events, unless you can show either in the logs or in the API documentation that the missing item is actually available. Read the FAQ section for more details on this.
+# Reporting Issues and Bugs
+**CAREFULLY** Read the [FAQ](#troubleshooting-and-faq) before submitting a bug report or opening a feature request, a lot of common issues are already covered there.
 
-Before submitting any bug report please enable debug logging by adding the following to your configuration.yaml file then restart HA:
-```
-logger:
-  default: warn
-  logs:
-    home_connect_async: debug
-    home_connect_alt: debug
-    custom_components.home_connect_alt: debug
-```
+**DO NOT** open bugs or feature requests on missing data, controls or events, unless you can show, either in the logs or in the API documentation that the missing item is actually available. Read the [FAQ](#troubleshooting-and-faq) section for more details on this.
 
-When reporting an issue press the **Home Connect Debug** button and attach the HA log file to your issue report.
+### Bug report requirements
+All non trivial issues require:
+* A click on the **Home Connect Debug Info** button that the intgration is adding to the Home Assistant default "Overview" dashboard. This will dump some critical state information to the log.
+* A full debug log. See next section for instructions how to enable debug logging.
+* In some cases, while working on an issue, I will ask you to set a specific *Log Mode*, see below how to do that.
+
+### Enabling debug logging
+Use one of these two methods enable debug logging:
+* In Home Assistant navigate to *Settings → Devices & Services → Home Connect Alt* 
+  and click on "*Enable debug logging*".  
+  If you are using this method you can click "*Disable debug logging" when you're done to download the log file which you'll have to attach to your bug report.
+
+  -OR-
+
+* Add the following to your configuration.yaml file then restart HA:
+  ```
+  logger:
+    default: warn
+    logs:
+      home_connect_async: debug
+      home_connect_alt: debug
+      custom_components.home_connect_alt: debug
+  ```
+  If you're using this method you will have to download the log directly from the Home Assistant server in order to attach it to the bug report.
+
+### Setting Log Mode
+If while analyzing an issue you reported you are requested to set a specific **Log Mode**:
+1. Make sure that "Advanced mode" is enabled in your Home Assistant profile.
+2. In Home Assistant navigate to *Settings → Devices & Services → Home Connect Alt*
+3. Press the "CONFIGURE" button and set the required log mode.
+
 
 </br>
 
