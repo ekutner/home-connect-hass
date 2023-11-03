@@ -28,7 +28,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
         entity_manager.remove_appliance(appliance)
 
     # First add the integration button
-    async_add_entities([HomeConnectRefreshButton(homeconnect), HomeConnecDebugButton(homeconnect)])
+    async_add_entities([HomeConnectRefreshButton(homeconnect), HomeConnectDebugButton(homeconnect)])
 
     # Subscribe for events and register existing appliances
     homeconnect.register_callback(add_appliance, [Events.PAIRED, Events.DATA_CHANGED, Events.PROGRAM_STARTED, Events.PROGRAM_SELECTED])
@@ -245,7 +245,7 @@ class HomeConnectRefreshButton(ButtonEntity):
             raise HomeAssistantError(f"Failed to refresh the Home Connect data ({ex.code})")
 
 
-class HomeConnecDebugButton(ButtonEntity):
+class HomeConnectDebugButton(ButtonEntity):
     """ Class for a button to trigger a global refresh of Home Connect data  """
     _attr_has_entity_name = True
 

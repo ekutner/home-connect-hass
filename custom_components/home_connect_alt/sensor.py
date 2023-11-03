@@ -75,7 +75,7 @@ async def async_setup_entry(
     def remove_appliance(appliance: Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
-    # First add the global home connect satus sensor
+    # First add the global home connect status sensor
     async_add_entities([HomeConnectStatusSensor(homeconnect)])
 
     # Subscribe for events and register the existing appliances
