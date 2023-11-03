@@ -115,7 +115,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     conf["homeconnect"] = homeconnect
     conf["services"] = register_services(hass, homeconnect)
 
-    #region internal event hadlers
+    #region internal event handlers
     # async def async_delayed_update_cache(delay:float = 0):
     #     asyncio.sleep(delay)
     #     await async_save_to_cache(hass, homeconnect)
@@ -201,7 +201,7 @@ async def async_load_from_cache(hass:HomeAssistant, auth:api.AsyncConfigEntryAut
     except Exception as ex:
         # If there is any exception when creating the object from cache then clear the cache and continue
         await cache.async_remove()
-        _LOGGER.debug("Exception while loading HomeConnect from cache, clearing cache and contiuing", exc_info=ex)
+        _LOGGER.debug("Exception while loading HomeConnect from cache, clearing cache and continuing", exc_info=ex)
         return None
 
 async def async_save_to_cache(hass:HomeAssistant, homeconnect:HomeConnect, cache:storage.Store=None) -> None:
@@ -228,7 +228,7 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
     """ Register the services offered by this integration """
     services = Services(hass, homeconnect)
 
-    select_program_scema = vol.Schema(
+    select_program_schema = vol.Schema(
         {
             vol.Required('device_id'): cv.string,
             vol.Required('program_key'): cv.string,
@@ -243,9 +243,9 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
             )
         }
     )
-    hass.services.async_register(DOMAIN, "select_program", services.async_select_program, schema=select_program_scema)
+    hass.services.async_register(DOMAIN, "select_program", services.async_select_program, schema=select_program_schema)
 
-    start_program_scema = vol.Schema(
+    start_program_schema = vol.Schema(
         {
             vol.Required('device_id'): cv.string,
             vol.Optional('program_key'): cv.string,
@@ -260,7 +260,7 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
             )
         }
     )
-    hass.services.async_register(DOMAIN, "start_program", services.async_start_program, schema=start_program_scema)
+    hass.services.async_register(DOMAIN, "start_program", services.async_start_program, schema=start_program_schema)
 
     stop_program_schema = vol.Schema(
         {

@@ -75,7 +75,7 @@ class EntityBase(ABC):
 
     @property
     def name_ext(self) -> str|None:
-        """ Provide the suffix of the name, can be be overriden by sub-classes to provide a custom or translated display name """
+        """Provide the suffix of the name, can be be overridden by sub-classes to provide a custom or translated display name."""
         return None
 
     @property
@@ -96,10 +96,10 @@ class EntityBase(ABC):
 
 
     # This property is important to let HA know if this entity is online or not.
-    # If an entity is offline (return False), the UI will refelect this.
+    # If an entity is offline (return False), the UI will reflect this.
     @property
     def available(self) -> bool:
-        """ Avilability of the enity """
+        """Availability of the entity."""
         return self._appliance.connected
 
     @property
@@ -133,7 +133,7 @@ class EntityBase(ABC):
         pass
 
     def pretty_enum(self, val:str) -> str:
-        """ Extract display string from a Home COnnect Enum string """
+        """Extract display string from a Home Connect Enum string."""
         name = val.split('.')[-1]
         parts = re.findall('[A-Z0-9]+[^A-Z]*', name)
         return' '.join(parts)
@@ -154,12 +154,11 @@ class InteractiveEntityBase(EntityBase):
 
 
 class EntityManager():
-    """ Helper class for managing entity registration
+    """Helper class for managing entity registration.
 
-    Dupliaction might happen because there is a race condition between the task that
+    Duplication might happen because there is a race condition between the task that
     loads data from the Home Connect service and the initialization of the platforms.
-    This class prevents that from happening
-
+    This class prevents that from happening.
     """
     def __init__(self, async_add_entities:AddEntitiesCallback):
         self._existing_ids = set()
@@ -168,7 +167,7 @@ class EntityManager():
         self._async_add_entities = async_add_entities
 
     def add(self, entity:Entity) -> None:
-        """ Add a new entiity unless it already esists """
+        """Add a new entity unless it already exists."""
         if entity and (entity.unique_id not in self._existing_ids) and (entity.unique_id not in self._pending_entities):
             self._pending_entities[entity.unique_id] = entity
 
@@ -180,11 +179,10 @@ class EntityManager():
             if entity.haId not in self._entity_appliance_map:
                 self._entity_appliance_map[entity.haId] = set()
             self._entity_appliance_map[entity.haId].add(entity.unique_id)
-        _LOGGER.debug("Registring new entities: %s", new_ids)
+        _LOGGER.debug("Registering new entities: %s", new_ids)
         self._async_add_entities(new_entities)
         self._existing_ids |= new_ids
         self._pending_entities = {}
-
 
     def remove_appliance(self, appliance:Appliance):
         """ Remove an appliance and all its registered entities """
@@ -227,7 +225,7 @@ class Configuration(dict):
         return False
 
     def set_entity_setting(self, key:str, option:str, value):
-        """ Retrun an entity config setting or None if it doesn't exist """
+        """Return an entity config setting or None if it doesn't exist."""
         if CONF_ENTITY_SETTINGS not in self:
             self[CONF_ENTITY_SETTINGS] = {}
         if key not in self[CONF_ENTITY_SETTINGS]:
@@ -235,12 +233,12 @@ class Configuration(dict):
         self[CONF_ENTITY_SETTINGS][key][option] = value
 
     def get_entity_settings(self, key:str):
-        """ Retrun an entity config setting or None if it doesn't exist """
+        """Return an entity config setting or None if it doesn't exist."""
         if CONF_ENTITY_SETTINGS in self and  key in self[CONF_ENTITY_SETTINGS]:
             return self[key]
         return None
 
     @classmethod
     def set_global_config(cls, global_config:dict):
-        """ Set the global config once as a static member that will be appende automatically to each config object """
+        """.Set the global config once as a static member that will be appended automatically to each config object."""
         cls._global_config = global_config
