@@ -15,6 +15,6 @@
   "issue_tracker": "https://github.com/ekutner/home-connect-hass/issues",
   "requirements": ["home-connect-async==0.7.14"],
   "ssdp": [],
-  "version": "0.7.0-b5",
+  "version": "1.0.0-b1",
   "zeroconf": []
 }
