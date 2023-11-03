@@ -7,7 +7,7 @@ on:
 
 jobs:
   tagged-release:
-    name: "Tagged Release"
+    name: "Tagged Pre-Release"
     runs-on: "ubuntu-latest"
 
     steps:
