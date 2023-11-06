@@ -1,19 +1,71 @@
 {
   "config": {
     "abort": {
-      "already_configured": "[%key:common::config_flow::abort::already_configured_account%]",
-      "already_in_progress": "[%key:common::config_flow::abort::already_in_progress%]",
-      "authorize_url_timeout": "[%key:common::config_flow::abort::oauth2_authorize_url_timeout%]",
-      "missing_configuration": "Komponenta není nakonfigurována. Postupujte podle dokumentace.",
-      "no_url_available": "[%key:common::config_flow::abort::oauth2_no_url_available%]",
-      "oauth_error": "[%key:common::config_flow::abort::oauth2_error%]"
+      "already_configured": "Účet je již nakonfigurován",
+      "already_in_progress": "Konfigurace již probíhá",
+      "cannot_connect": "Připojení se nezdařilo",
+      "timeout_connect": "Časový limit navázání spojení vypršel",
+      "oauth_error": "Přijaty špatná data tokenu",
+      "missing_configuration": "Komponent není nakonfigurován. Prosím řiďte se dokumentací.",
+      "reauth_successful": "Znovuověření proběhlo úspěšně",
+      "invalid_access_token": "Nesprávný přístupový token",
+      "unknown": "Neočekávaný error"
     },
     "create_entry": {
-      "default": "Úspěšně autentifikováno"
+      "default": "Úspěšně ověřeno"
     },
     "step": {
-      "pick_implementation": {
-        "title": "[%key:common::config_flow::title::oauth2_pick_implementation%]"
+      "user": {
+        "title": "Vyberte server",
+        "data": {
+          "api_host": "Home Connect Server"
+        },
+        "data_description": {
+          "api_host": "Zvolte Čínu pouze, pokud zde žijete, jinak zvolte Výchozí"
+        }
+      },
+      "auth": {
+        "title": "Propojit s účtem Home Connect "
+      },
+      "reauth_confirm": {
+        "title": "Znovuověření integrace",
+        "description": "Integrace Home Connect potřebuje znovuověřit váš účet"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Pokročilá nastavení",
+        "description": "Vysvětlení těchto nastavení naleznete v části [README] konfigurace (https://github.com/ekutner/home-connect-hass).",
+        "data": {
+          "language": "Jazyk kódu",
+          "translation_mode": "Režim překladu",
+          "name_template": "Šablona názvu entity",
+          "log_mode": "Verbose log režim"
+
+        },
+        "data_description": {
+          "language": "Používejte pouze [kódy jazyků](https://api-docs.home-connect.com/general/#supported-languages) podporované službou Home Connect.",
+          "log_mode": "Aby se toto nastavení použilo, musí být v souboru configuration.yaml povoleno protokolování ladění."
+        }
+      }
+    }
+  },
+  "application_credentials": {
+    "description": "Před pokračováním\n\n postupujte podle pokynů k nastavení v souboru [README]({more_info_url}) integrace."
+  },
+  "selector": {
+    "api_host": {
+      "options": {
+        "https://api.home-connect.com": "Výchozí",
+        "https://api.home-connect.cn": "Čína"
+      }
+    },
+    "translation_mode": {
+      "options": {
+        "local": "Lokální",
+        "server": "Server"
       }
     }
   },
@@ -24,6 +76,14 @@
     }
   },
   "entity": {
+    "button": {
+      "start_program":  { "name": "Spustit program" },
+      "pause_program":  { "name": "Pozastavit program" },
+      "resume_program": { "name": "Pokračovat v programu" },
+      "stop_program":   { "name": "Zastavit program" },
+      "homeconnect_refresh": { "name": "Home Connect znovu načíst" },
+      "homeconnect_debug":   { "name": "Home Connect Debug Info" }
+    },
     "select": {
       "options": {
         "state": {
@@ -45,8 +105,8 @@
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.ExtraStrong": "Extra silný",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.Mild": "Mírné",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.MildPlus": "Mírné +",
-          "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.Normal": "Normalní",
-          "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.NormalPlus": "Normalní +",
+          "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.Normal": "Normální",
+          "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.NormalPlus": "Normální +",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.Strong": "Silný",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.StrongPlus": "Silný +",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.TripleShot": "Trojitá dávka",
@@ -83,7 +143,7 @@
           "Cooking.Oven.Option.FastPreHeat": "Rychloohřev",
           "Cooking.Oven.Option.SetpointTemperature": "Nastavená teplota",
           "Cooking.Oven.Option.WarmingLevel": "Úroveň ohřívání",
-          "Dishcare.Dishwasher.Option.BrillianceDry": "Brilliance Dry",
+          "Dishcare.Dishwasher.Option.BrillianceDry": "Nablýskání",
           "Dishcare.Dishwasher.Option.ExtraDry": "Extra Dry",
           "Dishcare.Dishwasher.Option.HalfLoad": "Poloviční náplň",
           "Dishcare.Dishwasher.Option.HygienePlus": "Hygiene Plus",
@@ -103,8 +163,8 @@
           "LaundryCare.Common.EnumType.VarioPerfect.EcoPerfect": "EcoPerfect",
           "LaundryCare.Common.EnumType.VarioPerfect.Off": "Off",
           "LaundryCare.Common.EnumType.VarioPerfect.SpeedPerfect": "SpeedPerfect",
-          "LaundryCare.Dryer.EnumType.DryingTarget.CupboardDry": "Cupboard Dry",
-          "LaundryCare.Dryer.EnumType.DryingTarget.CupboardDryPlus": "Cupboard Dry Plus",
+          "LaundryCare.Dryer.EnumType.DryingTarget.CupboardDry": "Sušení do skříně",
+          "LaundryCare.Dryer.EnumType.DryingTarget.CupboardDryPlus": "Sušení do skříně Plus",
           "LaundryCare.Dryer.EnumType.DryingTarget.GentleDry": "Jemné žehlení",
           "LaundryCare.Dryer.EnumType.DryingTarget.IronDry": "Suché žehlení",
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Off": "Off",
@@ -186,7 +246,7 @@
           "ConsumerProducts.CoffeeMaker.Program.Beverage.MilkFroth": "Mléčná pěna",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Ristretto": "Ristretto",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.WarmMilk": "Teplé mléko",
-          "ConsumerProducts.CoffeeMaker.Program.Beverage.XLCoffee": "XLCoffee",
+          "ConsumerProducts.CoffeeMaker.Program.Beverage.XLCoffee": "XL Káva",
           "ConsumerProducts.CoffeeMaker.Program.CleaningModes.ApplianceOffRinsing": "Proplach (kávovar se vypíná)",
           "ConsumerProducts.CoffeeMaker.Program.CleaningModes.ApplianceOnRinsing": "Proplach (kávovar se zapíná)",
           "ConsumerProducts.CoffeeMaker.Program.CleaningModes.CalcNClean": "Calc 'n Clean",
@@ -201,13 +261,13 @@
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.FlatWhite": "Flat White",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Galao": "Galao",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Garoto": "Garoto",
-          "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.GrosserBrauner": "Grosser Brauner",
+          "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.GrosserBrauner": "Großer Brauner",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Kaapi": "Kaapi",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.KleinerBrauner": "Kleiner Brauner",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.KoffieVerkeerd": "Koffie Verkeerd",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.RedEye": "Red Eye",
-          "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Verlaengerter": "Verlaengerter",
-          "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.VerlaengerterBraun": "Verlaengerter Braun",
+          "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Verlaengerter": "Verlängerter",
+          "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.VerlaengerterBraun": "Verlängerter Braun",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.WienerMelange": "Wiener Melange",
           "Cooking.Common.Program.Hood.Automatic": "Automatický",
           "Cooking.Common.Program.Hood.DelayedShutOff": "Odložené vypnutí",
@@ -217,7 +277,7 @@
           "Cooking.Oven.Program.HeatingMode.BottomHeating": "Spodní ohřev",
           "Cooking.Oven.Program.HeatingMode.Defrost": "Rozmrazování",
           "Cooking.Oven.Program.HeatingMode.Desiccation": "Sušení",
-          "Cooking.Oven.Program.HeatingMode.FrozenHeatupSpecial": "Frozen Heatup Special",
+          "Cooking.Oven.Program.HeatingMode.FrozenHeatupSpecial": "Ohřívání mražených potravin",
           "Cooking.Oven.Program.HeatingMode.GrillLargeArea": "Gril, velkoplošný",
           "Cooking.Oven.Program.HeatingMode.HotAir": "Horký vzduch",
           "Cooking.Oven.Program.HeatingMode.HotAirEco": "Horký vzduch ECO",
@@ -247,7 +307,7 @@
           "Dishcare.Dishwasher.Program.IntensivPower": "Intenzivní výkon",
           "Dishcare.Dishwasher.Program.Kurz60": "Expresní 60°C",
           "Dishcare.Dishwasher.Program.MachineCare": "Péče o myčku",
-          "Dishcare.Dishwasher.Program.MagicDaily": "Magic Daily",
+          "Dishcare.Dishwasher.Program.MagicDaily": "Denní kouzlo",
           "Dishcare.Dishwasher.Program.MaximumCleaning": "Maximální čištění",
           "Dishcare.Dishwasher.Program.NightWash": "Noční mytí",
           "Dishcare.Dishwasher.Program.Normal45": "Normální 45°C",
@@ -424,13 +484,13 @@
       },
       "statuses": {
         "state": {
-          "BSH.Common.EnumType.OperationState.Aborting": "Přerušení",
+          "BSH.Common.EnumType.OperationState.Aborting": "Ruší se",
           "BSH.Common.EnumType.OperationState.ActionRequired": "Vyžadována akce",
           "BSH.Common.EnumType.OperationState.DelayedStart": "Odložený start",
           "BSH.Common.EnumType.OperationState.Error": "Error",
           "BSH.Common.EnumType.OperationState.Finished": "Dokončeno",
           "BSH.Common.EnumType.OperationState.Inactive": "Neaktivní",
-          "BSH.Common.EnumType.OperationState.Pause": "Pozastavit",
+          "BSH.Common.EnumType.OperationState.Pause": "Pozastaven",
           "BSH.Common.EnumType.OperationState.Ready": "Připraven",
           "BSH.Common.EnumType.OperationState.Run": "Běží",
           "BSH.Common.EnumType.PowerState.MainsOff": "Síť vypnuta",
@@ -443,6 +503,7 @@
       }
     },
     "sensor": {
+      "homeconnect_status": { "name": "Home Connect status" },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "Doba trvání",
@@ -463,8 +524,8 @@
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.ExtraStrong": "Extra silný",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.Mild": "Mírné",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.MildPlus": "Mírné +",
-          "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.Normal": "Normalní",
-          "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.NormalPlus": "Normalní +",
+          "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.Normal": "Normální",
+          "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.NormalPlus": "Normální +",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.Strong": "Silný",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.StrongPlus": "Silný +",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.TripleShot": "Trojitá dávka",
@@ -501,7 +562,7 @@
           "Cooking.Oven.Option.FastPreHeat": "Rychloohřev",
           "Cooking.Oven.Option.SetpointTemperature": "Nastavená teplota",
           "Cooking.Oven.Option.WarmingLevel": "Úroveň ohřívání",
-          "Dishcare.Dishwasher.Option.BrillianceDry": "Brilliance Dry",
+          "Dishcare.Dishwasher.Option.BrillianceDry": "Nablýskání",
           "Dishcare.Dishwasher.Option.ExtraDry": "Extra Dry",
           "Dishcare.Dishwasher.Option.HalfLoad": "Poloviční náplň",
           "Dishcare.Dishwasher.Option.HygienePlus": "Hygiene Plus",
@@ -521,8 +582,8 @@
           "LaundryCare.Common.EnumType.VarioPerfect.EcoPerfect": "EcoPerfect",
           "LaundryCare.Common.EnumType.VarioPerfect.Off": "Off",
           "LaundryCare.Common.EnumType.VarioPerfect.SpeedPerfect": "SpeedPerfect",
-          "LaundryCare.Dryer.EnumType.DryingTarget.CupboardDry": "Cupboard Dry",
-          "LaundryCare.Dryer.EnumType.DryingTarget.CupboardDryPlus": "Cupboard Dry Plus",
+          "LaundryCare.Dryer.EnumType.DryingTarget.CupboardDry": "Sušení do skříně",
+          "LaundryCare.Dryer.EnumType.DryingTarget.CupboardDryPlus": "Sušení do skříně Plus",
           "LaundryCare.Dryer.EnumType.DryingTarget.GentleDry": "Jemné sušení",
           "LaundryCare.Dryer.EnumType.DryingTarget.IronDry": "Suché žehlení",
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Off": "Off",
@@ -596,7 +657,7 @@
           "ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeGrande": "Caffe Grande",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.CaffeLatte": "Caffe Latte",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Cappuccino": "Cappuccino",
-          "ConsumerProducts.CoffeeMaker.Program.Beverage.Coffee": "Coffee",
+          "ConsumerProducts.CoffeeMaker.Program.Beverage.Coffee": "Káva",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Espresso": "Espresso",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.EspressoDoppio": "Espresso Doppio",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.EspressoMacchiato": "Espresso Macchiato",
@@ -604,7 +665,7 @@
           "ConsumerProducts.CoffeeMaker.Program.Beverage.MilkFroth": "Mléčná pěna",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Ristretto": "Ristretto",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.WarmMilk": "Teplé mléko",
-          "ConsumerProducts.CoffeeMaker.Program.Beverage.XLCoffee": "XLCoffee",
+          "ConsumerProducts.CoffeeMaker.Program.Beverage.XLCoffee": "XL Káva",
           "ConsumerProducts.CoffeeMaker.Program.CleaningModes.ApplianceOffRinsing": "Proplach (kávovar se vypíná)",
           "ConsumerProducts.CoffeeMaker.Program.CleaningModes.ApplianceOnRinsing": "Proplach (kávovar se zapíná)",
           "ConsumerProducts.CoffeeMaker.Program.CleaningModes.CalcNClean": "Calc 'n Clean",
@@ -619,13 +680,13 @@
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.FlatWhite": "Flat White",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Galao": "Galao",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Garoto": "Garoto",
-          "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.GrosserBrauner": "Grosser Brauner",
+          "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.GrosserBrauner": "Großer Brauner",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Kaapi": "Kaapi",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.KleinerBrauner": "Kleiner Brauner",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.KoffieVerkeerd": "Koffie Verkeerd",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.RedEye": "Red Eye",
-          "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Verlaengerter": "Verlaengerter",
-          "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.VerlaengerterBraun": "Verlaengerter Braun",
+          "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.Verlaengerter": "Verlängerter",
+          "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.VerlaengerterBraun": "Verlängerter Braun",
           "ConsumerProducts.CoffeeMaker.Program.CoffeeWorld.WienerMelange": "Wiener Melange",
           "Cooking.Common.Program.Hood.Automatic": "Automatický",
           "Cooking.Common.Program.Hood.DelayedShutOff": "Odložené vypnutí",
@@ -635,7 +696,7 @@
           "Cooking.Oven.Program.HeatingMode.BottomHeating": "Spodní ohřev",
           "Cooking.Oven.Program.HeatingMode.Defrost": "Rozmrazování",
           "Cooking.Oven.Program.HeatingMode.Desiccation": "Sušení",
-          "Cooking.Oven.Program.HeatingMode.FrozenHeatupSpecial": "Frozen Heatup Special",
+          "Cooking.Oven.Program.HeatingMode.FrozenHeatupSpecial": "Ohřívání mražených potravin",
           "Cooking.Oven.Program.HeatingMode.GrillLargeArea": "Gril, velkoplošný",
           "Cooking.Oven.Program.HeatingMode.HotAir": "Horký vzduch",
           "Cooking.Oven.Program.HeatingMode.HotAirEco": "Horký vzduch ECO",
@@ -842,13 +903,13 @@
       },
       "statuses": {
         "state": {
-          "BSH.Common.EnumType.OperationState.Aborting": "Přerušení",
+          "BSH.Common.EnumType.OperationState.Aborting": "Ruší se",
           "BSH.Common.EnumType.OperationState.ActionRequired": "Vyžadována akce",
           "BSH.Common.EnumType.OperationState.DelayedStart": "Odložený start",
           "BSH.Common.EnumType.OperationState.Error": "Error",
           "BSH.Common.EnumType.OperationState.Finished": "Dokončeno",
           "BSH.Common.EnumType.OperationState.Inactive": "Neaktivní",
-          "BSH.Common.EnumType.OperationState.Pause": "Pozastavit",
+          "BSH.Common.EnumType.OperationState.Pause": "Pozastaven",
           "BSH.Common.EnumType.OperationState.Ready": "Připraven",
           "BSH.Common.EnumType.OperationState.Run": "Běží",
           "BSH.Common.EnumType.PowerState.MainsOff": "Síť vypnuta",
