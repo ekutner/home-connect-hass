@@ -43,7 +43,6 @@
           "translation_mode": "Translation mode",
           "name_template": "Entity name template",
           "log_mode": "Verbose log mode"
-
         },
         "data_description": {
           "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
@@ -77,12 +76,24 @@
   },
   "entity": {
     "button": {
-      "start_program":  { "name": "Start Program" },
-      "pause_program":  { "name": "Pause Program" },
-      "resume_program": { "name": "Resume Program" },
-      "stop_program":   { "name": "Stop Program" },
-      "homeconnect_refresh": { "name": "Home Connect Refresh Data" },
-      "homeconnect_debug":   { "name": "Home Connect Dump Debug Info" }
+      "start_program": {
+        "name": "Start Program"
+      },
+      "pause_program": {
+        "name": "Pause Program"
+      },
+      "resume_program": {
+        "name": "Resume Program"
+      },
+      "stop_program": {
+        "name": "Stop Program"
+      },
+      "homeconnect_refresh": {
+        "name": "Home Connect Refresh Data"
+      },
+      "homeconnect_debug": {
+        "name": "Home Connect Dump Debug Info"
+      }
     },
     "select": {
       "options": {
@@ -503,7 +514,9 @@
       }
     },
     "sensor": {
-      "homeconnect_status": { "name": "Home Connect Status DE" },
+      "homeconnect_status": {
+        "name": "Home Connect Status"
+      },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "Dauer",

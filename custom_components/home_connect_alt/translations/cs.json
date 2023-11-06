@@ -43,7 +43,6 @@
           "translation_mode": "Režim překladu",
           "name_template": "Šablona názvu entity",
           "log_mode": "Verbose log režim"
-
         },
         "data_description": {
           "language": "Používejte pouze [kódy jazyků](https://api-docs.home-connect.com/general/#supported-languages) podporované službou Home Connect.",
@@ -77,12 +76,24 @@
   },
   "entity": {
     "button": {
-      "start_program":  { "name": "Spustit program" },
-      "pause_program":  { "name": "Pozastavit program" },
-      "resume_program": { "name": "Pokračovat v programu" },
-      "stop_program":   { "name": "Zastavit program" },
-      "homeconnect_refresh": { "name": "Home Connect znovu načíst" },
-      "homeconnect_debug":   { "name": "Home Connect Debug Info" }
+      "start_program": {
+        "name": "Spustit program"
+      },
+      "pause_program": {
+        "name": "Pozastavit program"
+      },
+      "resume_program": {
+        "name": "Pokračovat v programu"
+      },
+      "stop_program": {
+        "name": "Zastavit program"
+      },
+      "homeconnect_refresh": {
+        "name": "Home Connect znovu načíst"
+      },
+      "homeconnect_debug": {
+        "name": "Home Connect Debug Info"
+      }
     },
     "select": {
       "options": {
@@ -123,7 +134,7 @@
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.94C": "94°C",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.95C": "95°C",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.96C": "96°C",
-          "ConsumerProducts.CoffeeMaker.EnumType.FlowRate.Intense": "Intenzinvní",
+          "ConsumerProducts.CoffeeMaker.EnumType.FlowRate.Intense": "Intenzivní",
           "ConsumerProducts.CoffeeMaker.EnumType.FlowRate.IntensePlus": "Intenzivní +",
           "ConsumerProducts.CoffeeMaker.EnumType.FlowRate.Normal": "Normální",
           "ConsumerProducts.CoffeeMaker.Option.BeanAmount": "Množství zrn",
@@ -150,7 +161,7 @@
           "Dishcare.Dishwasher.Option.IntensivZone": "Intensive Zone",
           "Dishcare.Dishwasher.Option.SilenceOnDemand": "Tichý režim na přání",
           "Dishcare.Dishwasher.Option.VarioSpeedPlus": "Vario Speed Plus",
-          "LaundryCare.Common.EnumType.ProcessPhase.DetectingLoad": "Zjišťování náplnění",
+          "LaundryCare.Common.EnumType.ProcessPhase.DetectingLoad": "Zjišťování naplnění",
           "LaundryCare.Common.EnumType.ProcessPhase.Drying": "Sušení",
           "LaundryCare.Common.EnumType.ProcessPhase.Fluffing": "Nadýchání",
           "LaundryCare.Common.EnumType.ProcessPhase.Heating": "Ohřívání",
@@ -165,7 +176,7 @@
           "LaundryCare.Common.EnumType.VarioPerfect.SpeedPerfect": "SpeedPerfect",
           "LaundryCare.Dryer.EnumType.DryingTarget.CupboardDry": "Sušení do skříně",
           "LaundryCare.Dryer.EnumType.DryingTarget.CupboardDryPlus": "Sušení do skříně Plus",
-          "LaundryCare.Dryer.EnumType.DryingTarget.GentleDry": "Jemné žehlení",
+          "LaundryCare.Dryer.EnumType.DryingTarget.GentleDry": "Jemné sušení",
           "LaundryCare.Dryer.EnumType.DryingTarget.IronDry": "Suché žehlení",
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Off": "Off",
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus1": "+1",
@@ -307,7 +318,7 @@
           "Dishcare.Dishwasher.Program.IntensivPower": "Intenzivní výkon",
           "Dishcare.Dishwasher.Program.Kurz60": "Expresní 60°C",
           "Dishcare.Dishwasher.Program.MachineCare": "Péče o myčku",
-          "Dishcare.Dishwasher.Program.MagicDaily": "Denní kouzlo",
+          "Dishcare.Dishwasher.Program.MagicDaily": "Magic Daily",
           "Dishcare.Dishwasher.Program.MaximumCleaning": "Maximální čištění",
           "Dishcare.Dishwasher.Program.NightWash": "Noční mytí",
           "Dishcare.Dishwasher.Program.Normal45": "Normální 45°C",
@@ -387,7 +398,7 @@
           "LaundryCare.Washer.Program.Sensitive.Sensitive.Sensitive": "Praní: Citlivé",
           "LaundryCare.Washer.Program.ShirtsBlouses": "Praní: košile a halenky",
           "LaundryCare.Washer.Program.ShirtsBlouses.ShirtsBlouses.ShirtsBlouses": "Praní: košile a halenky",
-          "LaundryCare.Washer.Program.Spin.Spin.SpinDrain": "Praní: Odtok odstředění",
+          "LaundryCare.Washer.Program.Spin.Spin.SpinDrain": "Praní: Odtok ostředění",
           "LaundryCare.Washer.Program.Spin.SpinDrain": "Praní: Odtok odstředění",
           "LaundryCare.Washer.Program.SportFitness": "Praní: Sport a fitness",
           "LaundryCare.Washer.Program.Steaming.Steaming.Steaming": "Praní: Napařování",
@@ -503,7 +514,9 @@
       }
     },
     "sensor": {
-      "homeconnect_status": { "name": "Home Connect status" },
+      "homeconnect_status": {
+        "name": "Home Connect status"
+      },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "Doba trvání",

@@ -43,7 +43,6 @@
           "translation_mode": "Translation mode",
           "name_template": "Entity name template",
           "log_mode": "Verbose log mode"
-
         },
         "data_description": {
           "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
@@ -77,12 +76,24 @@
   },
   "entity": {
     "button": {
-      "start_program":  { "name": "Start Program" },
-      "pause_program":  { "name": "Pause Program" },
-      "resume_program": { "name": "Resume Program" },
-      "stop_program":   { "name": "Stop Program" },
-      "hc_refresh":     { "name": "Home Connect Refresh" },
-      "hc_debug_info":  { "name": "Home Connect Dump Debug Info" }
+      "start_program": {
+        "name": "Start Program"
+      },
+      "pause_program": {
+        "name": "Pause Program"
+      },
+      "resume_program": {
+        "name": "Resume Program"
+      },
+      "stop_program": {
+        "name": "Stop Program"
+      },
+      "hc_refresh": {
+        "name": "Home Connect Refresh"
+      },
+      "hc_debug_info": {
+        "name": "Home Connect Dump Debug Info"
+      }
     },
     "select": {
       "options": {
@@ -918,6 +929,9 @@
           "Cooking.Hob.EnumType.PowerLevel.Off": "關閉",
           "Cooking.Hob.EnumType.PowerLevel.On": "開啟"
         }
+      },
+      "homeconnect_status": {
+        "name": "Home Connect Status"
       }
     }
   }

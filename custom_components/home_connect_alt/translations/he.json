@@ -43,7 +43,6 @@
           "translation_mode": "מצב תרגום",
           "name_template": "תבנית שמות ישויות",
           "log_mode": "מצב כתיבת לוג"
-
         },
         "data_description": {
           "language": "יש להשתמש רק [בקודי שפה](https://api-docs.home-connect.com/general/#supported-languages) הנתמכים על ידי Home Connect",
@@ -77,12 +76,24 @@
   },
   "entity": {
     "button": {
-      "start_program":  { "name": "Start Program" },
-      "pause_program":  { "name": "Pause Program" },
-      "resume_program": { "name": "Resume Program" },
-      "stop_program":   { "name": "Stop Program" },
-      "homeconnect_refresh": { "name": "Home Connect רענן את" },
-      "homeconnect_debug":   { "name": "Home Connect כתוב מידע דבאג ללוג" }
+      "start_program": {
+        "name": "Start Program"
+      },
+      "pause_program": {
+        "name": "Pause Program"
+      },
+      "resume_program": {
+        "name": "Resume Program"
+      },
+      "stop_program": {
+        "name": "Stop Program"
+      },
+      "homeconnect_refresh": {
+        "name": "Home Connect רענן את"
+      },
+      "homeconnect_debug": {
+        "name": "Home Connect כתוב מידע דבאג ללוג"
+      }
     },
     "select": {
       "options": {
@@ -501,7 +512,9 @@
       }
     },
     "sensor": {
-      "homeconnect_status": { "name": "Home Connect סטטוס" },
+      "homeconnect_status": {
+        "name": "Home Connect סטטוס"
+      },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "מֶשֶׁך",

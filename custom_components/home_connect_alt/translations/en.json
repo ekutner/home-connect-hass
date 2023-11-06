@@ -1,71 +1,38 @@
 {
+  "application_credentials": {
+    "description": "Follow the setup instructions in the integration's [README]({more_info_url}) file before continuing\n\n"
+  },
   "config": {
     "abort": {
       "already_configured": "Account is already configured",
       "already_in_progress": "Configuration flow is already in progress",
       "cannot_connect": "Failed to connect",
-      "timeout_connect": "Timeout establishing connection",
-      "oauth_error": "Received invalid token data",
-      "missing_configuration": "The component is not configured. Please follow the documentation.",
-      "reauth_successful": "Re-authentication was successful",
       "invalid_access_token": "Invalid access token",
+      "missing_configuration": "The component is not configured. Please follow the documentation.",
+      "oauth_error": "Received invalid token data",
+      "reauth_successful": "Re-authentication was successful",
+      "timeout_connect": "Timeout establishing connection",
       "unknown": "Unexpected error"
     },
     "create_entry": {
       "default": "Successfully authenticated"
     },
     "step": {
+      "auth": {
+        "title": "Link Home Connect Account"
+      },
+      "reauth_confirm": {
+        "description": "The Home Connect integration needs to re-authenticate your account",
+        "title": "Reauthenticate integration"
+      },
       "user": {
-        "title": "Select Server",
         "data": {
           "api_host": "Home Connect Server"
         },
         "data_description": {
           "api_host": "Use China only if you are located there, otherwise use Default"
-        }
-      },
-      "auth": {
-        "title": "Link Home Connect Account"
-      },
-      "reauth_confirm": {
-        "title": "Reauthenticate integration",
-        "description": "The Home Connect integration needs to re-authenticate your account"
-      }
-    }
-  },
-  "options": {
-    "step": {
-      "init": {
-        "title": "Advanced settings",
-        "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
-        "data": {
-          "language": "Language code",
-          "translation_mode": "Translation mode",
-          "name_template": "Entity name template",
-          "log_mode": "Verbose log mode"
-
         },
-        "data_description": {
-          "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
-          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply"
-        }
-      }
-    }
-  },
-  "application_credentials": {
-    "description": "Follow the setup instructions in the integration's [README]({more_info_url}) file before continuing\n\n"
-  },
-  "selector": {
-    "api_host": {
-      "options": {
-        "https://api.home-connect.com": "Default",
-        "https://api.home-connect.cn": "China"
-      }
-    },
-    "translation_mode": {
-      "options": {
-        "local": "Local",
-        "server": "Server"
+        "title": "Select Server"
       }
     }
   },
@@ -77,14 +44,29 @@
   },
   "entity": {
     "button": {
-      "start_program":  { "name": "Start Program" },
-      "pause_program":  { "name": "Pause Program" },
-      "resume_program": { "name": "Resume Program" },
-      "stop_program":   { "name": "Stop Program" },
-      "homeconnect_refresh": { "name": "Home Connect Refresh" },
-      "homeconnect_debug":   { "name": "Home Connect Debug Info" }
+      "homeconnect_debug": {
+        "name": "Home Connect Debug Info"
+      },
+      "homeconnect_refresh": {
+        "name": "Home Connect Refresh"
+      },
+      "pause_program": {
+        "name": "Pause Program"
+      },
+      "resume_program": {
+        "name": "Resume Program"
+      },
+      "start_program": {
+        "name": "Start Program"
+      },
+      "stop_program": {
+        "name": "Stop Program"
+      }
     },
     "select": {
+      "homeconnect_status": {
+        "name": "Home Connect Status"
+      },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "Duration",
@@ -503,7 +485,9 @@
       }
     },
     "sensor": {
-      "homeconnect_status": { "name": "Home Connect Status" },
+      "homeconnect_status": {
+        "name": "Home Connect Status"
+      },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "Duration",
@@ -919,6 +903,38 @@
           "Cooking.Hob.EnumType.PowerLevel.Off": "Off",
           "Cooking.Hob.EnumType.PowerLevel.On": "On"
         }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "language": "Language code",
+          "log_mode": "Verbose log mode",
+          "name_template": "Entity name template",
+          "translation_mode": "Translation mode"
+        },
+        "data_description": {
+          "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
+          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply"
+        },
+        "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
+        "title": "Advanced settings"
+      }
+    }
+  },
+  "selector": {
+    "api_host": {
+      "options": {
+        "https://api.home-connect.cn": "China",
+        "https://api.home-connect.com": "Default"
+      }
+    },
+    "translation_mode": {
+      "options": {
+        "local": "Local",
+        "server": "Server"
       }
     }
   }

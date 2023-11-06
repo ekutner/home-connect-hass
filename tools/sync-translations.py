@@ -1,4 +1,6 @@
+import copy
 import json
+from collections import OrderedDict
 from os import path
 from glob import glob
 
@@ -43,11 +45,15 @@ def sync(o1:dict, o2:dict, path1:str, path2:str) -> bool:
             i1 += 1
     return o1_changes or o2_changes
 
+def cleanup(o:dict, keys:list[str]):
+    '''Delete a list of keys from a dictionary'''
+    for key in keys:
+        o.pop(key, None)
 
 files = glob(f"{TRANSLATIONS_PATH}/*.json")
 
 with open(f"{TRANSLATIONS_PATH}/en.json", encoding="utf-8") as f:
-    en = json.load(f)
+    en = json.load(f, object_pairs_hook=OrderedDict)
 
 sync(en["entity"]["sensor"], en["entity"]["select"], "en.entity.sensor", "en.entity.select")
 
@@ -63,10 +69,13 @@ for file in files:
         # Sync between the sensor and select nodes, just in case someone didn't follow the instructions
         sync(translation["entity"]["sensor"], translation["entity"]["select"], f"{basefile}.entity.sensor", f"{basefile}.entity.select")
         # overwrite the select translations with sensro translations
-        translation["entity"]["select"] = translation["entity"]["sensor"]
+        translation["entity"]["select"] = copy.deepcopy(translation["entity"]["sensor"])
+
+        # Clean up redundant nodes
+        cleanup(translation["entity"]["select"], ["homeconnect_status"])
 
         with open(file, encoding="utf-8", mode="w") as f:
-            json.dump(translation, f, indent=2, sort_keys=True, ensure_ascii=False)
+            json.dump(translation, f, indent=2, sort_keys=False, ensure_ascii=False)
 
 with open(f"{TRANSLATIONS_PATH}/en.json", encoding="utf-8", mode="w") as f:
     json.dump(en, f, indent=2, sort_keys=True, ensure_ascii=False)
