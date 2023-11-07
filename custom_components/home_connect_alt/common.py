@@ -11,16 +11,16 @@ from .const import CONF_NAME_TEMPLATE, DOMAIN, ENTITY_SETTINGS, CONF_ENTITY_SETT
 
 _LOGGER = logging.getLogger(__name__)
 
-def is_boolean_enum(values:list[str]) -> bool:
-    """ Check if the list of enum values represents a boolean on/off option"""
-    if not values or len(values) != 2:
+
+def is_boolean_enum(values: list[str]) -> bool:
+    """Check if the list of enum values represents a boolean on/off option."""
+
+    if len(values) != 2:
         return False
 
-    for v in values:
-        v = v.lower()
-        if not v.endswith(".off") and not v.endswith(".on"):
-            return False
-    return True
+    options = [v.lower() for v in values]
+    return all(option in ["on", "off"] for option in options)
+
 
 class EntityBase(ABC):
     """Base class with common methods for all the entities """
