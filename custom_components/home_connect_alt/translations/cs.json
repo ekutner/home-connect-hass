@@ -490,7 +490,12 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "Nastavená teplota mrazničky",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "Nastavená teplota chladničky",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "Super mód mrazničky",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super mód chladničky"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super mód chladničky",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
         }
       },
       "statuses": {
@@ -911,7 +916,12 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "Nastavená teplota mrazničky",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "Nastavená teplota chladničky",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "Super mód mrazničky",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super mód chladničky"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super mód chladničky",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
         }
       },
       "statuses": {

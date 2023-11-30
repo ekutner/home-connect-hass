@@ -490,7 +490,12 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "מקפיא: טמפרטורה",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "מקרר: טמפרטורה",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "הקפאה מהירה",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "קירור מהיר"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "קירור מהיר",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
         }
       },
       "statuses": {
@@ -909,7 +914,12 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "מקפיא: טמפרטורה",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "מקרר: טמפרטורה",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "הקפאה מהירה",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "קירור מהיר"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "קירור מהיר",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
         }
       },
       "statuses": {

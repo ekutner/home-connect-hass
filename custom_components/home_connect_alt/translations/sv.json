@@ -490,7 +490,12 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "Setpoint Temperature Freezer",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "Setpoint Temperature Refrigerator",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "Super Mode Freezer",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super Mode Refrigerator"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super Mode Refrigerator",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
         }
       },
       "statuses": {
@@ -906,7 +911,12 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "Setpoint Temperature Freezer",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "Setpoint Temperature Refrigerator",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "Super Mode Freezer",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super Mode Refrigerator"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super Mode Refrigerator",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
         }
       },
       "statuses": {

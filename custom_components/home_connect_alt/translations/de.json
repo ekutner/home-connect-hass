@@ -490,7 +490,12 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "Solltemperatur Gefrierschrank",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "Solltemperatur Kühlschrank",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "Blitzgefrieren",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Blitzkühlen"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Blitzkühlen",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
         }
       },
       "statuses": {
@@ -911,7 +916,12 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "Solltemperatur Gefrierschrank",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "Solltemperatur Kühlschrank",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "Blitzgefrieren",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Blitzkühlen"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Blitzkühlen",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
         }
       },
       "statuses": {

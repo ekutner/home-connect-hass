@@ -490,7 +490,12 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "設定冷凍溫度",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "設定冷藏溫度",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "超級冷凍溫度",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "超級冷藏溫度"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "超級冷藏溫度",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
         }
       },
       "statuses": {
@@ -908,7 +913,12 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "設定冷凍溫度",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "設定冷藏溫度",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "超級冷凍溫度",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "超級冷藏溫度"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "超級冷藏溫度",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
         }
       },
       "statuses": {

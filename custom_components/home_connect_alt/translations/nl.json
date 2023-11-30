@@ -490,7 +490,12 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "Instelpunt Temperatuur Vriezer",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "Instelpunt Temperatuur Vriezer Koelkast",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "Super Modus Vriezer",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super Modus Koelkast"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super Modus Koelkast",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
         }
       },
       "statuses": {
@@ -908,7 +913,12 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "Instelpunt Temperatuur Vriezer",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "Instelpunt Temperatuur Vriezer Koelkast",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "Super Modus Vriezer",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super Modus Koelkast"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super Modus Koelkast",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
         }
       },
       "statuses": {
