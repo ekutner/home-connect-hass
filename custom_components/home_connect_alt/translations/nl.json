@@ -1,27 +1,27 @@
 {
   "config": {
     "abort": {
-      "already_configured": "Account is already configured",
-      "already_in_progress": "Configuration flow is already in progress",
-      "cannot_connect": "Failed to connect",
-      "timeout_connect": "Timeout establishing connection",
-      "oauth_error": "Received invalid token data",
+      "already_configured": "Account is al ingesteld",
+      "already_in_progress": "Configuratie flow is al gestart",
+      "cannot_connect": "Problemen met verbinden",
+      "timeout_connect": "Timeout verbinding maken",
+      "oauth_error": "Ongeldige token data ontvangen",
       "missing_configuration": "Het component is niet geconfigureerd. Volg de documentatie.",
-      "reauth_successful": "Re-authentication was successful",
-      "invalid_access_token": "Invalid access token",
-      "unknown": "Unexpected error"
+      "reauth_successful": "Het-authenticatie was successvol",
+      "invalid_access_token": "Ongeldige access token",
+      "unknown": "Onverwachte error"
     },
     "create_entry": {
       "default": "Succesvol geverifieerd"
     },
     "step": {
       "user": {
-        "title": "Select Server",
+        "title": "Selecteer Server",
         "data": {
           "api_host": "Home Connect Server"
         },
         "data_description": {
-          "api_host": "Use China only if you are located there, otherwise use Default"
+          "api_host": "Gebruik China alleen wanneer u zich daar bevindt, gebruik anders Default"
         }
       },
       "auth": {
@@ -36,23 +36,23 @@
   "options": {
     "step": {
       "init": {
-        "title": "Advanced settings",
+        "title": "Geavanceerde installeingen",
         "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
         "data": {
-          "language": "Language code",
-          "translation_mode": "Translation mode",
+          "language": "Taal code",
+          "translation_mode": "Vertalings mode",
           "name_template": "Entity name template",
           "log_mode": "Verbose log mode"
         },
         "data_description": {
-          "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
+          "language": "Gebruik alleen [language codes](https://api-docs.home-connect.com/general/#supported-languages) ondersteund door Home Connect",
           "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply"
         }
       }
     }
   },
   "application_credentials": {
-    "description": "Follow the setup instructions in the integration's [README]({more_info_url}) file before continuing\n\n"
+    "description": "Volg de instructies in de integratie [README]({more_info_url}) file voor u verder gaat\n\n"
   },
   "selector": {
     "api_host": {
@@ -77,16 +77,16 @@
   "entity": {
     "button": {
       "start_program": {
-        "name": "Start Program"
+        "name": "Start Programma"
       },
       "pause_program": {
-        "name": "Pause Program"
+        "name": "Pauseer Programma"
       },
       "resume_program": {
-        "name": "Resume Program"
+        "name": "Vervolg Programma"
       },
       "stop_program": {
-        "name": "Stop Program"
+        "name": "Stop Programma"
       },
       "hc_refresh": {
         "name": "Home Connect Refresh"
