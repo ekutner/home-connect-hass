@@ -1,58 +1,58 @@
 {
   "config": {
     "abort": {
-      "already_configured": "Account is already configured",
-      "already_in_progress": "Configuration flow is already in progress",
-      "cannot_connect": "Failed to connect",
-      "timeout_connect": "Timeout establishing connection",
-      "oauth_error": "Received invalid token data",
+      "already_configured": "Account is al ingesteld",
+      "already_in_progress": "Configuratie flow is al bezig",
+      "cannot_connect": "Verbinden mislukt",
+      "timeout_connect": "Verbinding timeout ",
+      "oauth_error": "Invalide token data ontvangen",
       "missing_configuration": "Het component is niet geconfigureerd. Volg de documentatie.",
-      "reauth_successful": "Re-authentication was successful",
-      "invalid_access_token": "Invalid access token",
-      "unknown": "Unexpected error"
+      "reauth_successful": "Re-authentication gelukt",
+      "invalid_access_token": "Ongeldig access token",
+      "unknown": "Onverwachte foutmelding"
     },
     "create_entry": {
       "default": "Succesvol geverifieerd"
     },
     "step": {
       "user": {
-        "title": "Select Server",
+        "title": "Kies server",
         "data": {
           "api_host": "Home Connect Server"
         },
         "data_description": {
-          "api_host": "Use China only if you are located there, otherwise use Default"
+          "api_host": "Kies Default tenzij je in China bent."
         }
       },
       "auth": {
         "title": "Link Home Connect Account"
       },
       "reauth_confirm": {
-        "title": "Reauthenticate integration",
-        "description": "The Home Connect integration needs to re-authenticate your account"
+        "title": "Reauthenticatie integration",
+        "description": "De Home Connect integration moet je account her-authenticeren"
       }
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Advanced settings",
-        "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
+        "title": "Geavanceerde instellingen",
+        "description": "Bekijk de configuratie sectie op [README](https://github.com/ekutner/home-connect-hass) voor uitleg over deze instellingen",
         "data": {
-          "language": "Language code",
-          "translation_mode": "Translation mode",
-          "name_template": "Entity name template",
+          "language": "Taal code",
+          "translation_mode": "Vertalings mode",
+          "name_template": "Entiteit naam template",
           "log_mode": "Verbose log mode"
         },
         "data_description": {
-          "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
-          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply"
+          "language": "Gebruik enkel [language codes](https://api-docs.home-connect.com/general/#supported-languages) ondersteund door Home Connect",
+          "log_mode": "Debug logging moet aan staan in configuration.yaml voor deze setting."
         }
       }
     }
   },
   "application_credentials": {
-    "description": "Follow the setup instructions in the integration's [README]({more_info_url}) file before continuing\n\n"
+    "description": "Volg de setup instructies in de integrattie's [README]({more_info_url}) file voor je verder gaat\n\n"
   },
   "selector": {
     "api_host": {
@@ -63,7 +63,7 @@
     },
     "translation_mode": {
       "options": {
-        "local": "Local",
+        "local": "Lokaal",
         "server": "Server"
       }
     }
@@ -107,8 +107,8 @@
           "BSH.Common.Root.ActiveProgram": "Actief Programma",
           "BSH.Common.Root.SelectedProgram": "Geselected Programma",
           "ConsumerProducts.CleaningRobot.Option.CleaningMode": "Reinigingsmodus",
-          "ConsumerProducts.CleaningRobot.Option.ProcessPhase": "Process Fase",
-          "ConsumerProducts.CleaningRobot.Option.ReferenceMapId": "Reference Map Id",
+          "ConsumerProducts.CleaningRobot.Option.ProcessPhase": "Voortgang Fase",
+          "ConsumerProducts.CleaningRobot.Option.ReferenceMapId": "Referentie Map Id",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.CoffeeGround": "Koffie Gemalen",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.DoubleShot": "Double Shot",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.DoubleShotPlus": "Double Shot +",
@@ -122,12 +122,12 @@
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.StrongPlus": "Sterk +",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.TripleShot": "Triple Shot",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.TripleShotPlus": "Triple Shot +",
-          "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.VeryMild": "Slappe Bak",
+          "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.VeryMild": "Heel mild",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.VeryStrong": "Heel Sterk",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.VeryStrongPlus": "Heel Sterk +",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Left": "Links",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Right": "Rechts",
-          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio": "Coffee Milk Ratio",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio": "Koffie Milk Ratio",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.88C": "88°C",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.90C": "90°C",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.92C": "92°C",
