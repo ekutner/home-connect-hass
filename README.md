@@ -230,44 +230,44 @@ In contrast, setting ```sensor_value_translation: server``` will override this b
 </br>
 
 # Troubleshooting and FAQ
-* **I don't get the installation dialogs mentioned in the [Installation](#installation) section above***
+* **I don't get the installation dialogs mentioned in the [Installation](#installation) section above**  
   These dialogs will only show up the first time you install the integration and only if you do not have the *client_id* and *client_secret* configured in your configuration.yaml file.
   The make it appear again make sure the integration is uninstlled, then go to the *Settings -> Devices & Services* page on Home Assistant, then click the three-dot-menu on the top righthand corner and select "Application credentials". Locate the previous credentials row for this integration and delete it.
-* **I get errors on the browser window that pops-up after installing the integration for the first time**
+* **I get errors on the browser window that pops-up after installing the integration for the first time**  
   This popup window is trying to log you into the Home Connect website to establish a connection with the integration. If you get an error at this stage it means you didn't follow the setup instuctions carefully enough, so make sure that you do.
   Also make sure that you open https://my.home-assistant.io/ and configure the URL of your Home-Assistant server.  
   **NOTE:** If you are modifying an existing Home-Connect App then it may take up to 2 hours for the changes to take effect, so make sure you wait long enough.
 
-* **Some of my appliances are not showing up after I added the integration**
+* **Some of my appliances are not showing up after I added the integration**  
   This is most commonly caused by two reasons:
   1. The appliance must be powered on and connected to the Home Connect service to be discovered. Once the missing devices are turned on and connected, they will automatically be discovered and added by the integration.
   This can be verified in the Home Connect mobile app **but only while the wifi on the phone is turned OFF**. If the devices are active in the mobile app while the phone's wifi is turned off then please open an issue with a debug log to report it.
   2. Due to some unreasonable rate limits set by BSH, there is a limit of about 3
   appliances loaded per minute. If you have more, expect the initial load to take longer. The integration will wait for the service to become available and continue loading the rest of the appliances. You may have to refresh your screen to see them in Home Assistant after they were added.
 
-* **The Home Connect mobile app has some controls/data/events that are missing in Home Assistant**
+* **The Home Connect mobile app has some controls/data/events that are missing in Home Assistant**  
   This integration doesn't know anything about any specific appliance, it is using the official Home Connect API to explore the available options for each appliance and automatically exposes them as appropriate Home Assistant entities. The type of entities is automatically determined by information received from the API. The Home Connect mobile app is using a private API that is not available to the public and has more capabilities than those in the official API. Therefor it is expected that there will be some data, controls or events that are available in the app but not in the integration, this is NOT a problem with the integration but a limitation of the API.
   **DO NOT open bugs or feature requests related to such issues unless you can demonstrate that the missing item is actually available in the API**
 
-* **I've restarted Home Assistant a few times and now all my appliances are unavailable**
+* **I've restarted Home Assistant a few times and now all my appliances are unavailable**  
   This is, again, related to the Home Connect rate limits. Every time you restart Home Assistant the integration makes a few API calls to the service and if that happens too often it may block for up to 24 hours. The best way to fix this is to wait a day and restart Home Assistant again.
 
-* **I select a program or option but nothing happens on the appliance**
+* **I select a program or option but nothing happens on the appliance**  
   Make sure the appliance is turned on. Typically the integration will automatically detect appliances that are turned off or disconnected from the network and disable them in Home Assistant but it may happen that it fails to detect that and then attempting make any changes to setting will fail.
 
-* **I try to start the selected program by pressing the button but nothing happens**
+* **I try to start the selected program by pressing the button but nothing happens**  
   Make sure Remote Start is enabled on the appliance
 
-* **Sensor related to program progress are showing up as unavailable**
+* **Sensor related to program progress are showing up as unavailable**  
   These sensors only become available when the appliance is running a program.
 
-* **All the program, option and settings selection boxes, switches and numbers are disabled**
+* **All the program, option and settings selection boxes, switches and numbers are disabled**  
   Make sure that *Remote Control* is allowed on the appliance. It is typically enabled by default but gets temporarily disabled when changing setting on the appliance itself.
 
-* **The *Start* button is disabled**
+* **The *Start* button is disabled**  
   Make sure that *Remote Control Start* is allowed on the appliance, it's disabled by default.
 
-* **Sensor values or select boxes have values like BSH.Common.EnumType.PowerState.Off**
+* **Sensor values or select boxes have values like BSH.Common.EnumType.PowerState.Off**  
   Start by reading where these values are coming from in the explanation of the *sensor_value_translation* config param above. You can also set that parameter as a workaround for missing translations in sensor values.
   Regardless if you decide to use the language parameter or not it would be great if you can report these values so they can be properly translated. Ideally, if you know how, please update the translation files directly (at least the English ones) and create a PR. If you don't know how then you can add them to issue [#26](https://github.com/ekutner/home-connect-hass/issues/26) and I will add them to the translation files.
 
