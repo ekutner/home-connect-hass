@@ -142,6 +142,10 @@ These options will only show up when the user has enablde "Advanced mode" in the
 * **Log mode** - 
   Defines the log verbosity level. Should normally be set to 0. Don't change this unless asked to do so while working on a bug you reported.
 
+* **SSE Timeout** -  
+  Define the timeout, in minutes, to renew the event stream connection with the HC server.  
+  The default value of 15 minutes is designed to prevent situations of zombie streams that appear to be connected but don't receive events from HC.
+
 ## Options settable in configuration.yaml:
 These very advanced options are only settable in the configuration.yaml file.
 Generally you should not change them unless you know what you're doing.
