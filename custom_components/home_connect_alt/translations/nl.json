@@ -48,7 +48,7 @@
         "data_description": {
           "language": "Gebruik enkel [language codes](https://api-docs.home-connect.com/general/#supported-languages) ondersteund door Home Connect",
           "log_mode": "Debug logging moet aan staan in configuration.yaml voor deze setting.",
-          "sse_timeout": "Timeout for refreshing the SSE connection (0=disabled)"
+          "sse_timeout": "Timeout in minutes for refreshing the SSE connection (0=disabled)"
         }
       }
     }

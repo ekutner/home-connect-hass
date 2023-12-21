@@ -36,6 +36,40 @@
       }
     }
   },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "language": "Language code",
+          "log_mode": "Verbose log mode",
+          "name_template": "Entity name template",
+          "sse_timeout": "SSE Timeout",
+          "translation_mode": "Translation mode"
+        },
+        "data_description": {
+          "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
+          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply",
+          "sse_timeout": "Timeout for refreshing the SSE connection (0=disabled)"
+        },
+        "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
+        "title": "Advanced settings"
+      }
+    }
+  },
+  "selector": {
+    "api_host": {
+      "options": {
+        "https://api.home-connect.cn": "China",
+        "https://api.home-connect.com": "Default"
+      }
+    },
+    "translation_mode": {
+      "options": {
+        "local": "Local",
+        "server": "Server"
+      }
+    }
+  },
   "device_automation": {
     "trigger_type": {
       "program_finished": "Program Finished",
@@ -918,40 +952,6 @@
           "Cooking.Hob.EnumType.PowerLevel.Off": "Off",
           "Cooking.Hob.EnumType.PowerLevel.On": "On"
         }
-      }
-    }
-  },
-  "options": {
-    "step": {
-      "init": {
-        "data": {
-          "language": "Language code",
-          "log_mode": "Verbose log mode",
-          "name_template": "Entity name template",
-          "sse_timeout": "SSE Timeout",
-          "translation_mode": "Translation mode"
-        },
-        "data_description": {
-          "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
-          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply",
-          "sse_timeout": "Timeout for refreshing the SSE connection (0=disabled)"
-        },
-        "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
-        "title": "Advanced settings"
-      }
-    }
-  },
-  "selector": {
-    "api_host": {
-      "options": {
-        "https://api.home-connect.cn": "China",
-        "https://api.home-connect.com": "Default"
-      }
-    },
-    "translation_mode": {
-      "options": {
-        "local": "Local",
-        "server": "Server"
       }
     }
   }

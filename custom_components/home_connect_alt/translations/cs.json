@@ -48,7 +48,7 @@
         "data_description": {
           "language": "Používejte pouze [kódy jazyků](https://api-docs.home-connect.com/general/#supported-languages) podporované službou Home Connect.",
           "log_mode": "Aby se toto nastavení použilo, musí být v souboru configuration.yaml povoleno protokolování ladění.",
-          "sse_timeout": "Timeout for refreshing the SSE connection (0=disabled)"
+          "sse_timeout": "Timeout in minutes for refreshing the SSE connection (0=disabled)"
         }
       }
     }
