@@ -255,6 +255,7 @@
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Espresso": "Espresso",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.EspressoDoppio": "Espresso doppio",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.EspressoMacchiato": "Espresso Macchiato",
+          "ConsumerProducts.CoffeeMaker.Program.Beverage.HotWater": "Heißes Wasser",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.LatteMacchiato": "Latte Macchiato",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.MilkFroth": "Milchschaum",
           "ConsumerProducts.CoffeeMaker.Program.Beverage.Ristretto": "Ristretto",
