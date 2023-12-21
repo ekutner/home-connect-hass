@@ -50,11 +50,19 @@ def cleanup(o:dict, keys:list[str]):
     for key in keys:
         o.pop(key, None)
 
+def recursive_sort_keys(o:dict) -> dict:
+    for k,v in o.items():
+        if isinstance(v, dict):
+            o[k] = recursive_sort_keys(o[k])
+    return dict(sorted(o.items()))
+
+
 files = glob(f"{TRANSLATIONS_PATH}/*.json")
 
 with open(f"{TRANSLATIONS_PATH}/en.json", encoding="utf-8") as f:
     en = json.load(f, object_pairs_hook=OrderedDict)
 
+en["entity"]["sensor"] = recursive_sort_keys(en["entity"]["sensor"])
 sync(en["entity"]["sensor"], en["entity"]["select"], "en.entity.sensor", "en.entity.select")
 
 en_changed = False
@@ -68,6 +76,7 @@ for file in files:
         sync(en["entity"]["sensor"], translation["entity"]["sensor"], "en.entity.sensor", f"{basefile}.entity.sensor")
         # Sync between the sensor and select nodes, just in case someone didn't follow the instructions
         sync(translation["entity"]["sensor"], translation["entity"]["select"], f"{basefile}.entity.sensor", f"{basefile}.entity.select")
+        translation["entity"]["sensor"] = recursive_sort_keys(translation["entity"]["sensor"])
         # overwrite the select translations with sensro translations
         translation["entity"]["select"] = copy.deepcopy(translation["entity"]["sensor"])
 
@@ -78,6 +87,8 @@ for file in files:
             json.dump(translation, f, indent=2, sort_keys=False, ensure_ascii=False)
 
 with open(f"{TRANSLATIONS_PATH}/en.json", encoding="utf-8", mode="w") as f:
+    en["entity"]["sensor"] = recursive_sort_keys(en["entity"]["sensor"])
+    en["entity"]["select"] = recursive_sort_keys(en["entity"]["select"])
     json.dump(en, f, indent=2, sort_keys=True, ensure_ascii=False)
 
 
