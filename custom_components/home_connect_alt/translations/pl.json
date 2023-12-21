@@ -42,11 +42,13 @@
           "language": "Language code",
           "translation_mode": "Translation mode",
           "name_template": "Entity name template",
-          "log_mode": "Verbose log mode"
+          "log_mode": "Verbose log mode",
+          "sse_timeout": "SSE Timeout"
         },
         "data_description": {
           "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
-          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply"
+          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply",
+          "sse_timeout": "Timeout for refreshing the SSE connection (0=disabled)"
         }
       }
     }
@@ -320,12 +322,14 @@
           "Dishcare.Dishwasher.Program.MachineCare": "Czyszczenie zmywarki",
           "Dishcare.Dishwasher.Program.MagicDaily": "Codzienny Magiczny",
           "Dishcare.Dishwasher.Program.MaximumCleaning": "Maksymalne czyszczenie",
+          "Dishcare.Dishwasher.Program.MixedLoad": "Mixed Load",
           "Dishcare.Dishwasher.Program.NightWash": "Nocny 50°C",
           "Dishcare.Dishwasher.Program.Normal45": "Normalny 45°C",
           "Dishcare.Dishwasher.Program.Normal65": "Normalny 65°C",
           "Dishcare.Dishwasher.Program.PreRinse": "Płukanie wstępne",
           "Dishcare.Dishwasher.Program.Quick45": "Szybki 45°C",
           "Dishcare.Dishwasher.Program.Quick65": "Szybki 65°C",
+          "Dishcare.Dishwasher.Program.QuickD": "Quick Wash & Dry",
           "Dishcare.Dishwasher.Program.SteamFresh": "Świeża para",
           "Dishcare.Dishwasher.Program.Super60": "Super 60°C",
           "LaundryCare.Dryer.Program.AntiShrink": "Suszenie: Antyskurcz",
@@ -476,6 +480,11 @@
           "Cooking.Oven.EnumType.AddedSteam.Off": "Wyłączony",
           "Cooking.Oven.EnumType.AddedSteam.On": "Włączony",
           "Cooking.Oven.Setting.SabbathMode": "Tryb szabasowy",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push",
           "Refrigeration.Common.Setting.BottleCooler.SetpointTemperature": "Chłodziarka do butelek",
           "Refrigeration.Common.Setting.ChillerCommon.SetpointTemperature": "Chłodzenie centralne",
           "Refrigeration.Common.Setting.ChillerLeft.SetpointTemperature": "Chłodzenie lewej strony",
@@ -490,12 +499,7 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "Temperatura zadana w zamrażalce",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "Temperatura zadana w lodówce",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "Super zamrażanie",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super chłodzenie",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super chłodzenie"
         }
       },
       "statuses": {
@@ -517,6 +521,9 @@
       }
     },
     "sensor": {
+      "homeconnect_status": {
+        "name": "Home Connect Status"
+      },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "Czas trwania",
@@ -741,12 +748,14 @@
           "Dishcare.Dishwasher.Program.MachineCare": "Czyszczenie zmywarki",
           "Dishcare.Dishwasher.Program.MagicDaily": "Codzienny Magiczny",
           "Dishcare.Dishwasher.Program.MaximumCleaning": "Maksymalne czyszczenie",
+          "Dishcare.Dishwasher.Program.MixedLoad": "Mixed Load",
           "Dishcare.Dishwasher.Program.NightWash": "Nocny 50°C",
           "Dishcare.Dishwasher.Program.Normal45": "Normalny 45°C",
           "Dishcare.Dishwasher.Program.Normal65": "Normalny 65°C",
           "Dishcare.Dishwasher.Program.PreRinse": "Płukanie wstępne",
           "Dishcare.Dishwasher.Program.Quick45": "Szybki 45°C",
           "Dishcare.Dishwasher.Program.Quick65": "Szybki 65°C",
+          "Dishcare.Dishwasher.Program.QuickD": "Quick Wash & Dry",
           "Dishcare.Dishwasher.Program.SteamFresh": "Świeża para",
           "Dishcare.Dishwasher.Program.Super60": "Super 60°C",
           "LaundryCare.Dryer.Program.AntiShrink": "Suszenie: Antyskurcz",
@@ -897,6 +906,11 @@
           "Cooking.Oven.EnumType.AddedSteam.Off": "Wyłączony",
           "Cooking.Oven.EnumType.AddedSteam.On": "Włączony",
           "Cooking.Oven.Setting.SabbathMode": "Tryb szabasowy",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push",
           "Refrigeration.Common.Setting.BottleCooler.SetpointTemperature": "Chłodziarka do butelek",
           "Refrigeration.Common.Setting.ChillerCommon.SetpointTemperature": "Chłodzenie centralne",
           "Refrigeration.Common.Setting.ChillerLeft.SetpointTemperature": "Chłodzenie lewej strony",
@@ -911,12 +925,7 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "Temperatura zadana w zamrażalce",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "Temperatura zadana w lodówce",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "Super zamrażanie",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super chłodzenie",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super chłodzenie"
         }
       },
       "statuses": {
@@ -935,9 +944,6 @@
           "BSH.Common.EnumType.PowerState.On": "Włączony",
           "BSH.Common.EnumType.PowerState.Standby": "Wyłączony"
         }
-      },
-      "homeconnect_status": {
-        "name": "Home Connect Status"
       }
     }
   }

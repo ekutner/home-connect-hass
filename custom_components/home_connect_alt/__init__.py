@@ -38,6 +38,7 @@ HC_CONFIG_SCHEMA = vol.Schema(
         vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(str, None),
         vol.Optional(CONF_NAME_TEMPLATE, default=CONF_NAME_TEMPLATE_DEFAULT): str,
         vol.Optional(CONF_LOG_MODE, default=0): int,
+        vol.Optional(CONF_SSE_TIMEOUT, default=CONF_SSE_TIMEOUT_DEFAULT): int,
         vol.Optional(CONF_ENTITY_SETTINGS, default={}): vol.Any(dict, None),
         vol.Optional(CONF_APPLIANCE_SETTINGS, default={}): vol.Any(dict, None)
     }
@@ -134,7 +135,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     #         return False
     ConditionalLogger.mode(logmode)
     disabled_appliances = [haid for haid in conf[CONF_APPLIANCE_SETTINGS] if "disabled" in conf[CONF_APPLIANCE_SETTINGS][haid] and conf[CONF_APPLIANCE_SETTINGS][haid]["disabled"] ] if conf[CONF_APPLIANCE_SETTINGS] else []
-    homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang, disabled_appliances=disabled_appliances)
+    homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang, disabled_appliances=disabled_appliances, sse_timeout=conf[CONF_SSE_TIMEOUT])
 
     conf[entry.entry_id] = auth
     conf["homeconnect"] = homeconnect

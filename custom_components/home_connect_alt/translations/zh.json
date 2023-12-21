@@ -42,11 +42,13 @@
           "language": "Language code",
           "translation_mode": "Translation mode",
           "name_template": "Entity name template",
-          "log_mode": "Verbose log mode"
+          "log_mode": "Verbose log mode",
+          "sse_timeout": "SSE Timeout"
         },
         "data_description": {
           "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
-          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply"
+          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply",
+          "sse_timeout": "Timeout for refreshing the SSE connection (0=disabled)"
         }
       }
     }
@@ -320,12 +322,14 @@
           "Dishcare.Dishwasher.Program.MachineCare": "機器保養",
           "Dishcare.Dishwasher.Program.MagicDaily": "Magic Daily",
           "Dishcare.Dishwasher.Program.MaximumCleaning": "最大清潔度洗",
+          "Dishcare.Dishwasher.Program.MixedLoad": "Mixed Load",
           "Dishcare.Dishwasher.Program.NightWash": "夜間洗程洗",
           "Dishcare.Dishwasher.Program.Normal45": "正常洗 45°C",
           "Dishcare.Dishwasher.Program.Normal65": "正常洗 65°C",
           "Dishcare.Dishwasher.Program.PreRinse": "預洗",
           "Dishcare.Dishwasher.Program.Quick45": "快洗 45°C",
           "Dishcare.Dishwasher.Program.Quick65": "快洗 65°C",
+          "Dishcare.Dishwasher.Program.QuickD": "Quick Wash & Dry",
           "Dishcare.Dishwasher.Program.SteamFresh": "噴射洗",
           "Dishcare.Dishwasher.Program.Super60": "超級洗 60°C",
           "LaundryCare.Dryer.Program.AntiShrink": "烘乾: 防縮水",
@@ -476,6 +480,11 @@
           "Cooking.Oven.EnumType.AddedSteam.Off": "Added Steam Off",
           "Cooking.Oven.EnumType.AddedSteam.On": "Added Steam Oמ",
           "Cooking.Oven.Setting.SabbathMode": "安息日模式",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push",
           "Refrigeration.Common.Setting.BottleCooler.SetpointTemperature": "奶瓶冷卻器",
           "Refrigeration.Common.Setting.ChillerCommon.SetpointTemperature": "冷水機",
           "Refrigeration.Common.Setting.ChillerLeft.SetpointTemperature": "左冷水機",
@@ -490,12 +499,7 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "設定冷凍溫度",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "設定冷藏溫度",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "超級冷凍溫度",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "超級冷藏溫度",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "超級冷藏溫度"
         }
       },
       "statuses": {
@@ -519,6 +523,9 @@
       }
     },
     "sensor": {
+      "homeconnect_status": {
+        "name": "Home Connect Status"
+      },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "持續時間",
@@ -743,12 +750,14 @@
           "Dishcare.Dishwasher.Program.MachineCare": "機器保養",
           "Dishcare.Dishwasher.Program.MagicDaily": "Magic Daily",
           "Dishcare.Dishwasher.Program.MaximumCleaning": "最大清潔度洗",
+          "Dishcare.Dishwasher.Program.MixedLoad": "Mixed Load",
           "Dishcare.Dishwasher.Program.NightWash": "夜間洗程洗",
           "Dishcare.Dishwasher.Program.Normal45": "正常洗 45°C",
           "Dishcare.Dishwasher.Program.Normal65": "正常洗 65°C",
           "Dishcare.Dishwasher.Program.PreRinse": "預洗",
           "Dishcare.Dishwasher.Program.Quick45": "快洗 45°C",
           "Dishcare.Dishwasher.Program.Quick65": "快洗 65°C",
+          "Dishcare.Dishwasher.Program.QuickD": "Quick Wash & Dry",
           "Dishcare.Dishwasher.Program.SteamFresh": "噴射洗",
           "Dishcare.Dishwasher.Program.Super60": "超級洗 60°C",
           "LaundryCare.Dryer.Program.AntiShrink": "烘乾: 防縮水",
@@ -899,6 +908,11 @@
           "Cooking.Oven.EnumType.AddedSteam.Off": "Added Steam Off",
           "Cooking.Oven.EnumType.AddedSteam.On": "Added Steam Oמ",
           "Cooking.Oven.Setting.SabbathMode": "安息日模式",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push",
           "Refrigeration.Common.Setting.BottleCooler.SetpointTemperature": "奶瓶冷卻器",
           "Refrigeration.Common.Setting.ChillerCommon.SetpointTemperature": "冷水機",
           "Refrigeration.Common.Setting.ChillerLeft.SetpointTemperature": "左冷水機",
@@ -913,12 +927,7 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "設定冷凍溫度",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "設定冷藏溫度",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "超級冷凍溫度",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "超級冷藏溫度",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "超級冷藏溫度"
         }
       },
       "statuses": {
@@ -939,9 +948,6 @@
           "Cooking.Hob.EnumType.PowerLevel.Off": "關閉",
           "Cooking.Hob.EnumType.PowerLevel.On": "開啟"
         }
-      },
-      "homeconnect_status": {
-        "name": "Home Connect Status"
       }
     }
   }

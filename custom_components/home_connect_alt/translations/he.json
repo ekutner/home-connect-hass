@@ -42,11 +42,13 @@
           "language": "קוד שפה",
           "translation_mode": "מצב תרגום",
           "name_template": "תבנית שמות ישויות",
-          "log_mode": "מצב כתיבת לוג"
+          "log_mode": "מצב כתיבת לוג",
+          "sse_timeout": "SSE חידוש קשר"
         },
         "data_description": {
           "language": "יש להשתמש רק [בקודי שפה](https://api-docs.home-connect.com/general/#supported-languages) הנתמכים על ידי Home Connect",
-          "log_mode": "יש להפעיל כתיבת לוג דיבאג בקובץ configuration.yaml כדי שהגדרה זו תפעל"
+          "log_mode": "יש להפעיל כתיבת לוג דיבאג בקובץ configuration.yaml כדי שהגדרה זו תפעל",
+          "sse_timeout": "זמן לחידוש קשר SSE (0=כבוי)"
         }
       }
     }
@@ -320,12 +322,14 @@
           "Dishcare.Dishwasher.Program.MachineCare": "טיפול במכונה",
           "Dishcare.Dishwasher.Program.MagicDaily": "Magic Daily",
           "Dishcare.Dishwasher.Program.MaximumCleaning": "ניקיון מירבי",
+          "Dishcare.Dishwasher.Program.MixedLoad": "תוכנית כללית",
           "Dishcare.Dishwasher.Program.NightWash": "רחצת לילה",
           "Dishcare.Dishwasher.Program.Normal45": "רגיל 45",
           "Dishcare.Dishwasher.Program.Normal65": "רגיל 65",
           "Dishcare.Dishwasher.Program.PreRinse": "שטיפה מראש",
           "Dishcare.Dishwasher.Program.Quick45": "אקספרס 45",
           "Dishcare.Dishwasher.Program.Quick65": "אקספרס 65",
+          "Dishcare.Dishwasher.Program.QuickD": "ניקוי וייבוש מהיר",
           "Dishcare.Dishwasher.Program.SteamFresh": "קיטור טרי",
           "Dishcare.Dishwasher.Program.Super60": "סופר 60",
           "LaundryCare.Dryer.Program.AntiShrink": "ייבוש: נגד כיווץ",
@@ -476,6 +480,11 @@
           "Cooking.Oven.EnumType.AddedSteam.Off": "תוספת אדים פעיל",
           "Cooking.Oven.EnumType.AddedSteam.On": "תוספת אדים כבוי",
           "Cooking.Oven.Setting.SabbathMode": "מצב שבת",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push",
           "Refrigeration.Common.Setting.BottleCooler.SetpointTemperature": "מקרר בקבוקים: טמפרטורה",
           "Refrigeration.Common.Setting.ChillerCommon.SetpointTemperature": "מקרר: טמפרטורה",
           "Refrigeration.Common.Setting.ChillerLeft.SetpointTemperature": "מקרר שמאלי: : טמפרטורה",
@@ -490,12 +499,7 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "מקפיא: טמפרטורה",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "מקרר: טמפרטורה",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "הקפאה מהירה",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "קירור מהיר",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "קירור מהיר"
         }
       },
       "statuses": {
@@ -744,12 +748,14 @@
           "Dishcare.Dishwasher.Program.MachineCare": "טיפול במכונה",
           "Dishcare.Dishwasher.Program.MagicDaily": "Magic Daily",
           "Dishcare.Dishwasher.Program.MaximumCleaning": "ניקיון מירבי",
+          "Dishcare.Dishwasher.Program.MixedLoad": "תוכנית כללית",
           "Dishcare.Dishwasher.Program.NightWash": "רחצת לילה",
           "Dishcare.Dishwasher.Program.Normal45": "רגיל 45",
           "Dishcare.Dishwasher.Program.Normal65": "רגיל 65",
           "Dishcare.Dishwasher.Program.PreRinse": "שטיפה מראש",
           "Dishcare.Dishwasher.Program.Quick45": "אקספרס 45",
           "Dishcare.Dishwasher.Program.Quick65": "אקספרס 65",
+          "Dishcare.Dishwasher.Program.QuickD": "ניקוי וייבוש מהיר",
           "Dishcare.Dishwasher.Program.SteamFresh": "קיטור טרי",
           "Dishcare.Dishwasher.Program.Super60": "סופר 60",
           "LaundryCare.Dryer.Program.AntiShrink": "ייבוש: נגד כיווץ",
@@ -900,6 +906,11 @@
           "Cooking.Oven.EnumType.AddedSteam.Off": "תוספת אדים פעיל",
           "Cooking.Oven.EnumType.AddedSteam.On": "תוספת אדים כבוי",
           "Cooking.Oven.Setting.SabbathMode": "מצב שבת",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push",
           "Refrigeration.Common.Setting.BottleCooler.SetpointTemperature": "מקרר בקבוקים: טמפרטורה",
           "Refrigeration.Common.Setting.ChillerCommon.SetpointTemperature": "מקרר: טמפרטורה",
           "Refrigeration.Common.Setting.ChillerLeft.SetpointTemperature": "מקרר שמאלי: : טמפרטורה",
@@ -914,12 +925,7 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "מקפיא: טמפרטורה",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "מקרר: טמפרטורה",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "הקפאה מהירה",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "קירור מהיר",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "קירור מהיר"
         }
       },
       "statuses": {

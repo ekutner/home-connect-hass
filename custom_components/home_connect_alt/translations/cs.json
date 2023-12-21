@@ -42,11 +42,13 @@
           "language": "Jazyk kódu",
           "translation_mode": "Režim překladu",
           "name_template": "Šablona názvu entity",
-          "log_mode": "Verbose log režim"
+          "log_mode": "Verbose log režim",
+          "sse_timeout": "SSE Timeout"
         },
         "data_description": {
           "language": "Používejte pouze [kódy jazyků](https://api-docs.home-connect.com/general/#supported-languages) podporované službou Home Connect.",
-          "log_mode": "Aby se toto nastavení použilo, musí být v souboru configuration.yaml povoleno protokolování ladění."
+          "log_mode": "Aby se toto nastavení použilo, musí být v souboru configuration.yaml povoleno protokolování ladění.",
+          "sse_timeout": "Timeout for refreshing the SSE connection (0=disabled)"
         }
       }
     }
@@ -320,12 +322,14 @@
           "Dishcare.Dishwasher.Program.MachineCare": "Péče o myčku",
           "Dishcare.Dishwasher.Program.MagicDaily": "Magic Daily",
           "Dishcare.Dishwasher.Program.MaximumCleaning": "Maximální čištění",
+          "Dishcare.Dishwasher.Program.MixedLoad": "Mixed Load",
           "Dishcare.Dishwasher.Program.NightWash": "Noční mytí",
           "Dishcare.Dishwasher.Program.Normal45": "Normální 45°C",
           "Dishcare.Dishwasher.Program.Normal65": "Normální 65°C",
           "Dishcare.Dishwasher.Program.PreRinse": "Předmytí",
           "Dishcare.Dishwasher.Program.Quick45": "Rychlé mytí 45°C",
           "Dishcare.Dishwasher.Program.Quick65": "Rychlé mytí 65°C",
+          "Dishcare.Dishwasher.Program.QuickD": "Quick Wash & Dry",
           "Dishcare.Dishwasher.Program.SteamFresh": "Čerstvá pára",
           "Dishcare.Dishwasher.Program.Super60": "Super 60°C",
           "LaundryCare.Dryer.Program.AntiShrink": "Sušení: Proti pomačkání",
@@ -476,6 +480,11 @@
           "Cooking.Oven.EnumType.AddedSteam.Off": "Přidaná pára vypnuto",
           "Cooking.Oven.EnumType.AddedSteam.On": "Přidaná pára zapnuto",
           "Cooking.Oven.Setting.SabbathMode": "Sabbath mód",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push",
           "Refrigeration.Common.Setting.BottleCooler.SetpointTemperature": "Chladič na láhve",
           "Refrigeration.Common.Setting.ChillerCommon.SetpointTemperature": "Společné chlazení",
           "Refrigeration.Common.Setting.ChillerLeft.SetpointTemperature": "Levé chlazení",
@@ -490,12 +499,7 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "Nastavená teplota mrazničky",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "Nastavená teplota chladničky",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "Super mód mrazničky",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super mód chladničky",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super mód chladničky"
         }
       },
       "statuses": {
@@ -746,12 +750,14 @@
           "Dishcare.Dishwasher.Program.MachineCare": "Péče o myčku",
           "Dishcare.Dishwasher.Program.MagicDaily": "Magic Daily",
           "Dishcare.Dishwasher.Program.MaximumCleaning": "Maximální čištění",
+          "Dishcare.Dishwasher.Program.MixedLoad": "Mixed Load",
           "Dishcare.Dishwasher.Program.NightWash": "Noční mytí",
           "Dishcare.Dishwasher.Program.Normal45": "Normální 45°C",
           "Dishcare.Dishwasher.Program.Normal65": "Normální 65°C",
           "Dishcare.Dishwasher.Program.PreRinse": "Předmytí",
           "Dishcare.Dishwasher.Program.Quick45": "Rychlé mytí 45°C",
           "Dishcare.Dishwasher.Program.Quick65": "Rychlé mytí 65°C",
+          "Dishcare.Dishwasher.Program.QuickD": "Quick Wash & Dry",
           "Dishcare.Dishwasher.Program.SteamFresh": "Čerstvá pára",
           "Dishcare.Dishwasher.Program.Super60": "Super 60°C",
           "LaundryCare.Dryer.Program.AntiShrink": "Sušení: Proti pomačkání",
@@ -902,6 +908,11 @@
           "Cooking.Oven.EnumType.AddedSteam.Off": "Přidaná pára vypnuto",
           "Cooking.Oven.EnumType.AddedSteam.On": "Přidaná pára zapnuto",
           "Cooking.Oven.Setting.SabbathMode": "Sabbath mód",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push",
           "Refrigeration.Common.Setting.BottleCooler.SetpointTemperature": "Chladič na láhve",
           "Refrigeration.Common.Setting.ChillerCommon.SetpointTemperature": "Společné chlazení",
           "Refrigeration.Common.Setting.ChillerLeft.SetpointTemperature": "Levé chlazení",
@@ -916,12 +927,7 @@
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureFreezer": "Nastavená teplota mrazničky",
           "Refrigeration.FridgeFreezer.Setting.SetpointTemperatureRefrigerator": "Nastavená teplota chladničky",
           "Refrigeration.FridgeFreezer.Setting.SuperModeFreezer": "Super mód mrazničky",
-          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super mód chladničky",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push"
+          "Refrigeration.FridgeFreezer.Setting.SuperModeRefrigerator": "Super mód chladničky"
         }
       },
       "statuses": {

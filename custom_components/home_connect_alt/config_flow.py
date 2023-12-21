@@ -146,12 +146,13 @@ class OptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
                         "translation_key": CONF_TRANSLATION_MODE
                     },
                 }),
+            vol.Optional(CONF_LOG_MODE, default=0): vol.All(int, vol.Range(min=0, max=7)),
         }
         if self.context.get("show_advanced_options"):
             data_schema.update(
                 {
                     vol.Optional(CONF_NAME_TEMPLATE, default=CONF_NAME_TEMPLATE_DEFAULT): str,
-                    vol.Optional(CONF_LOG_MODE, default=0): vol.All(int, vol.Range(min=0, max=7)),
+                    vol.Optional(CONF_SSE_TIMEOUT, default=CONF_SSE_TIMEOUT_DEFAULT): int,
 
                     # vol.Optional(CONF_APPLIANCE_SETTINGS): selector({
                     #     "device": {

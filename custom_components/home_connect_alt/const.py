@@ -24,6 +24,8 @@ CONF_SENSORS_TRANSLATION = "sensor_value_translation"
 CONF_NAME_TEMPLATE = "name_template"
 CONF_NAME_TEMPLATE_DEFAULT = "$brand $appliance - $name"
 CONF_LOG_MODE = "log_mode"
+CONF_SSE_TIMEOUT = "sse_timeout"
+CONF_SSE_TIMEOUT_DEFAULT = 15
 CONF_ENTITY_SETTINGS = "entity_settings"
 CONF_APPLIANCE_SETTINGS = "appliance_settings"
 
