@@ -41,8 +41,6 @@
           "${containerWorkspaceFolder}",
           "${containerWorkspaceFolder}/../home-connect-async"
         ],
-        "python.linting.pylintEnabled": true,
-        "python.linting.enabled": true,
         "python.formatting.provider": "black",
         "python.testing.pytestArgs": ["--no-cov"],
         "editor.formatOnPaste": false,
