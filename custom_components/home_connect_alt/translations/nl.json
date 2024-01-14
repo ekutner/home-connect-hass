@@ -181,7 +181,7 @@
           "LaundryCare.Common.EnumType.ProcessPhase.Heating": "Opwarmen",
           "LaundryCare.Common.EnumType.ProcessPhase.IntermediateSpin": "Centrifugeren",
           "LaundryCare.Common.EnumType.ProcessPhase.IronDryReached": "Strijkdroog Bereikt",
-          "LaundryCare.Common.EnumType.ProcessPhase.NoPhase": "Geen Fase"
+          "LaundryCare.Common.EnumType.ProcessPhase.NoPhase": "Geen Fase",
           "LaundryCare.Common.EnumType.ProcessPhase.Prewash": "Voorwas",
           "LaundryCare.Common.EnumType.ProcessPhase.Rinsing": "Spoelen",
           "LaundryCare.Common.EnumType.ProcessPhase.RinsingSoftener": "Spoelen Wasverzachter",
@@ -198,7 +198,7 @@
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus1": "+1",
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus2": "+2",
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus3": "+3",
-          "LaundryCare.Dryer.EnumType.WrinkleGuard.Off": "Uit"
+          "LaundryCare.Dryer.EnumType.WrinkleGuard.Off": "Uit",
           "LaundryCare.Dryer.EnumType.WrinkleGuard.Min120": "120 min",
           "LaundryCare.Dryer.EnumType.WrinkleGuard.Min60": "60 min",
           "LaundryCare.Dryer.Option.DryingTarget": "Droog Doel",
@@ -625,7 +625,7 @@
           "LaundryCare.Common.EnumType.ProcessPhase.Heating": "Opwarmen",
           "LaundryCare.Common.EnumType.ProcessPhase.IntermediateSpin": "Centrifugeren",
           "LaundryCare.Common.EnumType.ProcessPhase.IronDryReached": "Strijkdroog Bereikt",
-          "LaundryCare.Common.EnumType.ProcessPhase.NoPhase": "Geen Fase"
+          "LaundryCare.Common.EnumType.ProcessPhase.NoPhase": "Geen Fase",
           "LaundryCare.Common.EnumType.ProcessPhase.Prewash": "Voorwas",
           "LaundryCare.Common.EnumType.ProcessPhase.Rinsing": "Spoelen",
           "LaundryCare.Common.EnumType.ProcessPhase.RinsingSoftener": "Spoelen Wasverzachter",
@@ -642,7 +642,7 @@
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus1": "+1",
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus2": "+2",
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus3": "+3",
-          "LaundryCare.Dryer.EnumType.WrinkleGuard.Off": "Uit"
+          "LaundryCare.Dryer.EnumType.WrinkleGuard.Off": "Uit",
           "LaundryCare.Dryer.EnumType.WrinkleGuard.Min120": "120 min",
           "LaundryCare.Dryer.EnumType.WrinkleGuard.Min60": "60 min",
           "LaundryCare.Dryer.Option.DryingTarget": "Droog Doel",
