@@ -60,7 +60,7 @@ def recursive_sort_keys(o:dict) -> dict:
 files = glob(f"{TRANSLATIONS_PATH}/*.json")
 
 with open(f"{TRANSLATIONS_PATH}/en.json", encoding="utf-8") as f:
-    en = json.load(f, object_pairs_hook=OrderedDict)
+    en = json.load(f)
 
 en["entity"]["sensor"] = recursive_sort_keys(en["entity"]["sensor"])
 sync(en["entity"]["sensor"], en["entity"]["select"], "en.entity.sensor", "en.entity.select")
@@ -89,7 +89,7 @@ for file in files:
 with open(f"{TRANSLATIONS_PATH}/en.json", encoding="utf-8", mode="w") as f:
     en["entity"]["sensor"] = recursive_sort_keys(en["entity"]["sensor"])
     en["entity"]["select"] = recursive_sort_keys(en["entity"]["select"])
-    json.dump(en, f, indent=2, sort_keys=True, ensure_ascii=False)
+    json.dump(en, f, indent=2, sort_keys=False, ensure_ascii=False)
 
 
 
