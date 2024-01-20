@@ -36,6 +36,40 @@
       }
     }
   },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "language": "Language code",
+          "log_mode": "Verbose log mode",
+          "name_template": "Entity name template",
+          "sse_timeout": "SSE Timeout",
+          "translation_mode": "Translation mode"
+        },
+        "data_description": {
+          "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
+          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply",
+          "sse_timeout": "Timeout for refreshing the SSE connection (0=disabled)"
+        },
+        "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
+        "title": "Advanced settings"
+      }
+    }
+  },
+  "selector": {
+    "api_host": {
+      "options": {
+        "https://api.home-connect.cn": "China",
+        "https://api.home-connect.com": "Default"
+      }
+    },
+    "translation_mode": {
+      "options": {
+        "local": "Local",
+        "server": "Server"
+      }
+    }
+  },
   "device_automation": {
     "trigger_type": {
       "program_finished": "Program Finished",
@@ -98,7 +132,21 @@
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.VeryStrongPlus": "Very Strong +",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Left": "Left",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Right": "Right",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness1": "Level 1",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness2": "Level 2",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness3": "Level 3",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness4": "Level 4",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness5": "Level 5",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio": "Coffee Milk Ratio",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength1": "1",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength2": "2",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength3": "3",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength4": "4",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength5": "5",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength6": "6",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength7": "7",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength8": "8",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength9": "9",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.88C": "88°C",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.90C": "90°C",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.92C": "92°C",
@@ -169,9 +217,9 @@
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus1": "+1",
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus2": "+2",
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus3": "+3",
-          "LaundryCare.Dryer.EnumType.WrinkleGuard.Off": "Off",
           "LaundryCare.Dryer.EnumType.WrinkleGuard.Min120": "120 min",
           "LaundryCare.Dryer.EnumType.WrinkleGuard.Min60": "60 min",
+          "LaundryCare.Dryer.EnumType.WrinkleGuard.Off": "Off",
           "LaundryCare.Dryer.Option.DryingTarget": "Drying Target",
           "LaundryCare.Washer.EnumType.IDosingLevel.High": "High",
           "LaundryCare.Washer.EnumType.IDosingLevel.Light": "Light",
@@ -550,7 +598,21 @@
           "ConsumerProducts.CoffeeMaker.EnumType.BeanAmount.VeryStrongPlus": "Very Strong +",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Left": "Left",
           "ConsumerProducts.CoffeeMaker.EnumType.BeanContainerSelection.Right": "Right",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness1": "Level 1",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness2": "Level 2",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness3": "Level 3",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness4": "Level 4",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoarsnessExtended.Coarsness5": "Level 5",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeMilkRatio": "Coffee Milk Ratio",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength1": "1",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength2": "2",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength3": "3",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength4": "4",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength5": "5",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength6": "6",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength7": "7",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength8": "8",
+          "ConsumerProducts.CoffeeMaker.EnumType.CoffeeStrength.Strength9": "9",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.88C": "88°C",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.90C": "90°C",
           "ConsumerProducts.CoffeeMaker.EnumType.CoffeeTemperature.92C": "92°C",
@@ -621,9 +683,9 @@
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus1": "+1",
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus2": "+2",
           "LaundryCare.Dryer.EnumType.DryingTargetAdjustment.Plus3": "+3",
-          "LaundryCare.Dryer.EnumType.WrinkleGuard.Off": "Off",
           "LaundryCare.Dryer.EnumType.WrinkleGuard.Min120": "120 min",
           "LaundryCare.Dryer.EnumType.WrinkleGuard.Min60": "60 min",
+          "LaundryCare.Dryer.EnumType.WrinkleGuard.Off": "Off",
           "LaundryCare.Dryer.Option.DryingTarget": "Drying Target",
           "LaundryCare.Washer.EnumType.IDosingLevel.High": "High",
           "LaundryCare.Washer.EnumType.IDosingLevel.Light": "Light",
@@ -965,40 +1027,6 @@
           "Cooking.Hob.EnumType.PowerLevel.Off": "Off",
           "Cooking.Hob.EnumType.PowerLevel.On": "On"
         }
-      }
-    }
-  },
-  "options": {
-    "step": {
-      "init": {
-        "data": {
-          "language": "Language code",
-          "log_mode": "Verbose log mode",
-          "name_template": "Entity name template",
-          "sse_timeout": "SSE Timeout",
-          "translation_mode": "Translation mode"
-        },
-        "data_description": {
-          "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
-          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply",
-          "sse_timeout": "Timeout for refreshing the SSE connection (0=disabled)"
-        },
-        "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
-        "title": "Advanced settings"
-      }
-    }
-  },
-  "selector": {
-    "api_host": {
-      "options": {
-        "https://api.home-connect.cn": "China",
-        "https://api.home-connect.com": "Default"
-      }
-    },
-    "translation_mode": {
-      "options": {
-        "local": "Local",
-        "server": "Server"
       }
     }
   }
