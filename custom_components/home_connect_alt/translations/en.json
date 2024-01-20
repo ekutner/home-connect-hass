@@ -150,6 +150,7 @@
           "LaundryCare.Common.EnumType.ProcessPhase.Drying": "Drying",
           "LaundryCare.Common.EnumType.ProcessPhase.FillingDetergent": "FillingDetergent",
           "LaundryCare.Common.EnumType.ProcessPhase.Fluffing": "Fluffing",
+          "LaundryCare.Common.EnumType.ProcessPhase.GuardingWrinkle": "Guarding Wrinkle",
           "LaundryCare.Common.EnumType.ProcessPhase.Heating": "Heating",
           "LaundryCare.Common.EnumType.ProcessPhase.HoldAfterRinse": "Hold After Rinse",
           "LaundryCare.Common.EnumType.ProcessPhase.IntermediateSpin": "IntermediateSpin",
