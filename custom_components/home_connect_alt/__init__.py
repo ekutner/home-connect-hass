@@ -29,16 +29,16 @@ _LOGGER = logging.getLogger(__name__)
 
 HC_CONFIG_SCHEMA = vol.Schema(
     {
-        vol.Optional(CONF_CLIENT_ID): cv.string,
-        vol.Optional(CONF_CLIENT_SECRET): cv.string,
-        vol.Optional(CONF_API_HOST, default=DEFAULT_API_HOST): str,
-        vol.Optional(CONF_CACHE, default=False): vol.Coerce(bool),
-        vol.Optional(CONF_LANG, default=CONF_LANG_DEFAULT): str,
-        vol.Optional(CONF_TRANSLATION_MODE, default="local"): str,
-        vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(str, None),
-        vol.Optional(CONF_NAME_TEMPLATE, default=CONF_NAME_TEMPLATE_DEFAULT): str,
-        vol.Optional(CONF_LOG_MODE, default=0): int,
-        vol.Optional(CONF_SSE_TIMEOUT, default=CONF_SSE_TIMEOUT_DEFAULT): int,
+        # vol.Optional(CONF_CLIENT_ID): cv.string,
+        # vol.Optional(CONF_CLIENT_SECRET): cv.string,
+        # vol.Optional(CONF_API_HOST, default=DEFAULT_API_HOST): str,
+        # vol.Optional(CONF_CACHE, default=False): vol.Coerce(bool),
+        # vol.Optional(CONF_LANG, default=CONF_LANG_DEFAULT): str,
+        # vol.Optional(CONF_TRANSLATION_MODE, default="local"): str,
+        # vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(str, None),
+        # vol.Optional(CONF_NAME_TEMPLATE, default=CONF_NAME_TEMPLATE_DEFAULT): str,
+        # vol.Optional(CONF_LOG_MODE, default=0): int,
+        # vol.Optional(CONF_SSE_TIMEOUT, default=CONF_SSE_TIMEOUT_DEFAULT): int,
         vol.Optional(CONF_ENTITY_SETTINGS, default={}): vol.Any(dict, None),
         vol.Optional(CONF_APPLIANCE_SETTINGS, default={}): vol.Any(dict, None)
     }
@@ -50,6 +50,20 @@ CONFIG_SCHEMA = vol.Schema(
     extra=vol.ALLOW_EXTRA,
 )
 
+OPTIONS_SCHEMA = vol.Schema(
+    {
+        vol.Optional(CONF_CACHE, default=False): vol.Coerce(bool),
+        vol.Optional(CONF_LANG, default=CONF_LANG_DEFAULT): str,
+        vol.Optional(CONF_TRANSLATION_MODE, default="local"): vol.Coerce(str),
+        vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(str, None),
+        vol.Optional(CONF_NAME_TEMPLATE, default=CONF_NAME_TEMPLATE_DEFAULT): vol.Coerce(str),
+        vol.Optional(CONF_LOG_MODE, default=0): vol.Coerce(int),
+        vol.Optional(CONF_SSE_TIMEOUT, default=CONF_SSE_TIMEOUT_DEFAULT): vol.Coerce(int),
+        vol.Optional(CONF_ENTITY_SETTINGS, default={}): vol.Any(dict, None),
+        vol.Optional(CONF_APPLIANCE_SETTINGS, default={}): vol.Any(dict, None)
+    }
+)
+
 # For your initial PR, limit it to 1 platform.
 PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.SELECT, Platform.NUMBER, Platform.BUTTON, Platform.SWITCH]
 
@@ -58,51 +72,54 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the Home Connect New component."""
 
     if DOMAIN not in config:
-        hass.data[DOMAIN] = HC_CONFIG_SCHEMA({})
+        # hass.data[DOMAIN] = HC_CONFIG_SCHEMA({})
+        hass.data[DOMAIN] = { "global": {} }
         return True
 
-    hass.data[DOMAIN] = config[DOMAIN]
-    # Migrate the old CONF_SENSORS_TRANSLATION to the new CONF_TRANSLATION_MODE
-    if CONF_SENSORS_TRANSLATION in config[DOMAIN] and CONF_TRANSLATION_MODE not in config[DOMAIN]:
-        hass.data[DOMAIN][CONF_TRANSLATION_MODE] = config[DOMAIN][CONF_SENSORS_TRANSLATION]
+    # The config now contains configuration coming from the configuration.yaml file
+    Configuration.set_global_config(config[DOMAIN])
+    hass.data[DOMAIN] = { "global": {} }
 
-
-    if (CONF_CLIENT_ID in config[DOMAIN] and CONF_CLIENT_SECRET in config[DOMAIN]):
-        await async_import_client_credential(
-            hass,
-            DOMAIN,
-            ClientCredential(
-                config[DOMAIN][CONF_CLIENT_ID],
-                config[DOMAIN][CONF_CLIENT_SECRET],
-            ),
-        )
+    # migrate OAuth credentials from configuration.yaml to credentials manager
+    # if (CONF_CLIENT_ID in config[DOMAIN] and CONF_CLIENT_SECRET in config[DOMAIN]):
+    #     await async_import_client_credential(
+    #         hass,
+    #         DOMAIN,
+    #         ClientCredential(
+    #             config[DOMAIN][CONF_CLIENT_ID],
+    #             config[DOMAIN][CONF_CLIENT_SECRET],
+    #         ),
+    #     )
     return True
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
 
     """Set up Home Connect New from a config entry."""
 
-
-    if DOMAIN in hass.data:
-        conf = hass.data[DOMAIN]
+    options = OPTIONS_SCHEMA(dict(config_entry.options))
+    #options.update(config_entry.options)
+    conf = Configuration(options)
+    hass.data[DOMAIN][config_entry.entry_id] = conf
+    if CONF_API_HOST in config_entry.data:
+        api_host = config_entry.data[CONF_API_HOST]
+        hass.data[DOMAIN]["global"][CONF_API_HOST] = api_host
+        conf["primary_config_entry"] = True
+        _LOGGER.debug(f"Config entry {config_entry.entry_id} is primary")
     else:
-        conf = HC_CONFIG_SCHEMA({})
+        api_host = hass.data[DOMAIN]["global"].get(CONF_API_HOST, DEFAULT_API_HOST)
+        conf["primary_config_entry"] = False
+        _LOGGER.debug(f"Config entry {config_entry.entry_id} is secondary")
+    _LOGGER.debug(f"OAuth2={config_entry.data.get('auth_implementation','')} api_host={config_entry.data.get(CONF_API_HOST,'')}")
+    _LOGGER.debug(f"options: {config_entry.options}")
 
-    if CONF_API_HOST in entry.data:
-        conf[CONF_API_HOST] = entry.data[CONF_API_HOST]
-
-    if entry.options:
-        conf.update(entry.options)
-
-    hass.data[DOMAIN] = conf
 
     # Add event listener to reload the integration when the config entry options change (because the user edited them in the UI)
-    entry.async_on_unload(entry.add_update_listener(lambda hass, entry: hass.config_entries.async_reload(entry.entry_id)))
+    config_entry.async_on_unload(config_entry.add_update_listener(lambda hass, entry: hass.config_entries.async_reload(entry.entry_id)))
 
 
-    implementation = await config_entry_oauth2_flow.async_get_config_entry_implementation(hass, entry)
-    session = config_entry_oauth2_flow.OAuth2Session(hass, entry, implementation)
+    implementation = await config_entry_oauth2_flow.async_get_config_entry_implementation(hass, config_entry)
+    session = config_entry_oauth2_flow.OAuth2Session(hass, config_entry, implementation)
     try:
         await session.async_ensure_token_valid()
     except aiohttp.ClientResponseError as ex:
@@ -111,11 +128,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             raise ConfigEntryAuthFailed("Token not valid, trigger renewal") from ex
         raise ConfigEntryNotReady from ex
 
-    api_host = conf[CONF_API_HOST] if conf[CONF_API_HOST] else DEFAULT_API_HOST
+
     lang = conf[CONF_LANG] # if conf[CONF_LANG] != "" else None
-    use_cache = conf[CONF_CACHE]
+    #use_cache = conf[CONF_CACHE]
     logmode = conf[CONF_LOG_MODE] if conf[CONF_LOG_MODE] else ConditionalLogger.LogMode.REQUESTS
-    Configuration.set_global_config(conf)
+
 
     # If using an aiohttp-based API lib
     auth = api.AsyncConfigEntryAuth(
@@ -136,10 +153,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     ConditionalLogger.mode(logmode)
     disabled_appliances = [haid for haid in conf[CONF_APPLIANCE_SETTINGS] if "disabled" in conf[CONF_APPLIANCE_SETTINGS][haid] and conf[CONF_APPLIANCE_SETTINGS][haid]["disabled"] ] if conf[CONF_APPLIANCE_SETTINGS] else []
     homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang, disabled_appliances=disabled_appliances, sse_timeout=conf[CONF_SSE_TIMEOUT])
+    services = register_services(hass, homeconnect)
 
-    conf[entry.entry_id] = auth
-    conf["homeconnect"] = homeconnect
-    conf["services"] = register_services(hass, homeconnect)
+    conf.update({ "homeconnect": homeconnect, "services": services, "auth": auth })
 
     #region internal event handlers
     # async def async_delayed_update_cache(delay:float = 0):
@@ -180,7 +196,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Setup all the callback listeners before starting to load the data
 
     #hass.config_entries.async_setup_platforms(entry, PLATFORMS)
-    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
     register_events_publisher(hass, homeconnect)
 
     # Continue loading the HomeConnect data model and set the callback to be notified when done
@@ -189,17 +205,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return True
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     conf = hass.data[DOMAIN]
-    homeconnect:HomeConnect = conf['homeconnect']
+    homeconnect:HomeConnect = conf[config_entry.entry_id]['homeconnect']
     homeconnect.close()
 
     # await async_save_to_cache(hass, None)
 
-    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    unload_ok = await hass.config_entries.async_unload_platforms(config_entry, PLATFORMS)
     if unload_ok:
-        hass.data[DOMAIN].pop(entry.entry_id)
+        hass.data[DOMAIN].pop(config_entry.entry_id)
 
     return unload_ok
 

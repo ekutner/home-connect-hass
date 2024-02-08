@@ -30,12 +30,12 @@ class EntityBase(ABC):
 
     _appliance: Appliance = None
 
-    def __init__(self, appliance:Appliance, key:str=None, conf:dict=None, hc_obj=None) -> None:
+    def __init__(self, appliance:Appliance, key:str, conf:Configuration, hc_obj=None) -> None:
         """Initialize the sensor."""
         self._appliance = appliance
         self._homeconnect = appliance._homeconnect
         self._key = key
-        self._conf = conf if conf else Configuration()
+        self._conf = conf
         self.entity_id = f'home_connect.{self.unique_id}'
         self._hc_obj = hc_obj
 
@@ -201,16 +201,17 @@ class Configuration(dict):
         super().__init__(*args, **kwargs)
         self.update(ENTITY_SETTINGS)
         if Configuration._global_config:
-            self.update(self.__merge(self, Configuration._global_config))
+            self.update(self.__merge(self, Configuration._global_config, overwrite=False))
 
-    def __merge(self, destination:dict, source:dict ):
+    def __merge(self, destination:dict, source:dict, overwrite:bool=True ):
         for key, value in source.items():
             if isinstance(value, dict):
                 # get node or create one
                 node = destination.setdefault(key, {})
-                self.__merge(node, value)
+                self.__merge(node, value, overwrite)
             else:
-                destination[key] = value
+                if key not in destination or overwrite:
+                    destination[key] = value
 
         return destination
 
@@ -240,7 +241,19 @@ class Configuration(dict):
             return self[key]
         return None
 
+    def get_config(self, extra_conf:dict=None):
+        """Return a new config object which is the merging of the current one with the extra configuration"""
+        c = Configuration(self)
+        if extra_conf:
+            c.update(extra_conf)
+        return c
+
     @classmethod
     def set_global_config(cls, global_config:dict):
-        """.Set the global config once as a static member that will be appended automatically to each config object."""
+        """Set the global config once as a static member that will be appended automatically to each config object."""
         cls._global_config = global_config
+
+    @classmethod
+    def get_global_config(cls):
+        """Return the global config"""
+        return cls._global_config

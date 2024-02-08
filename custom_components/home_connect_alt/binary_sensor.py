@@ -15,12 +15,14 @@ _LOGGER = logging.getLogger(__name__)
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
     """Add sensors for passed config_entry in HA."""
     #auth = hass.data[DOMAIN][config_entry.entry_id]
-    homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
+    #homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
+    entry_conf:Configuration = hass.data[DOMAIN][config_entry.entry_id]
+    homeconnect:HomeConnect = entry_conf["homeconnect"]
     entity_manager = EntityManager(async_add_entities)
 
     def add_appliance(appliance:Appliance) -> None:
         for (key, status) in appliance.status.items():
-            conf = Configuration()
+            conf = entry_conf.get_config()
             device = None
             if isinstance(status.value, bool) or conf.get_entity_setting(key, "type") == "Boolean": # should be a binary sensor if it has a boolean value
                 device = StatusBinarySensor(appliance, key, conf)
@@ -53,7 +55,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
                     device = SettingsBinarySensor(appliance, setting.key, conf)
                     entity_manager.add(device)
 
-        entity_manager.add(ConnectionBinarySensor(appliance, "Connected"))
+        entity_manager.add(ConnectionBinarySensor(appliance, "Connected", conf))
 
         # if len(new_entities)>0:
         #     entity_manager.register_entities(new_entities, async_add_entities)

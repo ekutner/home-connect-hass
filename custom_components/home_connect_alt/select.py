@@ -15,15 +15,18 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
     """Add Selects for passed config_entry in HA."""
-    homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
+    #homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
+    entry_conf:Configuration = hass.data[DOMAIN][config_entry.entry_id]
+    homeconnect:HomeConnect = entry_conf["homeconnect"]
     entity_manager = EntityManager(async_add_entities)
 
     def add_appliance(appliance:Appliance) -> None:
+        conf = entry_conf.get_config()
+
         if appliance.available_programs:
-            device = ProgramSelect(appliance)
+            device = ProgramSelect(appliance, None, conf)
             entity_manager.add(device)
 
-        conf = Configuration()
         if appliance.available_programs:
             for program in appliance.available_programs.values():
                 if program.options:

@@ -21,10 +21,10 @@ logger:
 home_connect_alt:
   # client_id: !secret home_connect_client_id
   # client_secret: !secret home_connect_client_secret
-  language: en-GB
-  translation_mode: server
-  name_template: $appliance $name ($brand)
-  log_mode: 7
+  # language: en-GB
+  # translation_mode: server
+  # name_template: $appliance $name ($brand)
+  # log_mode: 7
   #api_host: https://simulator.home-connect.com
   # entity_settings:
   #   LaundryCare.Washer.Setting.IDos2BaseLevel:

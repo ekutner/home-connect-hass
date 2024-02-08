@@ -15,12 +15,16 @@ from .const import DOMAIN, ENTITY_SETTINGS
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
     """Add Numbers for passed config_entry in HA."""
     #auth = hass.data[DOMAIN][config_entry.entry_id]
-    homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
+    #homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
+    entry_conf:Configuration = hass.data[DOMAIN][config_entry.entry_id]
+    homeconnect:HomeConnect = entry_conf["homeconnect"]
     entity_manager = EntityManager(async_add_entities)
 
-    conf = Configuration()
     number_types = ["Int", "Float", "Double"]
+
     def add_appliance(appliance:Appliance) -> None:
+        conf = entry_conf.get_config()
+
         if appliance.available_programs:
             for program in appliance.available_programs.values():
                 if program.options:

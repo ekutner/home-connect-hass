@@ -8,7 +8,7 @@ from .const import CONF_API_HOST, DEFAULT_API_HOST, DOMAIN
 async def async_get_authorization_server(hass: HomeAssistant) -> AuthorizationServer:
     """Return authorization server."""
 
-    api_host = hass.data[DOMAIN].get(CONF_API_HOST, DEFAULT_API_HOST) if DOMAIN in hass.data else DEFAULT_API_HOST
+    api_host = hass.data[DOMAIN]["global"].get(CONF_API_HOST, DEFAULT_API_HOST) if DOMAIN in hass.data and "global" in hass.data[DOMAIN] else DEFAULT_API_HOST
 
     return AuthorizationServer(
         f"{api_host}/security/oauth/authorize",

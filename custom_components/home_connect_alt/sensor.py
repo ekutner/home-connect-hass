@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 import logging
 from typing import Any, Mapping
-from home_connect_async import Appliance, HomeConnect, Events, GlobalStatus
+from home_connect_async import Appliance, HomeConnect, Events, HealthStatus
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -21,27 +21,26 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_entry(
-    hass: HomeAssistant,
-    config_entry: ConfigType,
-    async_add_entities: AddEntitiesCallback,
-) -> None:
+async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigType, async_add_entities: AddEntitiesCallback,) -> None:
     """Add sensors for passed config_entry in HA"""
-    homeconnect: HomeConnect = hass.data[DOMAIN]["homeconnect"]
+    #homeconnect: HomeConnect = hass.data[DOMAIN]["homeconnect"]
+    entry_conf:Configuration = hass.data[DOMAIN][config_entry.entry_id]
+    homeconnect:HomeConnect = entry_conf["homeconnect"]
+
     entity_manager = EntityManager(async_add_entities)
 
     def add_appliance(appliance: Appliance) -> None:
 
         if appliance.selected_program:
-            conf = Configuration({"program_type": "selected"})
-            device = ProgramSensor(appliance, conf=conf)
+            conf = entry_conf.get_config({"program_type": "selected"})
+            device = ProgramSensor(appliance, None, conf)
             entity_manager.add(device)
         if appliance.active_program:
-            conf = Configuration({"program_type": "active"})
-            device = ProgramSensor(appliance, conf=conf)
+            conf = entry_conf.get_config({"program_type": "active"})
+            device = ProgramSensor(appliance, None, conf)
             entity_manager.add(device)
 
-        conf = Configuration()
+        conf = entry_conf.get_config()
         if appliance.selected_program and appliance.selected_program.options:
             for option in appliance.selected_program.options.values():
                 if not isinstance(option.value, bool):
@@ -65,7 +64,7 @@ async def async_setup_entry(
 
         if appliance.settings:
             for setting in appliance.settings.values():
-                conf = Configuration()
+                conf = entry_conf.get_config()
                 if setting.type != "Boolean" and not isinstance(setting.value, bool) and conf.get_entity_setting(setting.key, "type") != "Boolean":
                     device = SettingsSensor(appliance, setting.key, conf)
                     entity_manager.add(device)
@@ -76,7 +75,7 @@ async def async_setup_entry(
         entity_manager.remove_appliance(appliance)
 
     # First add the global home connect status sensor
-    async_add_entities([HomeConnectStatusSensor(homeconnect)])
+    async_add_entities( [ HomeConnectStatusSensor(homeconnect, "" if entry_conf["primary_config_entry"] else "_"+config_entry.entry_id) ] )
 
     # Subscribe for events and register the existing appliances
     homeconnect.register_callback(add_appliance, [Events.PAIRED, Events.DATA_CHANGED, Events.PROGRAM_STARTED, Events.PROGRAM_SELECTED])
@@ -338,9 +337,10 @@ class HomeConnectStatusSensor(SensorEntity):
     should_poll = True
     _attr_has_entity_name = True
 
-    def __init__(self, homeconnect: HomeConnect) -> None:
+    def __init__(self, homeconnect: HomeConnect, name_suffix:str) -> None:
         self._homeconnect = homeconnect
-        self.entity_id = f'home_connect.{self.unique_id}'
+        self._name_suffix = name_suffix
+        self.entity_id = f"home_connect.{self.unique_id}"
 
     @property
     def device_info(self):
@@ -349,7 +349,7 @@ class HomeConnectStatusSensor(SensorEntity):
 
     @property
     def unique_id(self) -> str:
-        return "homeconnect_status"
+        return "homeconnect_status" + self._name_suffix
 
     @property
     def translation_key(self) -> str:
@@ -361,12 +361,11 @@ class HomeConnectStatusSensor(SensorEntity):
 
     @property
     def native_value(self):
-        return GlobalStatus.get_status().name
-        # return GlobalStatus.get_status_str()
+        return self._homeconnect.health.get_status().name
 
     @property
     def extra_state_attributes(self) -> Mapping[str, Any] | None:
         return {
-            "blocked_until": GlobalStatus.get_blocked_until(),
-            "blocked_for": GlobalStatus.get_block_time_str(),
+            "blocked_until": self._homeconnect.health.get_blocked_until(),
+            "blocked_for": self._homeconnect.health.get_block_time_str(),
         }
