@@ -1,17 +1,3 @@
-# Personal note
-![Flag of Isael](assets/Flag_of_Israel.svg)  
-Normally this section wouldn't exist here. However, on Oct. 7th Israel was attacked by Hamas, the terrorist organization that controls the Gaza strip. They invaded dozens of border communities, murdered, raped, burned, tortured and mutilated nearly 1400 Israelis and kidnapped at least another 200. Most of them civilians, including women, children, elderly and people with disabilities. The atrocities they committed are unspeakable, but the scope of affected people is actually much larger than those directly murdered or kidnapped. There are thousands of survivers, victim's families and over 100,000 people who were displaced from their homes due to constant rocket attacks. As an Israeli, I am spending most of my time since the massacre volunteering to help the victims as best I can, so expect my response time here to be longer than usual.
-
-Since I started this project some of you offered to buy me coffee as a token of appreciation, I always refused because I'm doing it for fun, but if you still want to show your support, a donation to the [Brothers and Sisters for Israel](https://www.brothersandsistersforisrael.org/) organization would be a great place to do that. This organization formed about 10 months ago, as a part of a coalition of pro-democracy civil organizations in Israel, protesting against the government's "judicial reform", which was meant to remove most checks and balances from the government and give it unchecked power, as happened in other countries such as Hungary. At this time of crisis the organization has transformed its infrastructure to a full fledged civic support and relief organization and is a worthy recipient of donations. 
-
-I hope the ISIS-like Hamas terrorist organization, who is responsible for the killing of countless Israelis and Palestinians, will soon be destroyed, peace will be restored and both parties can be free to build a better future.
-
-[DONATION LINK](https://www.brothersandsistersforisrael.org/)
-
-P.S. If you don't like this note then a) check your morale compass and b) feel free to not use this integration. 
-
-</br>
-</br>
 
 # Alternative Home Connect Integration for Home Assistant
 This project is an alternative integration for Home Connect enabled home appliances manufactured by BSH under the Bosch, Siemens, Constructa and Neff brands.
@@ -33,7 +19,6 @@ This project is an alternative integration for Home Connect enabled home applian
    * [Options settable in the UI](#options-settable-in-the-ui)
       + [Regular options](#regular-options)
       + [Advanced options](#advanced-options)
-   * [Options settable in configuration.yaml:](#options-settable-in-configurationyaml)
 - [Automation Notes](#automation-notes)
    * [Integration state](#integration-state)
    * [Services](#services)
@@ -41,6 +26,7 @@ This project is an alternative integration for Home Connect enabled home applian
    * [Triggers](#triggers)
    * [Local vs. Server translation](#local-vs-server-translation)
 - [Troubleshooting and FAQ](#troubleshooting-and-faq)
+- [Dealing with API rate limits](#dealing-with-api-rate-limits)
 - [Known Issues](#known-issues)
 - [Reporting issues / bugs](#reporting-issues-and-bugs)
     + [Bug report requirements](#bug-report-requirements)
@@ -146,15 +132,8 @@ These options will only show up when the user has enablde "Advanced mode" in the
   Define the timeout, in minutes, to renew the event stream connection with the HC server.  
   The default value of 15 minutes is designed to prevent situations of zombie streams that appear to be connected but don't receive events from HC.
 
-## Options settable in configuration.yaml:
-These very advanced options are only settable in the configuration.yaml file.
-Generally you should not change them unless you know what you're doing.
+The following very advanced options can only be defined using YAML. Generally you should not change them unless you really know what you're doing.
 
-```
-home_connect_alt:
-  appliance_settings: <custom appliance settings>
-  entity_settings:  <custom entity settings>
-```
 
 * **appliance_settings** (optional) - Overrides some settings for specific appliances.    
   This setting requires specifying the identifier (HAID) of the appliance. The easiest way to find it is to look at the entity ID of the "Connected" sensor of the appliance. 
@@ -166,10 +145,9 @@ home_connect_alt:
 
   For example:
   ```
-  appliance_settings:
-    bosch_wat286h0gb_68a64f51deb:
-      name_template: My appliance $name
-      disabled: false
+  bosch_wat286h0gb_68a64f51deb:
+    name_template: My appliance $name
+    disabled: false
   ```
 
 * **entity_settings** (optional) - Overrides internal entity settings.  
@@ -179,10 +157,9 @@ home_connect_alt:
   **_class_**: The Home Assistant class of the entity (must be a class which is already supported for that entity type)
   For example:
   ```
-  entity_settings:
-    ConsumerProducts.CoffeeMaker.Status.BeverageCounterCoffee:
-      unit: cups
-      icon: mdi:coffee
+  ConsumerProducts.CoffeeMaker.Status.BeverageCounterCoffee:
+    unit: cups
+    icon: mdi:coffee
   ```
 
 After the integration is configured READ THE FAQ then add it from the Home-Assistant UI.
@@ -237,6 +214,7 @@ In contrast, setting ```sensor_value_translation: server``` will override this b
 * **I don't get the installation dialogs mentioned in the [Installation](#installation) section above**  
   These dialogs will only show up the first time you install the integration and only if you do not have the *client_id* and *client_secret* configured in your configuration.yaml file.
   The make it appear again make sure the integration is uninstlled, then go to the *Settings -> Devices & Services* page on Home Assistant, then click the three-dot-menu on the top righthand corner and select "Application credentials". Locate the previous credentials row for this integration and delete it.
+
 * **I get errors on the browser window that pops-up after installing the integration for the first time**  
   This popup window is trying to log you into the Home Connect website to establish a connection with the integration. If you get an error at this stage it means you didn't follow the setup instuctions carefully enough, so make sure that you do.
   Also make sure that you open https://my.home-assistant.io/ and configure the URL of your Home-Assistant server.  
@@ -246,11 +224,14 @@ In contrast, setting ```sensor_value_translation: server``` will override this b
   This is most commonly caused by two reasons:
   1. The appliance must be powered on and connected to the Home Connect service to be discovered. Once the missing devices are turned on and connected, they will automatically be discovered and added by the integration.
   This can be verified in the Home Connect mobile app **but only while the wifi on the phone is turned OFF**. If the devices are active in the mobile app while the phone's wifi is turned off then please open an issue with a debug log to report it.
-  2. Due to some unreasonable rate limits set by BSH, there is a limit of about 3
-  appliances loaded per minute. If you have more, expect the initial load to take longer. The integration will wait for the service to become available and continue loading the rest of the appliances. You may have to refresh your screen to see them in Home Assistant after they were added.
+  2. Due to some unreasonable rate limits set by BSH, there is a limit of about 5
+  appliances loaded per minute. If you have more, expect the initial load to take longer. The integration will wait for the service to become available and continue loading the rest of the appliances. You may have to refresh your screen to see them in Home Assistant after they were added. See more details in the next item.
+
+* **The Home Connect Status sensor is showing the value BLOCKED and nothing works**  
+  Congratulations, you've hit one of Home Connects annoying API rate limits. It will get automatically lifted anytime between a few minutes and 24 hours. If you have many appliances and hitting this issue frequently then see the [Dealing with API rate limits](#dealing-with-api-rate-limits) section below.
 
 * **The Home Connect mobile app has some controls/data/events that are missing in Home Assistant**  
-  This integration doesn't know anything about any specific appliance, it is using the official Home Connect API to explore the available options for each appliance and automatically exposes them as appropriate Home Assistant entities. The type of entities is automatically determined by information received from the API. The Home Connect mobile app is using a private API that is not available to the public and has more capabilities than those in the official API. Therefor it is expected that there will be some data, controls or events that are available in the app but not in the integration, this is NOT a problem with the integration but a limitation of the API.
+  This integration doesn't know anything about any specific appliance, it is using the official Home Connect API to explore the available options for each appliance and automatically exposes them as appropriate Home Assistant entities. The type of entities is automatically determined by information received from the API. The Home Connect mobile app is using a private API that is not available to the public and has more capabilities than those in the official API. Therefor it is expected that there will be some data, controls or events that are available in the app but not in the integration, this is NOT a problem with the integration but a limitation of the API.  
   **DO NOT open bugs or feature requests related to such issues unless you can demonstrate that the missing item is actually available in the API**
 
 * **I've restarted Home Assistant a few times and now all my appliances are unavailable**  
@@ -283,10 +264,20 @@ In contrast, setting ```sensor_value_translation: server``` will override this b
 
 </br>
 
-# Known Issues
-* If you have more than 3 connected devices (or you just play a lot with settings), you may hit the daily API rate limit set by the Home Connect API. The limit is set to 1000 calls per day and when it is hit the API is blocked for 24h. During that time, the integration will not get updated with new states and you won't be able to select and options or start a program.
-If you hit this limit frequently, please open an issue with a debug log. I'll try to see if there is a way to reduce some calls. However, as of now, there is nothing I can do about it and the Home Connect team was unwilling to increase this limit, which hurts their best customers so there is nothing I can do about it.
+# Dealing with API rate limits
+If you have more than 5 appliances you may occasionaly hit the Home Connect API rate limit which only allows up to 1000 daily API calls, regardless of how many appliances you own. This limit ends up hurting their best customers and it doesn't make any sense, it should be adjusted based on the number of appliances in the account. If you hit that limit then I strongly enourage you to reach out to Home Connect and protest. Until hey listen there is an annoying workaround:  
+1. Create a second developer app in the Home COnnect developers portal with exactly the same settings you used for the first one.
+2. In Home Assistant go to Settings -> Devices & services then click the three dot menu at the top right and select "Application credentials" and then click the "Add Application Credential" button at the button right corner.
+3. In the popup dialog select "Home Connect Alt" as the integration, give your credentials some useful name, like "Home Connect 2" and then copy and paste the client ID and client secret for the second app you created in step 1.
+4. Go back to the Integrations page and click on "Home Connect Alt". Under "Integrations entries" click on "ADD ENTRY".
+5. This will start a new login flow to Home Connect. Complete the flow and you should now have two instances of the integration running in parallel.
+6. Now you must use the "CONFIGURE" button of each entry to change the Application settings advanced options so that half of your appliances are disabled in each entry. See details [above](#advanced-options) how to do that.
+7. If you've reached this far then you should now have two instances running, using different Home Connect apps and each one responsible for half of your appliances. If it still getting rate limit then just add a third one.
 
+<br>
+
+# Known Issues
+See the FAQ above.
 </br>
 
 # Reporting Issues and Bugs
