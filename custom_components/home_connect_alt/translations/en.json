@@ -43,13 +43,17 @@
           "language": "Language code",
           "log_mode": "Verbose log mode",
           "name_template": "Entity name template",
-          "sse_timeout": "SSE Timeout",
-          "translation_mode": "Translation mode"
+          "sse_timeout": "SSE timeout",
+          "translation_mode": "Translation mode",
+          "appliance_settings": "Advanced appliance settings (YAML)",
+          "entity_settings": "Advanced entity settings (YAML)"
         },
         "data_description": {
           "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
           "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply",
-          "sse_timeout": "Timeout for refreshing the SSE connection (0=disabled)"
+          "sse_timeout": "Timeout for refreshing the SSE connection (0=disabled)",
+          "appliance_settings": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
+          "entity_settings": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)"
         },
         "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
         "title": "Advanced settings"

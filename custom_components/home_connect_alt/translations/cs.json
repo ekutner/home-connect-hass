@@ -43,12 +43,16 @@
           "translation_mode": "Režim překladu",
           "name_template": "Šablona názvu entity",
           "log_mode": "Verbose log režim",
-          "sse_timeout": "SSE Timeout"
+          "sse_timeout": "SSE Timeout",
+          "appliance_settings": "Advanced appliance settings (YAML)",
+          "entity_settings": "Advanced entity settings (YAML)"
         },
         "data_description": {
           "language": "Používejte pouze [kódy jazyků](https://api-docs.home-connect.com/general/#supported-languages) podporované službou Home Connect.",
           "log_mode": "Aby se toto nastavení použilo, musí být v souboru configuration.yaml povoleno protokolování ladění.",
-          "sse_timeout": "Timeout in minutes for refreshing the SSE connection (0=disabled)"
+          "sse_timeout": "Timeout in minutes for refreshing the SSE connection (0=disabled)",
+          "appliance_settings": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
+          "entity_settings": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)"
         }
       }
     }
