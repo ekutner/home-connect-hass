@@ -124,7 +124,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
         await session.async_ensure_token_valid()
     except aiohttp.ClientResponseError as ex:
         _LOGGER.debug("API error: %s (%s)", ex.code, ex.message)
-        if ex.code in (401, 403):
+        if ex.code in (400, 401, 403):
             raise ConfigEntryAuthFailed("Token not valid, trigger renewal") from ex
         raise ConfigEntryNotReady from ex
 
