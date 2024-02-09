@@ -97,6 +97,8 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
     """Set up Home Connect New from a config entry."""
 
+    all_entries = hass.config_entries.async_entries(DOMAIN)
+
     options = OPTIONS_SCHEMA(dict(config_entry.options))
     #options.update(config_entry.options)
     conf = Configuration(options)
@@ -104,12 +106,11 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     if CONF_API_HOST in config_entry.data:
         api_host = config_entry.data[CONF_API_HOST]
         hass.data[DOMAIN]["global"][CONF_API_HOST] = api_host
-        conf["primary_config_entry"] = True
-        _LOGGER.debug(f"Config entry {config_entry.entry_id} is primary")
     else:
         api_host = hass.data[DOMAIN]["global"].get(CONF_API_HOST, DEFAULT_API_HOST)
-        conf["primary_config_entry"] = False
-        _LOGGER.debug(f"Config entry {config_entry.entry_id} is secondary")
+
+    conf["primary_config_entry"] = get_primary_config_entry(hass) == config_entry.entry_id
+    _LOGGER.debug(f"Config entry {config_entry.entry_id} is {'primary' if conf['primary_config_entry'] else 'secondary'}")
     _LOGGER.debug(f"OAuth2={config_entry.data.get('auth_implementation','')} api_host={config_entry.data.get(CONF_API_HOST,'')}")
     _LOGGER.debug(f"options: {config_entry.options}")
 
@@ -203,6 +204,15 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     homeconnect.start_load_data_task(on_complete=on_data_loaded, on_error= on_data_load_error)
 
     return True
+
+def get_primary_config_entry(hass:HomeAssistant) -> str:
+    """ Return the ID of the "first" config_entry for the integration """
+    all_entries = hass.config_entries.async_entries(DOMAIN)
+
+    for entry in all_entries:
+        if CONF_API_HOST in entry.data:
+            return entry.entry_id
+    return all_entries[0].entry_id
 
 
 async def async_unload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
