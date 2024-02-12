@@ -65,7 +65,7 @@ OPTIONS_SCHEMA = vol.Schema(
 )
 
 # For your initial PR, limit it to 1 platform.
-PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.SELECT, Platform.NUMBER, Platform.BUTTON, Platform.SWITCH]
+PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.SELECT, Platform.NUMBER, Platform.BUTTON, Platform.SWITCH, Platform.TIME]
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
