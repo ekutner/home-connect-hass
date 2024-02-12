@@ -30,14 +30,14 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
                 if program.options:
                     for option in program.options.values():
                         if (not conf.has_entity_setting(option.key, "type") and option.type in number_types) or conf.has_entity_setting(option.key, "type") in number_types:
-                            device = OptionNumber(appliance, option.key, hc_obj=option)
+                            device = OptionNumber(appliance, option.key, conf, hc_obj=option)
                             entity_manager.add(device)
 
         if appliance.settings:
             for setting in appliance.settings.values():
                 if ((not conf.has_entity_setting(setting.key, "type") and setting.type in number_types) or conf.has_entity_setting(setting.key, "type") in number_types) \
                     and setting.access != "read" :
-                    device = SettingsNumber(appliance, setting.key, hc_obj=setting)
+                    device = SettingsNumber(appliance, setting.key, conf, hc_obj=setting)
                     entity_manager.add(device)
 
         entity_manager.register()

@@ -15,7 +15,7 @@ logger:
   logs:
     home_connect_async: debug
     home_connect_alt: debug
-    # custom_components.home_connect_alt: debug
+    custom_components.home_connect_alt: debug
     homeassistant.helpers.config_entry_oauth2_flow: debug
 
 home_connect_alt:
