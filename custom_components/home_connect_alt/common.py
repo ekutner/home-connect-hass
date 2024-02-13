@@ -256,4 +256,4 @@ class Configuration(dict):
     @classmethod
     def get_global_config(cls):
         """Return the global config"""
-        return cls._global_config
+        return cls._global_config if cls._global_config else {}
