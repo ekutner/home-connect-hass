@@ -28,8 +28,9 @@ CONF_SSE_TIMEOUT = "sse_timeout"
 CONF_SSE_TIMEOUT_DEFAULT = 15
 CONF_ENTITY_SETTINGS = "entity_settings"
 CONF_APPLIANCE_SETTINGS = "appliance_settings"
-
-
+CONF_DELAYED_OPS = "delayed_ops"
+CONF_DELAYED_OPS_DEFAULT = "default"
+CONF_DELAYED_OPS_ABSOLUTE_TIME = "absolute_time"
 
 HOME_CONNECT_DEVICE = {
     "identifiers": {(DOMAIN, "homeconnect")},

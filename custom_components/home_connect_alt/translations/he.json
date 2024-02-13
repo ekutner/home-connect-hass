@@ -45,14 +45,16 @@
           "log_mode": "מצב כתיבת לוג",
           "sse_timeout": "SSE חידוש קשר",
           "appliance_settings": "הגדרות מכשיר מתקדמות (YAML)",
-          "entity_settings": "הגדרות ישות מתקדמות (YAML)"
+          "entity_settings": "הגדרות ישות מתקדמות (YAML)",
+          "delayed_ops": "התנהגות של הפעלה עתידית"
         },
         "data_description": {
           "language": "יש להשתמש רק [בקודי שפה](https://api-docs.home-connect.com/general/#supported-languages) הנתמכים על ידי Home Connect",
           "log_mode": "יש להפעיל כתיבת לוג דיבאג בקובץ configuration.yaml כדי שהגדרה זו תפעל",
           "sse_timeout": "זמן, בדקות, לחידוש קשר SSE (0=כבוי)",
           "appliance_settings": "מידע מפורט ב-[README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
-          "entity_settings": "מידע מפורט ב-[README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)"
+          "entity_settings": "מידע מפורט ב-[README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
+          "delayed_ops": "מידע נוסף ב-[README](https://github.com/ekutner/home-connect-hass?tab=handling-of-delayed-program-start)"
         }
       }
     }
@@ -71,6 +73,12 @@
       "options": {
         "local": "מקומי",
         "server": "שרת"
+      }
+    },
+    "delayed_ops": {
+      "options": {
+        "default": "שימוש במשך זמן הדחיה (ההתנהגות הרגילה)",
+        "absolute_time": "שימוש בזמן אבסולוטי"
       }
     }
   },

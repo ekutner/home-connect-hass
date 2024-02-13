@@ -7,9 +7,10 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
+from homeassistant.helpers.entity_registry import async_get
 
 from .common import InteractiveEntityBase, EntityManager, is_boolean_enum, Configuration
-from .const import DOMAIN
+from .const import CONF_DELAYED_OPS, CONF_DELAYED_OPS_ABSOLUTE_TIME, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -19,6 +20,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     homeconnect:HomeConnect = entry_conf["homeconnect"]
     entity_manager = EntityManager(async_add_entities)
 
+
     def add_appliance(appliance:Appliance) -> None:
         conf = entry_conf.get_config()
 
@@ -26,8 +28,13 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if conf.get_entity_setting(option.key, "type") == "DelayedOperation":
+                        if conf.get_entity_setting(option.key, "type") == "DelayedOperation" and entry_conf[CONF_DELAYED_OPS]==CONF_DELAYED_OPS_ABSOLUTE_TIME:
                             device = DelayedOperationTime(appliance, option.key, conf, option)
+                            # remove the SELECT delayed operation entity if it exists
+                            reg = async_get(hass)
+                            select_entity = reg.async_get_entity_id("select", DOMAIN, device.unique_id)
+                            if select_entity:
+                                reg.async_remove(select_entity)
                             entity_manager.add(device)
 
         entity_manager.register()
@@ -99,7 +106,8 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
             # and cancel the set delay option
             endtime = now + timedelta(seconds=program_run_time)
             #self._current = time(hour=endtime.hour, minute=endtime.minute)
-            _LOGGER.debug("Clearing startonly option %s", self._key)
+            if self._appliance.startonly_options and self._key in self._appliance.startonly_options:
+                _LOGGER.debug("Clearing startonly option %s", self._key)
             self._appliance.clear_startonly_option(self._key)
         elif set_option:
             delay = (endtime-now).total_seconds()
