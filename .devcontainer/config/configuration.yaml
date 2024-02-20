@@ -18,7 +18,7 @@ logger:
     custom_components.home_connect_alt: debug
     homeassistant.helpers.config_entry_oauth2_flow: debug
 
-home_connect_alt:
+#home_connect_alt:
   # client_id: !secret home_connect_client_id
   # client_secret: !secret home_connect_client_secret
   # language: en-GB
@@ -30,6 +30,6 @@ home_connect_alt:
   #   LaundryCare.Washer.Setting.IDos2BaseLevel:
   #     unit: xx
   #     icon: mdi:waves-arrow-up
-  appliance_settings:
-    bosch_wat286h0gb_68a40e3587eb:
-      disabled: false
+  # appliance_settings:
+  #   bosch_wat286h0gb_68a40e3587eb:
+  #     disabled: false

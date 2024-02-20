@@ -27,8 +27,9 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "github.vscode-pull-request-github",
         "ms-python.vscode-pylance",
+        "ms-python.pylint",
+        "github.vscode-pull-request-github",
         "visualstudioexptteam.vscodeintellicode",
         "redhat.vscode-yaml",
         "esbenp.prettier-vscode",
