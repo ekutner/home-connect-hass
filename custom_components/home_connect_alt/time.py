@@ -69,7 +69,7 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
     def available(self) -> bool:
 
         # We must have the program run time for this entity to work
-        available = super().program_option_available and self.get_program_run_time()
+        available = super().program_option_available and self.get_program_run_time() is not None
 
         if not available:
             self._appliance.clear_startonly_option(self._key)
@@ -149,6 +149,6 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         # reset the end time clock when a different program is selected
-        if key == Events.PROGRAM_SELECTED:
+        if key == Events.PROGRAM_SELECTED or "RemoteControlStartAllowed" in key:
             self._current = self.init_time()
         self.async_write_ha_state()
