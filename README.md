@@ -116,6 +116,15 @@ These options will show up for all users.
   * **Local** - The integration will use the raw ENUM values documented in the Home Connect documentation for sensors with string values. In that case the integration relies on the Home Assistant translation mechanism and translation files to translate these values into friendly names. The benefit of this approach is that the values used by the integration are language independent and match the values documented in the Home Connect API.  
   * **Server** - Sensor values are translated to friendly names using the Home Connect service. In this mode the internal values of string sensors will be translated and the translated values must be used in scripts referring to those sensors.
 
+* **Delayed start behavior (experimental)** - Sets the behavior of the delayed start UI.  <a name="handling-of-delayed-program-start"></a>  
+  By default the integration will use the standard delay method supported by the appliance. Typically this would be the delay time until the start of the program for dish washers and the delay time until the end of the program for washing machines and dryers. However, it can be annoying to have to work out the time to set instead of just setting and absolute time when the program should finish.  
+  Setting this option to "Absolute time" will replace the delay entity with a time entity that will always show the expected end time of the selected program. The value of this entity can be changed to set the desired end time for the program. 
+  **Notes:**  
+  * The time will always be interpreted as a future time so anything earlier than "now" will be interpreted as tomorrow.  
+  * The time can't be set for something closer than the duration of the selected program.  
+  * Remote start has to be enabled for this feature to work.  
+  * **This feature is still experimental and may have issues**
+
 ### Advanced options
 These options will only show up when the user has enablde "Advanced mode" in the user profile.
 * **Name Template**  - 
