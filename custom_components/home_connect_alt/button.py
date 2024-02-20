@@ -26,6 +26,12 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
         if appliance.available_programs:
             entity_manager.add(StartButton(appliance, None, conf))
             entity_manager.add(StopButton(appliance, None, conf))
+        if appliance.commands:
+            for command in appliance.commands.values():
+                # The "BSH.Common.Command.AcknowledgeEvent" command is used to acknowledge the ProgramFinished state
+                if command.key not in ["BSH.Common.Command.PauseProgram", "BSH.Common.Command.ResumeProgram", "BSH.Common.Command.AcknowledgeEvent"]:
+                    button = CommandButton(appliance, command.key, conf, hc_obj=command)
+                    entity_manager.add(button)
         entity_manager.register()
 
     def remove_appliance(appliance:Appliance) -> None:
@@ -147,6 +153,7 @@ class StartButton(EntityBase, ButtonEntity):
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
 
+
 class StopButton(EntityBase, ButtonEntity):
     """ Class for buttons that start the selected program """
     @property
@@ -210,6 +217,33 @@ class StopButton(EntityBase, ButtonEntity):
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
         self.async_write_ha_state()
 
+
+class CommandButton(EntityBase, ButtonEntity):
+    """ Class for running a HC command """
+
+    @property
+    def name_ext(self) -> str|None:
+        return self._hc_obj.name
+
+    @property
+    def icon(self) -> str:
+        return self.get_entity_setting('icon', "mdi:button-pointer")
+
+    @property
+    def available(self) -> bool:
+        return super().available and self._appliance.commands and self._key in self._appliance.commands
+
+    async def async_press(self) -> None:
+        """ Handle button press """
+        try:
+            await self._appliance.async_send_command(self._key, True)
+        except HomeConnectError as ex:
+            if ex.error_description:
+                raise HomeAssistantError(f"Failed to stop the selected program: {ex.error_description} ({ex.code})")
+            raise HomeAssistantError(f"Failed to stop the selected program ({ex.code})")
+
+    async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
+        self.async_write_ha_state()
 
 class HomeConnectRefreshButton(ButtonEntity):
     """ Class for a button to trigger a global refresh of Home Connect data  """
