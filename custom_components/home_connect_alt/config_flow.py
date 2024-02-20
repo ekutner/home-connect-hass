@@ -138,7 +138,7 @@ class OptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
     ) -> FlowResult:
         """ Manage the options """
         if user_input is not None:
-            #self.hass.data[DOMAIN].update(user_input)
+            # Save the config entry when the user input has been received
             return self.async_create_entry(title="", data=user_input)
 
         data_schema = {
@@ -147,8 +147,17 @@ class OptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
                 selector({
                     "select": {
                         "options": CONF_TRANSLATION_MODES,
-                        "mode": "dropdown",
+                        #"mode": "dropdown",
                         "translation_key": CONF_TRANSLATION_MODE
+                    },
+                }),
+            # vol.Optional(CONF_ABSOLUTE_DELAYED_OPS, default=False): cv.boolean,
+            vol.Optional(CONF_DELAYED_OPS, default=CONF_DELAYED_OPS_DEFAULT):
+                selector({
+                    "select": {
+                        "options": [CONF_DELAYED_OPS_DEFAULT, CONF_DELAYED_OPS_ABSOLUTE_TIME],
+                        "mode": "list",
+                        "translation_key": CONF_DELAYED_OPS
                     },
                 }),
             vol.Optional(CONF_LOG_MODE, default=0): vol.All(int, vol.Range(min=0, max=7)),
@@ -166,12 +175,6 @@ class OptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
                         selector({
                             "object": {}
                         }),
-                    # vol.Optional(CONF_APPLIANCE_SETTINGS): selector({
-                    #     "device": {
-                    #         "entity": [ {"integration": DOMAIN}],
-                    #         "multiple": True,
-                    #     }
-                    # }),
                 }
             )
 
@@ -181,5 +184,6 @@ class OptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
         data_schema = self.add_suggested_values_to_schema(data_schema=vol.Schema(data_schema), suggested_values=defaults)
 
         return self.async_show_form(step_id="init", data_schema=data_schema)
+
 
 

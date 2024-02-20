@@ -7,9 +7,10 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
+from homeassistant.helpers.entity_registry import async_get
 
 from .common import InteractiveEntityBase, EntityManager, is_boolean_enum, Configuration
-from .const import CONF_TRANSLATION_MODE, CONF_TRANSLATION_MODE_SERVER, DEVICE_ICON_MAP, DOMAIN
+from .const import CONF_DELAYED_OPS, CONF_DELAYED_OPS_ABSOLUTE_TIME, CONF_DELAYED_OPS_DEFAULT, CONF_TRANSLATION_MODE, CONF_TRANSLATION_MODE_SERVER, DEVICE_ICON_MAP, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -31,8 +32,14 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if conf.get_entity_setting(option.key, "type") == "DelayedOperation":
+                        if conf.get_entity_setting(option.key, "type") == "DelayedOperation" and entry_conf[CONF_DELAYED_OPS] == CONF_DELAYED_OPS_DEFAULT:
                             device = DelayedOperationSelect(appliance, option.key, conf, option)
+                            # remove the TIME delayed operation entity if it exists
+                            reg = async_get(hass)
+                            select_entity = reg.async_get_entity_id("time", DOMAIN, device.unique_id)
+                            if select_entity:
+                                reg.async_remove(select_entity)
+
                             entity_manager.add(device)
                         elif option.allowedvalues and len(option.allowedvalues)>1:
                             device = OptionSelect(appliance, option.key, conf)

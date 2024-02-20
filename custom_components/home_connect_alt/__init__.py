@@ -52,20 +52,19 @@ CONFIG_SCHEMA = vol.Schema(
 
 OPTIONS_SCHEMA = vol.Schema(
     {
-        vol.Optional(CONF_CACHE, default=False): vol.Coerce(bool),
-        vol.Optional(CONF_LANG, default=CONF_LANG_DEFAULT): str,
+        vol.Optional(CONF_LANG, default=CONF_LANG_DEFAULT): vol.Coerce(str),
         vol.Optional(CONF_TRANSLATION_MODE, default="local"): vol.Coerce(str),
-        vol.Optional(CONF_SENSORS_TRANSLATION, default=None): vol.Any(str, None),
+        vol.Optional(CONF_DELAYED_OPS, default=CONF_DELAYED_OPS_DEFAULT): vol.Coerce(str),
         vol.Optional(CONF_NAME_TEMPLATE, default=CONF_NAME_TEMPLATE_DEFAULT): vol.Coerce(str),
         vol.Optional(CONF_LOG_MODE, default=0): vol.Coerce(int),
         vol.Optional(CONF_SSE_TIMEOUT, default=CONF_SSE_TIMEOUT_DEFAULT): vol.Coerce(int),
         vol.Optional(CONF_ENTITY_SETTINGS, default={}): vol.Any(dict, None),
         vol.Optional(CONF_APPLIANCE_SETTINGS, default={}): vol.Any(dict, None)
-    }
+    },
+    extra=vol.REMOVE_EXTRA
 )
 
-# For your initial PR, limit it to 1 platform.
-PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.SELECT, Platform.NUMBER, Platform.BUTTON, Platform.SWITCH]
+PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.SELECT, Platform.NUMBER, Platform.BUTTON, Platform.SWITCH, Platform.TIME]
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:

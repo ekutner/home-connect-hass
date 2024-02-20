@@ -45,14 +45,16 @@
           "log_mode": "Verbose log mode",
           "sse_timeout": "SSE Timeout",
           "appliance_settings": "Advanced appliance settings (YAML)",
-          "entity_settings": "Advanced entity settings (YAML)"
+          "entity_settings": "Advanced entity settings (YAML)",
+          "delayed_ops": "Delayed start behavior"
         },
         "data_description": {
           "language": "Gebruik enkel [language codes](https://api-docs.home-connect.com/general/#supported-languages) ondersteund door Home Connect",
           "log_mode": "Debug logging moet aan staan in configuration.yaml voor deze setting.",
           "sse_timeout": "Timeout in minutes for refreshing the SSE connection (0=disabled)",
           "appliance_settings": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
-          "entity_settings": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)"
+          "entity_settings": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
+          "delayed_ops": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=handling-of-delayed-program-start)"
         }
       }
     }
@@ -71,6 +73,12 @@
       "options": {
         "local": "Lokaal",
         "server": "Server"
+      }
+    },
+    "delayed_ops": {
+      "options": {
+        "default": "Use delay time span (default behavior)",
+        "absolute_time": "Use absolute time"
       }
     }
   },
