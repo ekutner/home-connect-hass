@@ -28,7 +28,9 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if conf.get_entity_setting(option.key, "type") == "DelayedOperation" and entry_conf[CONF_DELAYED_OPS]==CONF_DELAYED_OPS_ABSOLUTE_TIME:
+                        if conf.get_entity_setting(option.key, "type") == "DelayedOperation" \
+                            and entry_conf[CONF_DELAYED_OPS]==CONF_DELAYED_OPS_ABSOLUTE_TIME \
+                            and DelayedOperationTime.has_program_run_time(appliance):
                             device = DelayedOperationTime(appliance, option.key, conf, option)
                             # remove the SELECT delayed operation entity if it exists
                             reg = async_get(hass)
@@ -54,8 +56,7 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
 
     def __init__(self, appliance: Appliance, key: str = None, conf: dict = None, hc_obj = None) -> None:
         super().__init__(appliance, key, conf, hc_obj)
-        self._current:time = self.init_time()
-
+        self._current:time = None
     @property
     def name_ext(self) -> str|None:
         return self._hc_obj.name if self._hc_obj.name else "Delayed operation"
@@ -69,7 +70,7 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
     def available(self) -> bool:
 
         # We must have the program run time for this entity to work
-        available = super().program_option_available and self.get_program_run_time() is not None
+        available = super().program_option_available and self.get_program_run_time(self._appliance) is not None
 
         if not available:
             self._appliance.clear_startonly_option(self._key)
@@ -84,13 +85,17 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
     @property
     def native_value(self) -> time:
         """Return the entity value to represent the entity state."""
+        if self._current is None:
+            self._current = self.init_time()
+
         if self._appliance.startonly_options and self._key in self._appliance.startonly_options:
             self._current = self.adjust_time(self._current, True)
         else:
             self._current = self.adjust_time(self._current, False)
         return self._current
 
-    def adjust_time(self, t:time, set_option:bool) -> time:
+
+    def adjust_time(self, t:time, set_option:bool) -> time|None:
 
         now = datetime.datetime.now()
         endtime = datetime.datetime(year=now.year, month=now.month, day=now.day, hour=t.hour, minute=t.minute)
@@ -99,7 +104,10 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
             # if the specified time is smaller than now then it means tomorrow
             endtime += datetime.timedelta(days=1)
 
-        program_run_time = self.get_program_run_time()
+        program_run_time = self.get_program_run_time(self._appliance)
+
+        if not program_run_time:
+            return None
 
         if endtime < now + timedelta(seconds=program_run_time):
             # the set end time is closer then the program run time so change it to the expected end of the program
@@ -129,22 +137,25 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
         t = time(hour=inittime.hour, minute=inittime.minute)
         return self.adjust_time(t, False)
 
-    def get_program_run_time(self) -> int|None:
+    @classmethod
+    def get_program_run_time(cls, appliance:Appliance) -> int|None:
 
-        # There seems to be a bug in HC which returns the remaining time for the previous program when there isn't an dactive one
-        prog_time_option = self._appliance.get_applied_program_option("BSH.Common.Option.RemainingProgramTime")
-        if prog_time_option and self._appliance.active_program:
-            return prog_time_option.value
+        time_option_keys = [
+            "BSH.Common.Option.RemainingProgramTime",
+            "BSH.Common.Option.FinishInRelative",
+            "BSH.Common.Option.EstimatedTotalProgramTime",
+        ]
 
-        prog_time_option = self._appliance.get_applied_program_option("BSH.Common.Option.FinishInRelative")
-        if prog_time_option:
-            return prog_time_option.value
-
-        prog_time_option = self._appliance.get_applied_program_option("BSH.Common.Option.EstimatedTotalProgramTime")
-        if prog_time_option:
-            return prog_time_option.value
+        for key in time_option_keys:
+            o = appliance.get_applied_program_option(key)
+            if o:
+                return o
 
         return None
+
+    @classmethod
+    def has_program_run_time(cls, appliance:Appliance) ->bool:
+        return cls.get_program_run_time(appliance) is not None
 
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:

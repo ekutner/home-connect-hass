@@ -1,6 +1,7 @@
 """ Implement the Select entities of this implementation """
 from __future__ import annotations
 import logging
+from custom_components.home_connect_alt.time import DelayedOperationTime
 from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events, ConditionalLogger as CL
 from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
@@ -32,13 +33,14 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if conf.get_entity_setting(option.key, "type") == "DelayedOperation" and entry_conf[CONF_DELAYED_OPS] == CONF_DELAYED_OPS_DEFAULT:
+                        if conf.get_entity_setting(option.key, "type") == "DelayedOperation" and (
+                            entry_conf[CONF_DELAYED_OPS] == CONF_DELAYED_OPS_DEFAULT or not DelayedOperationTime.has_program_run_time(appliance)):
                             device = DelayedOperationSelect(appliance, option.key, conf, option)
                             # remove the TIME delayed operation entity if it exists
                             reg = async_get(hass)
-                            select_entity = reg.async_get_entity_id("time", DOMAIN, device.unique_id)
-                            if select_entity:
-                                reg.async_remove(select_entity)
+                            time_entity = reg.async_get_entity_id("time", DOMAIN, device.unique_id)
+                            if time_entity:
+                                reg.async_remove(time_entity)
 
                             entity_manager.add(device)
                         elif option.allowedvalues and len(option.allowedvalues)>1:
