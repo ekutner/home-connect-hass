@@ -96,6 +96,7 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
 
 
     def adjust_time(self, t:time, set_option:bool) -> time|None:
+        """ Adjust the time state when required """
 
         now = datetime.datetime.now()
         endtime = datetime.datetime(year=now.year, month=now.month, day=now.day, hour=t.hour, minute=t.minute)
@@ -133,13 +134,14 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
         return time(hour=endtime.hour, minute=endtime.minute)
 
     def init_time(self) -> time:
+        """ Initialize the time state """
         inittime = datetime.datetime.now() + timedelta(minutes=1)
         t = time(hour=inittime.hour, minute=inittime.minute)
         return self.adjust_time(t, False)
 
     @classmethod
     def get_program_run_time(cls, appliance:Appliance) -> int|None:
-
+        """ Try to get the expected run time of the selected program or the remaining time of the running program """
         time_option_keys = [
             "BSH.Common.Option.RemainingProgramTime",
             "BSH.Common.Option.FinishInRelative",
@@ -149,12 +151,13 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
         for key in time_option_keys:
             o = appliance.get_applied_program_option(key)
             if o:
-                return o
+                return o.value
 
         return None
 
     @classmethod
     def has_program_run_time(cls, appliance:Appliance) ->bool:
+        """ Check if it's possible to get a program run time estimate """
         return cls.get_program_run_time(appliance) is not None
 
 
