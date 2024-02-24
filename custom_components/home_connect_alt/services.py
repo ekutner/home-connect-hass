@@ -1,5 +1,5 @@
 """ Implement the services of this implementation """
-from home_connect_async import HomeConnect, HomeConnectError
+from home_connect_async import HomeConnect, HomeConnectError, Appliance
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import device_registry as dr
@@ -100,13 +100,13 @@ class Services():
         appliance = self.get_appliance_from_device_id(data['device_id'])
         if appliance:
             try:
-                await appliance.async_run_command(data['key'], data['value'])
+                await appliance.async_send_command(data['key'], data['value'])
             except HomeConnectError as ex:
                 raise HomeAssistantError(ex.error_description if ex.error_description else ex.msg) from ex
             except ValueError as ex:
                 raise HomeAssistantError(str(ex)) from ex
 
-    def get_appliance_from_device_id(self, device_id):
+    def get_appliance_from_device_id(self, device_id) -> Appliance|None:
         """ Helper function to get an appliance from the Home Assistant device_id """
         device = self.dr.devices[device_id]
         haId = list(device.identifiers)[0][1]
