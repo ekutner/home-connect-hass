@@ -232,8 +232,8 @@ In contrast, setting ```sensor_value_translation: server``` will override this b
 * **Some of my appliances are not showing up after I added the integration**  
   This is most commonly caused by two reasons:
   1. The appliance must be powered on and connected to the Home Connect service to be discovered. Once the missing devices are turned on and connected, they will automatically be discovered and added by the integration.
-  This can be verified in the Home Connect mobile app **but only while the wifi on the phone is turned OFF**. If the devices are active in the mobile app while the phone's wifi is turned off then please open an issue with a debug log to report it.
-  2. Due to some unreasonable rate limits set by BSH, there is a limit of about 5
+  This can be verified in the Home Connect mobile app **but only while the wifi on the phone is turned OFF**. If some devices still do not show app in the integration, restart them. If the devices are active in the mobile app while the phone's wifi is turned off then please open an issue with a debug log to report it.
+  3. Due to some unreasonable rate limits set by BSH, there is a limit of about 5
   appliances loaded per minute. If you have more, expect the initial load to take longer. The integration will wait for the service to become available and continue loading the rest of the appliances. You may have to refresh your screen to see them in Home Assistant after they were added. See more details in the next item.
 
 * **The Home Connect Status sensor is showing the value BLOCKED and nothing works**  
