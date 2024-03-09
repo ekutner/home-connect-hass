@@ -38,7 +38,7 @@ HOME_CONNECT_DEVICE = {
     "manufacturer": "BSH"
 }
 
-ENTITY_SETTINGS = {
+DEFAULT_SETTINGS = {
     CONF_ENTITY_SETTINGS: {
         "BSH.Common.Option.FinishInRelative": { "type": "DelayedOperation", "unit": None, "class": f"{DOMAIN}__timespan"},
         "BSH.Common.Option.StartInRelative": { "type": "DelayedOperation", "unit": None, "class": f"{DOMAIN}__timespan"},

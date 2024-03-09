@@ -9,7 +9,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
 from .common import Configuration, InteractiveEntityBase, EntityManager
-from .const import DOMAIN, ENTITY_SETTINGS
+from .const import DOMAIN
 
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:

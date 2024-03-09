@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import copy
 import logging
 import aiohttp
 from datetime import datetime
@@ -98,7 +99,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
     all_entries = hass.config_entries.async_entries(DOMAIN)
 
-    options = OPTIONS_SCHEMA(dict(config_entry.options))
+    options = OPTIONS_SCHEMA(copy.deepcopy(dict(config_entry.options)))
     #options.update(config_entry.options)
     conf = Configuration(options)
     hass.data[DOMAIN][config_entry.entry_id] = conf

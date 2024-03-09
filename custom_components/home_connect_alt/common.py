@@ -7,7 +7,7 @@ from home_connect_async import Appliance, Events
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_NAME_TEMPLATE, CONF_NAME_TEMPLATE_DEFAULT, DOMAIN, ENTITY_SETTINGS, CONF_ENTITY_SETTINGS, CONF_APPLIANCE_SETTINGS
+from .const import CONF_NAME_TEMPLATE, CONF_NAME_TEMPLATE_DEFAULT, DOMAIN, DEFAULT_SETTINGS, CONF_ENTITY_SETTINGS, CONF_APPLIANCE_SETTINGS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -199,7 +199,7 @@ class Configuration(dict):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.update(ENTITY_SETTINGS)
+        self.update(self.__merge(self, DEFAULT_SETTINGS, overwrite=False))
         if Configuration._global_config:
             self.update(self.__merge(self, Configuration._global_config, overwrite=False))
 

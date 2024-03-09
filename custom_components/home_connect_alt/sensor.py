@@ -211,7 +211,7 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
             return datetime.now(timezone.utc).astimezone() + timedelta(
                 seconds=option.value
             )
-        if "timespan" in self.device_class:
+        if self.device_class and "timespan" in self.device_class:
             m, s = divmod(option.value, 60)
             h, m = divmod(m, 60)
             return f"{h}:{m:02d}"
