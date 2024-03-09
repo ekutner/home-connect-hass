@@ -125,7 +125,7 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
 
             # round the delay to the stepsize
             stepsize_option = self._appliance.get_applied_program_available_option(self._key)
-            stepsize = stepsize_option.stepsize if stepsize_option else 60
+            stepsize = stepsize_option.stepsize if stepsize_option and stepsize_option.stepsize and stepsize_option.stepsize != 0 else 60
             delay = int(delay/stepsize)*stepsize
 
             _LOGGER.debug("Setting startonly option %s to: %i", self._key, delay)
