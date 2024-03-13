@@ -266,7 +266,7 @@ class SettingsSelect(InteractiveEntityBase, SelectEntity):
     @property
     def current_option(self) -> str:
         """Return the selected entity option to represent the entity state."""
-        return self._appliance.settings[self._key].value
+        return self._appliance.settings[self._key].value if self._appliance.settings and self._key in self._appliance.settings else None
 
     async def async_select_option(self, option: str) -> None:
         try:
