@@ -21,8 +21,8 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     entity_manager = EntityManager(async_add_entities)
 
     def add_appliance(appliance:Appliance) -> None:
+        conf:Configuration = entry_conf.get_config()
         for (key, status) in appliance.status.items():
-            conf = entry_conf.get_config()
             device = None
             if isinstance(status.value, bool) or conf.get_entity_setting(key, "type") == "Boolean": # should be a binary sensor if it has a boolean value
                 device = StatusBinarySensor(appliance, key, conf)
