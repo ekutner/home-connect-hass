@@ -69,7 +69,7 @@ Before installing the integration you need to create an "application" in the Hom
    **Application ID**: A unique ID for the application, can be home-connect-alt, or whatever you like.  
    **OAuth Flow**: Authorization Code Grant Flow  
    **Home Connect User Account for Testing**: Leave blank  
-   **Redirect URI**: https://my.home-assistant.io/redirect/oauth  
+   **Redirect URI**: https://my.home-assistant.io/redirect/config_flow_start?domain=home_connect_alt
    **Add additional redirect URIs**: Leave unchecked  
    **Enable One Time Token Mode**: Leave unchecked  
 4. Click "Save" then copy the *Client ID* and *Client Secret* and save them for use in the next step.
