@@ -74,6 +74,10 @@ class OAuth2FlowHandler(config_entry_oauth2_flow.AbstractOAuth2FlowHandler, doma
             elif "config_flow" not in self.hass.data[DOMAIN]:
                 self.hass.data[DOMAIN]["config_flow"] = {}
             self.hass.data[DOMAIN]["config_flow"].update(user_input)
+            if "global" not in self.hass.data[DOMAIN]:
+                self.hass.data[DOMAIN]["global"] = {}
+            self.hass.data[DOMAIN]["global"].update({ CONF_API_HOST: user_input[CONF_API_HOST] })
+
             user_input = None
         return await self.async_step_pick_implementation(user_input)
 
