@@ -382,11 +382,21 @@ def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect):
                 "key": key,
                 "value": value
             }
-            hass.bus.async_fire(f"{DOMAIN}_event", event_data)
-            _LOGGER.debug("Published event to Home Assistant event bus: %s = %s", key, str(value))
+            if key in ("BSH.Common.Status.OperationState", "BSH.Common.Event.ProgramFinished"):
+                # delay the firing of the event to deal with event handling race condition
+                _LOGGER.debug("Creating delayed_publish_event task")
+                asyncio.create_task(delayed_publish_event(event_data, 1))
+            else:
+                hass.bus.async_fire(f"{DOMAIN}_event", event_data)
+                _LOGGER.debug("Published event to Home Assistant event bus: %s = %s", key, str(value))
         else:
             _LOGGER.debug("Skipped publishing of duplicate event to Home Assistant event bus: %s = %s", key, str(value))
 
+    async def delayed_publish_event(event_data, timeout):
+        _LOGGER.debug(f"Sleeping for {timeout} seconds to delay event publishing of {event_data}")
+        await asyncio.sleep(timeout)
+        hass.bus.async_fire(f"{DOMAIN}_event", event_data)
+        _LOGGER.debug("Published event to Home Assistant event bus after delay: %s = %s", event_data["key"], str(event_data["value"]))
 
     def register_appliance(appliance:Appliance):
         for event in PUBLISHED_EVENTS:
