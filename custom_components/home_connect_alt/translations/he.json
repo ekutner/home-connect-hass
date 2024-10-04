@@ -66,7 +66,8 @@
     "api_host": {
       "options": {
         "https://api.home-connect.com": "ברירת מחדל",
-        "https://api.home-connect.cn": "סין"
+        "https://api.home-connect.cn": "סין",
+        "https://simulator.home-connect.com": "סימולטור (לבדיקה בלבד)"
       }
     },
     "translation_mode": {

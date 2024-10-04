@@ -9,7 +9,7 @@ ENDPOINT_AUTHORIZE = "/security/oauth/authorize"
 ENDPOINT_TOKEN = "/security/oauth/token"
 SCOPES = "IdentifyAppliance Monitor Control Settings"
 CONF_API_HOST = "api_host"
-CONF_API_HOST_OPTIONS = [ "https://api.home-connect.com", "https://api.home-connect.cn" ]
+CONF_API_HOST_OPTIONS = [ "https://api.home-connect.com", "https://api.home-connect.cn", "https://simulator.home-connect.com" ]
 # CONF_API_HOST_OPTIONS = [
 #     {"label": "default", "value": "https://api.home-connect.com"},
 #     {"label": "china", "value": "https://api.home-connect.cn"}

@@ -66,7 +66,8 @@
     "api_host": {
       "options": {
         "https://api.home-connect.cn": "中国",
-        "https://api.home-connect.com": "デフォルト"
+        "https://api.home-connect.com": "デフォルト",
+        "https://simulator.home-connect.com": "Simulator (for testing only)"
       }
     },
     "translation_mode": {

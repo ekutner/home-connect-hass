@@ -89,7 +89,8 @@ Before installing the integration you need to create an "application" in the Hom
    [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ekutner&repository=home-connect-hass)  
    Alternatively, go to Settings -> Devices & Services in Home Assistance and click the "Add Integration" button. Search for "Home Connect Alt" and install it.
 2. A dialog box will popup asking you to select your preferred Home Connect server. 
-   Select "China" if you are located in China and "Default" for any other location.
+   Select "China" if you are located in China and "Default" for any other location.  
+   If you just want to test the integration and see how it you can select the "Simulator" endpoint, which connect to the Home Connect developer simulator and shows all the appliances that exist there. Note that this option is only shown once so you will have to delete the config entry once you finished testing in order to be able to connect to the real API for you actual appliances.
    ![api_host dialog](assets/api_host_dialog.png)
 3. Next you will be asked to provide the Home Connect developer app credentials you 
    created erlier. Give these credetials set a name that will make it easy for you to reference them in the Home Assistant credentials manager :

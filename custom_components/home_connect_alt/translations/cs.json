@@ -66,7 +66,8 @@
     "api_host": {
       "options": {
         "https://api.home-connect.com": "Výchozí",
-        "https://api.home-connect.cn": "Čína"
+        "https://api.home-connect.cn": "Čína",
+        "https://simulator.home-connect.com": "Simulator (for testing only)"
       }
     },
     "translation_mode": {
