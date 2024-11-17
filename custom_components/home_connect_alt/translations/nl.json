@@ -16,7 +16,7 @@
     },
     "step": {
       "user": {
-        "title": "Kies server",
+        "title": "Voorkeurslocatie server selecteren",
         "data": {
           "api_host": "Home Connect Server"
         },
@@ -28,8 +28,8 @@
         "title": "Link Home Connect Account"
       },
       "reauth_confirm": {
-        "title": "Reauthenticatie integration",
-        "description": "De Home Connect integration moet je account her-authenticeren"
+        "title": "Herbevestig authenticatie van de integratie",
+        "description": "De Home Connect integratie moet je account opnieuw bevestigen."
       }
     }
   },
@@ -40,17 +40,17 @@
         "description": "Bekijk de configuratie sectie op [README](https://github.com/ekutner/home-connect-hass) voor uitleg over deze instellingen",
         "data": {
           "language": "Taal code",
-          "translation_mode": "Vertalings mode",
-          "name_template": "Entiteit naam template",
+          "translation_mode": "Vertalingsmode",
+          "name_template": "Template voor entiteitsnamen in Home Assistant",
           "log_mode": "Verbose log mode",
-          "sse_timeout": "SSE Timeout",
-          "appliance_settings": "Advanced appliance settings (YAML)",
-          "entity_settings": "Advanced entity settings (YAML)",
-          "delayed_ops": "Delayed start behavior"
+          "sse_timeout": "SSE timeout",
+          "appliance_settings": "Geavanceerde apparaat configuratie (YAML)",
+          "entity_settings": "Geavanceerde entity configuratie (YAML)",
+          "delayed_ops": "instellingen 'Vertraagde start'"
         },
         "data_description": {
           "language": "Gebruik enkel [language codes](https://api-docs.home-connect.com/general/#supported-languages) ondersteund door Home Connect",
-          "log_mode": "Debug logging moet aan staan in configuration.yaml voor deze setting.",
+          "log_mode": "Debug logging moet aan staan in configuration.yaml voor deze instelling.",
           "sse_timeout": "Timeout in minutes for refreshing the SSE connection (0=disabled)",
           "appliance_settings": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
           "entity_settings": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
@@ -78,8 +78,8 @@
     },
     "delayed_ops": {
       "options": {
-        "default": "Use delay time span (default behavior)",
-        "absolute_time": "Use absolute time"
+        "default": "Gebruik vertraagde tijdsperiode (standaard)",
+        "absolute_time": "Gebruik het absolute tijdsmoment"
       }
     }
   },
@@ -92,22 +92,22 @@
   "entity": {
     "button": {
       "start_program": {
-        "name": "Start Program"
+        "name": "Programma starten"
       },
       "pause_program": {
-        "name": "Pause Program"
+        "name": "Pauzeren"
       },
       "resume_program": {
-        "name": "Resume Program"
+        "name": "Programma hervatten"
       },
       "stop_program": {
-        "name": "Stop Program"
+        "name": "Programma stoppen"
       },
       "hc_refresh": {
-        "name": "Home Connect Refresh"
+        "name": "Home Connect vernieuwen"
       },
       "hc_debug_info": {
-        "name": "Home Connect Dump Debug Info"
+        "name": "Home Connect Debug Info"
       }
     },
     "select": {
@@ -118,7 +118,7 @@
           "BSH.Common.Option.FinishInRelative": "Klaar In",
           "BSH.Common.Option.ProgramProgress": "Programmavoortgang",
           "BSH.Common.Option.RemainingProgramTime": "Resterende programmatijd",
-          "BSH.Common.Option.StartInRelative": "Start In Relative",
+          "BSH.Common.Option.StartInRelative": "Starten in",
           "BSH.Common.Root.ActiveProgram": "Actief Programma",
           "BSH.Common.Root.SelectedProgram": "Geselected Programma",
           "ConsumerProducts.CleaningRobot.Option.CleaningMode": "Reinigingsmodus",
@@ -176,10 +176,10 @@
           "Cooking.Common.Option.Hood.VentingLevel": "Afzuigkap",
           "Cooking.Hood.EnumType.IntensiveStage.IntensiveStage1": "Boost",
           "Cooking.Hood.EnumType.IntensiveStage.IntensiveStage2": "Power Boost",
-          "Cooking.Hood.EnumType.Stage.FanStage01": "Stage 1",
-          "Cooking.Hood.EnumType.Stage.FanStage02": "Stage 2",
-          "Cooking.Hood.EnumType.Stage.FanStage03": "Stage 3",
-          "Cooking.Hood.EnumType.Stage.FanStage04": "Stage 4",
+          "Cooking.Hood.EnumType.Stage.FanStage01": "Niveau 1",
+          "Cooking.Hood.EnumType.Stage.FanStage02": "Niveau 2",
+          "Cooking.Hood.EnumType.Stage.FanStage03": "Niveau 3",
+          "Cooking.Hood.EnumType.Stage.FanStage04": "Niveau 4",
           "Cooking.Oven.Option.FastPreHeat": "Snel Voorverwarmen",
           "Cooking.Oven.Option.SetpointTemperature": "Setpoint Temperatuur",
           "Cooking.Oven.Option.WarmingLevel": "Opwarmniveau",
@@ -201,7 +201,7 @@
           "Dishcare.Dishwasher.Option.HygienePlus": "Hygiene Plus",
           "Dishcare.Dishwasher.Option.IntensivZone": "Intensieve Zone",
           "Dishcare.Dishwasher.Option.SilenceOnDemand": "Stilte Op Verzoek",
-          "Dishcare.Dishwasher.Option.VarioSpeedPlus": "Vario Speed Plus",
+          "Dishcare.Dishwasher.Option.VarioSpeedPlus": "VarioSpeed Plus",
           "LaundryCare.Common.EnumType.ProcessPhase.Cooldown": "Afkoelen",
           "LaundryCare.Common.EnumType.ProcessPhase.CupboardDryReached": "Kastdroog Bereikt",
           "LaundryCare.Common.EnumType.ProcessPhase.DetectingLoad": "Belasting Detecteren",
@@ -289,7 +289,7 @@
           "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus1": "+1",
           "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus2": "+2",
           "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus3": "+3",
-          "LaundryCare.Washer.Option.SpinSpeed": "Omwentellingsnelheid",
+          "LaundryCare.Washer.Option.SpinSpeed": "Centrifugesnelheid",
           "LaundryCare.Washer.Option.Temperature": "Temperatuur"
         }
       },
@@ -506,13 +506,13 @@
           "BSH.Common.EnumType.AmbientLightColor.Color51": "Koud Wit",
           "BSH.Common.EnumType.AmbientLightColor.Color52": "Wit",
           "BSH.Common.EnumType.AmbientLightColor.CustomColor": "Aangepaste Kleur",
-          "BSH.Common.EnumType.PowerState.MainsOff": "Stroom uit",
-          "BSH.Common.EnumType.PowerState.Off": "Uit",
-          "BSH.Common.EnumType.PowerState.On": "Aan",
+          "BSH.Common.EnumType.PowerState.MainsOff": "Geen netstroom",
+          "BSH.Common.EnumType.PowerState.Off": "Uitgeschakeld",
+          "BSH.Common.EnumType.PowerState.On": "Ingeschakeld",
           "BSH.Common.EnumType.PowerState.Standby": "Standby",
           "BSH.Common.EnumType.TemperatureUnit.Celsius": "Celsius",
           "BSH.Common.EnumType.TemperatureUnit.Fahrenheit": "Fahrenheit",
-          "BSH.Common.Setting.AlarmClock": "Alarm Klok",
+          "BSH.Common.Setting.AlarmClock": "Alarmklok",
           "BSH.Common.Setting.AmbientLightBrightness": "Omgevingslicht Helderheid",
           "BSH.Common.Setting.AmbientLightColor": "Omgevingslichtkleur",
           "BSH.Common.Setting.AmbientLightCustomColor": "Aangepaste Omgevingslicht Kleur",
@@ -530,10 +530,10 @@
           "ConsumerProducts.CoffeeMaker.Setting.CupWarmer": "Kopjesverwarmer",
           "Cooking.Common.Setting.Lighting": "Verlichting",
           "Cooking.Common.Setting.LightingBrightness": "Verlichtings Helderheid",
-          "Cooking.Hob.EnumType.ZoneSelector.FrontLeft": "Vooraan Links",
-          "Cooking.Hob.EnumType.ZoneSelector.FrontRight": "Vooraan Rechts",
-          "Cooking.Hob.EnumType.ZoneSelector.RearLeft": "Achteraan Links",
-          "Cooking.Hob.EnumType.ZoneSelector.RearRight": "Achteraan Rechts",
+          "Cooking.Hob.EnumType.ZoneSelector.FrontLeft": "Linksvoor",
+          "Cooking.Hob.EnumType.ZoneSelector.FrontRight": "Rechtsvoor",
+          "Cooking.Hob.EnumType.ZoneSelector.RearLeft": "Linksachter",
+          "Cooking.Hob.EnumType.ZoneSelector.RearRight": "Rechtsachter",
           "Cooking.Oven.EnumType.AddedSteam.Off": "Added Steam Off",
           "Cooking.Oven.EnumType.AddedSteam.On": "Added Steam Oמ",
           "Cooking.Oven.Setting.SabbathMode": "Rust Modus",
@@ -562,20 +562,20 @@
       "statuses": {
         "state": {
           "BSH.Common.EnumType.OperationState.Aborting": "Afbreken",
-          "BSH.Common.EnumType.OperationState.ActionRequired": "Actie Vereist",
+          "BSH.Common.EnumType.OperationState.ActionRequired": "Actie vereist",
           "BSH.Common.EnumType.OperationState.DelayedStart": "Uitgestelde Start",
           "BSH.Common.EnumType.OperationState.Error": "Fout",
           "BSH.Common.EnumType.OperationState.Finished": "Klaar",
           "BSH.Common.EnumType.OperationState.Inactive": "Inactief",
           "BSH.Common.EnumType.OperationState.Pause": "Pause",
-          "BSH.Common.EnumType.OperationState.Ready": "Ready",
-          "BSH.Common.EnumType.OperationState.Run": "Run",
-          "BSH.Common.EnumType.PowerState.MainsOff": "c",
-          "BSH.Common.EnumType.PowerState.Off": "Uit",
-          "BSH.Common.EnumType.PowerState.On": "Aan",
+          "BSH.Common.EnumType.OperationState.Ready": "Klaar voor gebruik",
+          "BSH.Common.EnumType.OperationState.Run": "In bedrijf",
+          "BSH.Common.EnumType.PowerState.MainsOff": "Geen netstroom",
+          "BSH.Common.EnumType.PowerState.Off": "Uitgeschakeld",
+          "BSH.Common.EnumType.PowerState.On": "Ingeschakeld",
           "BSH.Common.EnumType.PowerState.Standby": "Standby",
-          "Cooking.Hob.EnumType.PowerLevel.Off": "Uit",
-          "Cooking.Hob.EnumType.PowerLevel.On": "Aan"
+          "Cooking.Hob.EnumType.PowerLevel.Off": "Uitgeschakeld",
+          "Cooking.Hob.EnumType.PowerLevel.On": "Ingeschakeld"
         }
       }
     },
@@ -590,9 +590,9 @@
           "BSH.Common.Option.FinishInRelative": "Klaar In",
           "BSH.Common.Option.ProgramProgress": "Programmavoortgang",
           "BSH.Common.Option.RemainingProgramTime": "Resterende programmatijd",
-          "BSH.Common.Option.StartInRelative": "Start In Relative",
+          "BSH.Common.Option.StartInRelative": "Starten over",
           "BSH.Common.Root.ActiveProgram": "Actief Programma",
-          "BSH.Common.Root.SelectedProgram": "Geselected Programma",
+          "BSH.Common.Root.SelectedProgram": "Gekozen Programma",
           "ConsumerProducts.CleaningRobot.Option.CleaningMode": "Reinigingsmodus",
           "ConsumerProducts.CleaningRobot.Option.ProcessPhase": "Process Fase",
           "ConsumerProducts.CleaningRobot.Option.ReferenceMapId": "Reference Map Id",
@@ -761,7 +761,7 @@
           "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus1": "+1",
           "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus2": "+2",
           "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus3": "+3",
-          "LaundryCare.Washer.Option.SpinSpeed": "Omwentellingsnelheid",
+          "LaundryCare.Washer.Option.SpinSpeed": "Centrifugeren",
           "LaundryCare.Washer.Option.Temperature": "Temperatuur"
         }
       },
@@ -889,17 +889,17 @@
           "LaundryCare.Dryer.Program.WaterProof.WaterProof": "Droger: Waterbestendig",
           "LaundryCare.Dryer.Program.Wool.Wool": "Droger: Wol",
           "LaundryCare.Dryer.Program.WoolFinish": "Droger: Wol Nabehandeling",
-          "LaundryCare.Washer.Program.Auto30": "Wasmachine: Auto 30",
-          "LaundryCare.Washer.Program.Auto40": "Wasmachine: Auto 40",
-          "LaundryCare.Washer.Program.Auto60": "Wasmachine: Auto 60",
-          "LaundryCare.Washer.Program.Automatic30.Auto30.Auto30": "Wasmachine: Auto 30",
-          "LaundryCare.Washer.Program.Automatic4060.Auto40.Auto40": "Wasmachine: Auto 40",
+          "LaundryCare.Washer.Program.Auto30": "Wasmachine: Auto 30°C",
+          "LaundryCare.Washer.Program.Auto40": "Wasmachine: Auto 40°C",
+          "LaundryCare.Washer.Program.Auto60": "Wasmachine: Auto 60°C",
+          "LaundryCare.Washer.Program.Automatic30.Auto30.Auto30": "Wasmachine: Auto 30°C",
+          "LaundryCare.Washer.Program.Automatic4060.Auto40.Auto40": "Wasmachine: Auto 40°C",
           "LaundryCare.Washer.Program.Chiffon": "Wasmachine: Zijde",
           "LaundryCare.Washer.Program.Cotton": "Wasmachine: Katoen",
           "LaundryCare.Washer.Program.Cotton.Colour": "Wasmachine: Gekleurde Katoen",
           "LaundryCare.Washer.Program.Cotton.Cotton.Cotton": "Wasmachine: Katoen",
           "LaundryCare.Washer.Program.Cotton.CottonEco": "Wasmachine: Katoen Eco",
-          "LaundryCare.Washer.Program.Cotton.Eco4060": "Wasmachine: Eco 40-60",
+          "LaundryCare.Washer.Program.Cotton.Eco4060": "Wasmachine: Eco 40-60°C",
           "LaundryCare.Washer.Program.Curtains": "Wasmachine: Gordijnen",
           "LaundryCare.Washer.Program.DarkWash": "Wasmachine: Donkere Was",
           "LaundryCare.Washer.Program.DarkWash.DarkWash.DarkWash": "Wasmachine: Donkere Was",
@@ -935,26 +935,26 @@
           "LaundryCare.Washer.Program.Spin.SpinDrain": "Wasmachine: Centrifugeren Afpompen",
           "LaundryCare.Washer.Program.SportFitness": "Wasmachine: Sport Fitness",
           "LaundryCare.Washer.Program.Steaming.Steaming.Steaming": "Wasmachine: Stomen",
-          "LaundryCare.Washer.Program.Super153045.Super15": "Wash: Super 15",
-          "LaundryCare.Washer.Program.Super153045.Super1530": "Wasmachine: Extra Snel 15-30",
-          "LaundryCare.Washer.Program.Super153045.Super1530.Super1530": "Wasmachine: Extra Snel 15-30",
+          "LaundryCare.Washer.Program.Super153045.Super15": "Wash: Super 15°C",
+          "LaundryCare.Washer.Program.Super153045.Super1530": "Wasmachine: Extra Snel 15-30°C",
+          "LaundryCare.Washer.Program.Super153045.Super1530.Super1530": "Wasmachine: Extra Snel 15-30°C",
           "LaundryCare.Washer.Program.Towels": "Wasmachine: Handdoeken",
           "LaundryCare.Washer.Program.Towels.Towels.Towels": "Wasmachine: Handdoeken",
-          "LaundryCare.Washer.Program.WashAndDry.60": "Wasmachine: Was En Droog 60",
-          "LaundryCare.Washer.Program.WashAndDry.90": "Wasmachine: Was En Droog 90",
+          "LaundryCare.Washer.Program.WashAndDry.60": "Wasmachine: Wassen & Drogen 60°C",
+          "LaundryCare.Washer.Program.WashAndDry.90": "Wasmachine: Wassen & Drogen 90°C",
           "LaundryCare.Washer.Program.WaterProof": "Wasmachine: Waterbestendig",
           "LaundryCare.Washer.Program.Wool": "Wasmachine: Wol",
           "LaundryCare.Washer.Program.Wool.Wool.Wool": "Wasmachine: Wol",
           "LaundryCare.WasherDryer.Program.Cotton": "Wasdroger: Katoen",
-          "LaundryCare.WasherDryer.Program.Cotton.Eco4060": "Wasdroger: Eco 40-60",
+          "LaundryCare.WasherDryer.Program.Cotton.Eco4060": "Wasdroger: Eco 40-60°C",
           "LaundryCare.WasherDryer.Program.EasyCare": "Wasdroger: Kreukherstellend",
           "LaundryCare.WasherDryer.Program.Mix": "Wasdroger: Mix",
           "LaundryCare.WasherDryer.Program.Rinse.Rinse": "Wasdroger: Spoelen",
           "LaundryCare.WasherDryer.Program.Rinse.RinseSpin": "Wasdroger: Spoelen & Centrigure",
           "LaundryCare.WasherDryer.Program.ShirtsBlouses.ShirtsBlouses": "Wasdroger: Overhemden",
           "LaundryCare.WasherDryer.Program.Towels.Towels": "Wasdroger: Handdoeken",
-          "LaundryCare.WasherDryer.Program.WashAndDry.60": "Wasdroger: Was En Droog 60",
-          "LaundryCare.WasherDryer.Program.WashAndDry.90": "Wasdroger: Was En Droog 90",
+          "LaundryCare.WasherDryer.Program.WashAndDry.60": "Wasdroger: Wassen & Drogen 60°C",
+          "LaundryCare.WasherDryer.Program.WashAndDry.90": "Wasdroger: Wassen & Drogen 90°C",
           "LaundryCare.WasherDryer.Program.WaterProof.WaterProof": "Wasdroger: Waterbestendig",
           "LaundryCare.WasherDryer.Program.Wool.Wool": "Wasdroger: Wol"
         }
@@ -1002,10 +1002,10 @@
           "ConsumerProducts.CoffeeMaker.Setting.CupWarmer": "Kopjesverwarmer",
           "Cooking.Common.Setting.Lighting": "Verlichting",
           "Cooking.Common.Setting.LightingBrightness": "Verlichtings Helderheid",
-          "Cooking.Hob.EnumType.ZoneSelector.FrontLeft": "Vooraan Links",
-          "Cooking.Hob.EnumType.ZoneSelector.FrontRight": "Vooraan Rechts",
-          "Cooking.Hob.EnumType.ZoneSelector.RearLeft": "Achteraan Links",
-          "Cooking.Hob.EnumType.ZoneSelector.RearRight": "Achteraan Rechts",
+          "Cooking.Hob.EnumType.ZoneSelector.FrontLeft": "Linksvoor",
+          "Cooking.Hob.EnumType.ZoneSelector.FrontRight": "Rechtsvoor",
+          "Cooking.Hob.EnumType.ZoneSelector.RearLeft": "Linksachter",
+          "Cooking.Hob.EnumType.ZoneSelector.RearRight": "Rechtsachter",
           "Cooking.Oven.EnumType.AddedSteam.Off": "Added Steam Off",
           "Cooking.Oven.EnumType.AddedSteam.On": "Added Steam Oמ",
           "Cooking.Oven.Setting.SabbathMode": "Rust Modus",
@@ -1034,20 +1034,20 @@
       "statuses": {
         "state": {
           "BSH.Common.EnumType.OperationState.Aborting": "Afbreken",
-          "BSH.Common.EnumType.OperationState.ActionRequired": "Actie Vereist",
+          "BSH.Common.EnumType.OperationState.ActionRequired": "Actie vereist",
           "BSH.Common.EnumType.OperationState.DelayedStart": "Uitgestelde Start",
-          "BSH.Common.EnumType.OperationState.Error": "Fout",
-          "BSH.Common.EnumType.OperationState.Finished": "Klaar",
+          "BSH.Common.EnumType.OperationState.Error": "Foutmelding",
+          "BSH.Common.EnumType.OperationState.Finished": "Voltooid",
           "BSH.Common.EnumType.OperationState.Inactive": "Inactief",
           "BSH.Common.EnumType.OperationState.Pause": "Pause",
-          "BSH.Common.EnumType.OperationState.Ready": "Ready",
-          "BSH.Common.EnumType.OperationState.Run": "Run",
-          "BSH.Common.EnumType.PowerState.MainsOff": "c",
-          "BSH.Common.EnumType.PowerState.Off": "Uit",
-          "BSH.Common.EnumType.PowerState.On": "Aan",
+          "BSH.Common.EnumType.OperationState.Ready": "Klaar voor bedrijf",
+          "BSH.Common.EnumType.OperationState.Run": "In bedrijf",
+          "BSH.Common.EnumType.PowerState.MainsOff": "Geen netstroom",
+          "BSH.Common.EnumType.PowerState.Off": "Uitgeschakeld",
+          "BSH.Common.EnumType.PowerState.On": "Ingeschakeld",
           "BSH.Common.EnumType.PowerState.Standby": "Standby",
-          "Cooking.Hob.EnumType.PowerLevel.Off": "Uit",
-          "Cooking.Hob.EnumType.PowerLevel.On": "Aan"
+          "Cooking.Hob.EnumType.PowerLevel.Off": "Uitgeschakeld",
+          "Cooking.Hob.EnumType.PowerLevel.On": "Ingeschakeld"
         }
       }
     }
