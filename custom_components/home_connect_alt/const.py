@@ -48,6 +48,7 @@ DEFAULT_SETTINGS = {
         "BSH.Common.Status.DoorState": { "type": "Boolean", "class": "door", "icon": None, "on_state": "BSH.Common.EnumType.DoorState.Open" },
         "Refrigeration.Common.Status.Door.Freezer": { "type": "Boolean", "class": "door", "icon": None, "on_state": "Refrigeration.Common.EnumType.Door.States.Open" },
         "Refrigeration.Common.Status.Door.Refrigerator": { "type": "Boolean", "class": "door", "icon": None, "on_state": "Refrigeration.Common.EnumType.Door.States.Open" },
+        "Refrigeration.Common.Status.Door.ChillerCommon": { "type": "Boolean", "class": "door", "icon": None, "on_state": "Refrigeration.Common.EnumType.Door.States.Open" },
         "Connected": { "class": "connectivity" },
     }
 }
