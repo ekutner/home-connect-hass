@@ -111,6 +111,9 @@
       }
     },
     "select": {
+      "homeconnect_status": {
+        "name": "Home Connect ステータス"
+      },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "期間",
@@ -807,7 +810,10 @@
           "Cooking.Common.Program.Hood.DelayedShutOff": "遅延シャットオフ",
           "Cooking.Common.Program.Hood.Venting": "換気",
           "Cooking.Hob.Program.PowerLevelMode": "パワーレベルモード",
+          "Cooking.Oven.Program.Cleaning.Drying": "Drying",
+          "Cooking.Oven.Program.Cleaning.EasyClean": "Easy Clean",
           "Cooking.Oven.Program.Cleaning.Ecolysis": "洗浄機能",
+          "Cooking.Oven.Program.Cleaning.Pyrolysis": "Pyrolysis",
           "Cooking.Oven.Program.HeatingMode.BottomHeating": "下部加熱",
           "Cooking.Oven.Program.HeatingMode.Defrost": "解凍",
           "Cooking.Oven.Program.HeatingMode.Desiccation": "乾燥",
@@ -828,6 +834,13 @@
           "Cooking.Oven.Program.HeatingMode.TopBottomHeating": "上下加熱",
           "Cooking.Oven.Program.HeatingMode.TopBottomHeatingEco": "上下加熱エコ",
           "Cooking.Oven.Program.HeatingMode.WarmingDrawer": "ウォーミングドロワー",
+          "Cooking.Oven.Program.Microwave.90Watt": "90 Watt",
+          "Cooking.Oven.Program.Microwave.180Watt": "180 Watt",
+          "Cooking.Oven.Program.Microwave.360Watt": "360 Watt",
+          "Cooking.Oven.Program.Microwave.600Watt": "600 Watt",
+          "Cooking.Oven.Program.Microwave.900Watt": "900 Watt",
+          "Cooking.Oven.Program.Microwave.1000Watt": "1000 Watt",
+          "Cooking.Oven.Program.Microwave.Max": "Max",
           "Dishcare.Dishwasher.Program.Auto1": "自動 35-45°C",
           "Dishcare.Dishwasher.Program.Auto2": "自動 45-65°C",
           "Dishcare.Dishwasher.Program.Auto3": "自動 65-75°C",
