@@ -69,7 +69,7 @@ DEVICE_ICON_MAP = {
 
 PUBLISHED_EVENTS = [
     "BSH.Common.Status.OperationState",
-    "*.event.*"
+    "*.Event.*"
 ]
 
 TRIGGERS_CONFIG = {
