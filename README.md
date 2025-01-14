@@ -63,7 +63,7 @@ This integration attempts to address those issues and has the following features
 
 # Installation instructions
 ## Creating a Home Connect developer app
-Before installing the integration you need to create an "application" in the Home Connect developers website. Note that if you have an existing appliacation, that was created before July 2022 you will most likely have to update the redirect URI to the one specified below. It can take a few hours for the changes to existing applications to apply, so be patiant.
+Before installing the integration you need to create an "application" in the Home Connect developers website. Note that if you have an existing application, that was created before July 2022 you will most likely have to update the redirect URI to the one specified below. It can take a few hours for the changes to existing applications to apply, so be patiant.
 
 1. Navigate to the "[Applications](https://developer.home-connect.com/applications)"
    page on the Home Connect developers website. You'll be prompted to create an account or sign in if you already have one.  
@@ -76,6 +76,7 @@ Before installing the integration you need to create an "application" in the Hom
    **Redirect URI**: https://my.home-assistant.io/redirect/oauth  
    **Add additional redirect URIs**: Leave unchecked  
    **Enable One Time Token Mode**: Leave unchecked  
+   **Sync to China**: Only check if you are located in China
 4. Click "Save" then copy the *Client ID* and *Client Secret* and save them for use in the next step.
 
 ## Installing the integration
@@ -88,7 +89,7 @@ Before installing the integration you need to create an "application" in the Hom
 4. If this is **not** the first time you are installing the integration and anything changed with your credentials you should go the the Settings -> Devices & Services page on Home Assistant, then click the three-dot-menu on the top righthand corner and select "Application credentials". Locate the previous credentials row for this integration and delete it.
 
 ### Installation
-1. The esiest way to install the integration is using HACS. Just click the
+1. The easiest way to install the integration is using HACS. Just click the
    button bellow and follow the instructions:
    [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ekutner&repository=home-connect-hass)  
    Alternatively, go to Settings -> Devices & Services in Home Assistance and click the "Add Integration" button. Search for "Home Connect Alt" and install it.
@@ -97,15 +98,15 @@ Before installing the integration you need to create an "application" in the Hom
    If you just want to test the integration and see how it you can select the "Simulator" endpoint, which connect to the Home Connect developer simulator and shows all the appliances that exist there. Note that this option is only shown once so you will have to delete the config entry once you finished testing in order to be able to connect to the real API for you actual appliances.
    ![api_host dialog](assets/api_host_dialog.png)
 3. Next you will be asked to provide the Home Connect developer app credentials you 
-   created erlier. Give these credetials set a name that will make it easy for you to reference them in the Home Assistant credentials manager :
+   created earlier. Give these credentials set a name that will make it easy for you to reference them in the Home Assistant credentials manager :
    ![api_host dialog](assets/credentials_dialog.png)
 
-4. Finnaly, a new window will popup where you will be asked to login to to your Home Connect
+4. Finally, a new window will popup where you will be asked to login to to your Home Connect
    account and allow Home Assistant to access your appliances. After you approve that you will be redirected back to Home Assistant, continue as instructed.
 5. Congratulations, you're done!  
    Home Connect Alt will now start downloading the data for your
    appliances and will add the entities for them to Home Assistant.  
-   Note that the integration dynamically discoveres entities as they are made available by the API, so expect new entities to be added in the first few uses of the appliances.
+   Note that the integration dynamically discovers entities as they are made available by the API, so expect new entities to be added in the first few uses of the appliances.
 
 # Configuration options
 Starting with version 0.7.0 the integration supports the UI configuration flow for most configuration options. Existing config values will be read however, once the options are saved in the UI they will override the values from the config file.
@@ -131,7 +132,7 @@ These options will show up for all users.
   * **This feature is still experimental and may have issues**
 
 ### Advanced options
-These options will only show up when the user has enablde "Advanced mode" in the user profile.
+These options will only show up when the user has enabled "Advanced mode" in the user profile.
 * **Name Template**  - 
   Defines the template used for rendering entity names. The following placeholders are supported and will be replaced dynamically when rendering the name:  
   $brand - The brand name of the appliance ("Bosch", "Siemens", etc.)  
@@ -199,7 +200,7 @@ The following services are available for use with automations:
 **pause_program** - Pauses the active program (if and when supported by the appliance)  
 **resume_program** - Resumes a paused program (if and when supported by the appliance)  
 **set_program_option** - Sets an option on the active program if one exists or on the selected program otherwise  
-**apply_setting** - Applies the sepecified setting on an appliance  
+**apply_setting** - Applies the specified setting on an appliance  
 **run_command** - Runs the specified command on an appliance  
 
 ## Events
@@ -214,10 +215,10 @@ The integration exposes two triggers for easy automation:
   * program_finished
 
 ## Local vs. Server translation
-The default behavior of this integration is to use "local" value translation. That means that all string sensors keep their internal value in a raw, language independant format. Those values are "translated" in the UI to a human friendly text by using local translation files.  
+The default behavior of this integration is to use "local" value translation. That means that all string sensors keep their internal value in a raw, language independent format. Those values are "translated" in the UI to a human friendly text by using local translation files.  
 This method is different than most other Home Assistant integration but it has three important benefits:
 1. It makes automation code language independent. As a developer I strongly believe that code shouldn't relay on the specific human language currently selected by the user.
-2. It allows users to look up possible values in the Home Connect developer documentation. So you can know in advance which values to epxect for a given sensor.
+2. It allows users to look up possible values in the Home Connect developer documentation. So you can know in advance which values to expect for a given sensor.
 3. It allows add translation for languages which are not supported by the Home COnnect API.
 
 In contrast, setting ```sensor_value_translation: server``` will override this behavior and use translations provided by the Home Connect API. This is limited to languages supported by the API but it does make sensor have the actual textual values displayed in the UI. So you can use that if you prefer,
@@ -227,10 +228,10 @@ In contrast, setting ```sensor_value_translation: server``` will override this b
 # Troubleshooting and FAQ
 * **I don't get the installation dialogs mentioned in the [Installation](#installation) section above**  
   These dialogs will only show up the first time you install the integration and only if you do not have the *client_id* and *client_secret* configured in your configuration.yaml file.
-  The make it appear again make sure the integration is uninstlled, then go to the *Settings -> Devices & Services* page on Home Assistant, then click the three-dot-menu on the top righthand corner and select "Application credentials". Locate the previous credentials row for this integration and delete it.
+  The make it appear again make sure the integration is uninstalled, then go to the *Settings -> Devices & Services* page on Home Assistant, then click the three-dot-menu on the top righthand corner and select "Application credentials". Locate the previous credentials row for this integration and delete it.
 
 * **I get errors on the browser window that pops-up after installing the integration for the first time**  
-  This popup window is trying to log you into the Home Connect website to establish a connection with the integration. If you get an error at this stage it means you didn't follow the setup instuctions carefully enough, so make sure that you do.
+  This popup window is trying to log you into the Home Connect website to establish a connection with the integration. If you get an error at this stage it means you didn't follow the setup instructions carefully enough, so make sure that you do.
   Also make sure that you open https://my.home-assistant.io/ and configure the URL of your Home-Assistant server.  
   **NOTE:** If you are modifying an existing Home-Connect App then it may take up to 2 hours for the changes to take effect, so make sure you wait long enough.
 
@@ -274,12 +275,12 @@ In contrast, setting ```sensor_value_translation: server``` will override this b
 
 * **Home Assistant display "Error" popup after installing the integration and completing the login flow to Home Connect**  
   When this issue occurs the log file will show a "Bad Request" "400" error.  
-  Make sure the email address you used when registereting your Home Connect account has ONLY lowercase letters.
+  Make sure the email address you used when registering your Home Connect account has ONLY lowercase letters.
 
 </br>
 
 # Dealing with API rate limits
-If you have more than 5 appliances you may occasionaly hit the Home Connect API rate limit which only allows up to 1000 daily API calls, regardless of how many appliances you own. This limit ends up hurting their best customers and it doesn't make any sense, it should be adjusted based on the number of appliances in the account. If you hit that limit then I strongly enourage you to reach out to Home Connect and protest. Until hey listen there is an annoying workaround:  
+If you have more than 5 appliances you may occasionally hit the Home Connect API rate limit which only allows up to 1000 daily API calls, regardless of how many appliances you own. This limit ends up hurting their best customers and it doesn't make any sense, it should be adjusted based on the number of appliances in the account. If you hit that limit then I strongly encourage you to reach out to Home Connect and protest. Until hey listen there is an annoying workaround:  
 1. Create a second developer app in the Home COnnect developers portal with exactly the same settings you used for the first one.
 2. In Home Assistant go to Settings -> Devices & services then click the three dot menu at the top right and select "Application credentials" and then click the "Add Application Credential" button at the button right corner.
 3. In the popup dialog select "Home Connect Alt" as the integration, give your credentials some useful name, like "Home Connect 2" and then copy and paste the client ID and client secret for the second app you created in step 1.
@@ -301,7 +302,7 @@ See the FAQ above.
 
 ### Bug report requirements
 All non trivial issues require:
-* A click on the **Home Connect Debug Info** button that the intgration is adding to the Home Assistant default "Overview" dashboard. This will dump some critical state information to the log.
+* A click on the **Home Connect Debug Info** button that the integration is adding to the Home Assistant default "Overview" dashboard. This will dump some critical state information to the log.
 * A full debug log. See next section for instructions how to enable debug logging.
 * In some cases, while working on an issue, I will ask you to set a specific *Log Mode*, see below how to do that.
 
@@ -336,7 +337,7 @@ If while analyzing an issue you reported you are requested to set a specific **L
 # Beta Releases
 Major changes will be released in beta versions to reduce the impact on existing users. It is strongly advised not to install the beta version unless you are a part of an issue that specifically calls for installing one and when you are, you should only install the specified version (as there may be several issues handled in separate beta versions at the same time).
 To install a beta version go to the HACS dashboard in the Home Assistant UI:
-* Click on Integrations locat the "Home Connect Alt" integration.
+* Locate the "Home Connect Alt" integration.
 * Click on the three dot menu for the integration and select "Redownload".
 * In the popup dialog make sure "Show beta versions" is enabled and then select the version you need to install.
 
@@ -346,7 +347,7 @@ To install a beta version go to the HACS dashboard in the Home Assistant UI:
 You are welcome to create PRs for new language translations or updates to existing ones however please note the following requirements:
 * To add a new language translation **always** start by copying the English translation file and edit it.
 * New ENUM value translations **will not be accepted** if they are not added to the English translation file first.
-* Translations **MUST** be added and modified **ONLY** under the "entity.sensor" node of the translation file because those values will also be used to automatically overwrite the values under the "enity.select" node.
+* Translations **MUST** be added and modified **ONLY** under the "entity.sensor" node of the translation file because those values will also be used to automatically overwrite the values under the "entity.select" node.
 * The translated ENUM values must be added in the correct section (programs/options/settings/statuses)
 
 <br>
