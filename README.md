@@ -1,6 +1,6 @@
 # Alternative Home Connect Integration for Home Assistant
 
-[![version](https://img.shields.io/github/manifest-json/v/ekutner/home-connect-hass?filename=custom_components%2Fhome_connect_alt%2Fmanifest.json&color=slateblue)](https://github.com/Tasshack/dreame-vacuum/releases/latest)
+[![version](https://img.shields.io/github/manifest-json/v/ekutner/home-connect-hass?filename=custom_components%2Fhome_connect_alt%2Fmanifest.json&color=slateblue)](https://github.com/ekutner/home-connect-hass/releases/latest)
 [![HACS](https://img.shields.io/badge/HACS-Default-orange.svg?logo=HomeAssistantCommunityStore&logoColor=white)](https://github.com/hacs/integration)
 
 
