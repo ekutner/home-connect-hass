@@ -162,11 +162,12 @@ class EntityManager():
     loads data from the Home Connect service and the initialization of the platforms.
     This class prevents that from happening.
     """
-    def __init__(self, async_add_entities:AddEntitiesCallback):
+    def __init__(self, async_add_entities:AddEntitiesCallback, platform:str):
         self._existing_ids = set()
         self._pending_entities:dict[str, Entity] = {}
         self._entity_appliance_map = {}
         self._async_add_entities = async_add_entities
+        self._platform = platform
 
     def add(self, entity:Entity) -> None:
         """Add a new entity unless it already exists."""
@@ -181,10 +182,12 @@ class EntityManager():
             if entity.haId not in self._entity_appliance_map:
                 self._entity_appliance_map[entity.haId] = set()
             self._entity_appliance_map[entity.haId].add(entity.unique_id)
-        _LOGGER.debug("Registering new entities: %s", new_ids)
-        self._async_add_entities(new_entities)
-        self._existing_ids |= new_ids
-        self._pending_entities = {}
+        if len(new_ids)>0:
+            _LOGGER.debug("Registering new entities for platform=%s: %s", self._platform, new_ids)
+            _LOGGER.debug("Already registered entities for platform=%s: %s", self._platform, self._existing_ids)
+            self._async_add_entities(new_entities)
+            self._existing_ids |= new_ids
+            self._pending_entities = {}
 
     def remove_appliance(self, appliance:Appliance):
         """ Remove an appliance and all its registered entities """

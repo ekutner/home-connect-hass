@@ -20,7 +20,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     #homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
     entry_conf:Configuration = hass.data[DOMAIN][config_entry.entry_id]
     homeconnect:HomeConnect = entry_conf["homeconnect"]
-    entity_manager = EntityManager(async_add_entities)
+    entity_manager = EntityManager(async_add_entities, "Select")
 
     def add_appliance(appliance:Appliance) -> None:
         conf = entry_conf.get_config()
