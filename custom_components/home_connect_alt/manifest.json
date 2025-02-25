@@ -13,7 +13,7 @@
   "homekit": {},
   "iot_class": "cloud_push",
   "issue_tracker": "https://github.com/ekutner/home-connect-hass/issues",
-  "requirements": ["home-connect-async==0.8.1"],
+  "requirements": ["home-connect-async==0.8.2"],
   "loggers": ["home_connect_alt", "home_connect_async"],
   "ssdp": [],
   "version": "1.2.0-b1",
