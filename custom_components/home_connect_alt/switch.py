@@ -140,6 +140,8 @@ class SettingsSwitch(InteractiveEntityBase, SwitchEntity):
             setting = self._appliance.settings[self._key]
             if setting.allowedvalues and setting.value.lower().endswith(".off"):
                 return False
+            if setting.allowedvalues and setting.value.lower().endswith(".standby"):
+                return False
             if setting.allowedvalues and setting.value.lower().endswith(".on"):
                 return True
             return setting.value
@@ -148,7 +150,7 @@ class SettingsSwitch(InteractiveEntityBase, SwitchEntity):
     def bool_to_enum(self, allowedvalues, val:bool) -> str:
         """ Get the matching enum value for the provided boolean value """
         for av in allowedvalues:
-            if (val and av.lower().endswith('.on')) or (not val and av.lower().endswith('.off')) :
+            if (val and av.lower().endswith('.on')) or (not val and av.lower().endswith('.off')) or (not val and av.lower().endswith('.standby')) :
                 return av
         _LOGGER.error("Unexpected Error: couldn't find a boolean enum value in allowedvalues: %s", allowedvalues)
         return None
