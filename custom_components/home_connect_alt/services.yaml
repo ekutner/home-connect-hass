@@ -104,6 +104,30 @@ stop_program:
         device:
           integration: home_connect_alt
 
+pause_program:
+  name: Pause program
+  description: Pause the currently active program (if and when supported by the appliance)
+  fields:
+    device_id:
+      description: The ID of the appliance to pause the program on
+      name: device_id
+      required: true
+      selector:
+        device:
+          integration: home_connect_alt
+
+resume_program:
+  name: Resume program
+  description: Resumes a paused program (if and when supported by the appliance)
+  fields:
+    device_id:
+      description: The ID of the appliance to resume the program on
+      name: device_id
+      required: true
+      selector:
+        device:
+          integration: home_connect_alt
+
 set_program_option:
   name: Set program option
   description: Sets an option for the currently selected or active program
@@ -128,6 +152,64 @@ set_program_option:
       description: >
         An allowed value for the specified option
       example: ConsumerProducts.CoffeeMaker.Program.Beverage.Espresso
+      required: true
+      selector:
+        text:
+
+apply_setting:
+  name: Apply setting
+  description: Applies a Home Connect setting
+  fields:
+    device_id:
+      description: The ID of the appliance to apply the settings on
+      name: device_id
+      required: true
+      selector:
+        device:
+          integration: home_connect_alt
+    key:
+      name: Setting key
+      description: >
+        The ENUM key of a setting which is available for the specified appliance
+      example: ConsumerProducts.CoffeeMaker.Setting.CupWarmer
+      required: true
+      selector:
+        text:
+    value:
+      name: Setting value
+      description: >
+        An allowed value for the specified setting.
+        Note that if the setting type is not a string or ENUM (eg. Boolean), it must be specified in YAML in the correct format for its data type
+      example: true
+      required: true
+      selector:
+        text:
+
+run_command:
+  name: Run command
+  description: Runs a command on the appliance (must be available to run on the appliance)
+  fields:
+    device_id:
+      description: The ID of the appliance to run the command on
+      name: device_id
+      required: true
+      selector:
+        device:
+          integration: home_connect_alt
+    key:
+      name: Command key
+      description: >
+        The key of the command to run
+      example: BSH.Common.Command.OpenDoor
+      required: true
+      selector:
+        text:
+    value:
+      name: The command value
+      description: >
+        An allowed value for the specified command.
+        Note that if the setting type is not a string or ENUM (eg. Boolean), it must be specified in YAML in the correct format for its data type
+      example: true
       required: true
       selector:
         text:

@@ -7,7 +7,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
 from .common import Configuration, EntityBase, EntityManager
-from .const import DOMAIN, SPECIAL_ENTITIES
+from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -15,40 +15,38 @@ _LOGGER = logging.getLogger(__name__)
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
     """Add sensors for passed config_entry in HA."""
     #auth = hass.data[DOMAIN][config_entry.entry_id]
-    homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
-    entity_manager = EntityManager(async_add_entities)
+    #homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
+    entry_conf:Configuration = hass.data[DOMAIN][config_entry.entry_id]
+    homeconnect:HomeConnect = entry_conf["homeconnect"]
+    entity_manager = EntityManager(async_add_entities, "Binary Sensor")
 
     def add_appliance(appliance:Appliance) -> None:
+        conf:Configuration = entry_conf.get_config()
         for (key, status) in appliance.status.items():
             device = None
-            if key in SPECIAL_ENTITIES['status']:
-                conf = Configuration(SPECIAL_ENTITIES['status'][key])
-                if conf['type'] == 'binary_sensor':
-                    device = StatusBinarySensor(appliance, key, conf)
-            else:
-                if isinstance(status.value, bool): # should be a binary sensor if it has a boolean value
-                    device = StatusBinarySensor(appliance, key)
-            entity_manager.add(device)
+            if isinstance(status.value, bool) or conf.get_entity_setting(key, "type") == "Boolean": # should be a binary sensor if it has a boolean value
+                device = StatusBinarySensor(appliance, key, conf)
+                entity_manager.add(device)
 
         if appliance.selected_program and appliance.selected_program.options:
             for option in appliance.selected_program.options.values():
-                if isinstance(option.value, bool):
-                    device = ProgramOptionBinarySensor(appliance, option.key)
+                if isinstance(option.value, bool) or conf.get_entity_setting(option.key, "type") == "Boolean":
+                    device = ProgramOptionBinarySensor(appliance, option.key, conf)
                     entity_manager.add(device)
 
         if appliance.active_program and appliance.active_program.options:
             for option in appliance.active_program.options.values():
-                if isinstance(option.value, bool):
-                    device = ProgramOptionBinarySensor(appliance, option.key, SPECIAL_ENTITIES['options'].get(option.key, {}))
+                if isinstance(option.value, bool) or conf.get_entity_setting(option.key, "type") == "Boolean":
+                    device = ProgramOptionBinarySensor(appliance, option.key, conf)
                     entity_manager.add(device)
 
         if appliance.settings:
             for setting in appliance.settings.values():
-                if setting.type == "Boolean" or isinstance(setting.value, bool):
-                    device = SettingsBinarySensor(appliance, setting.key)
+                if setting.type == "Boolean" or isinstance(setting.value, bool) or conf.get_entity_setting(setting.key, "type") == "Boolean":
+                    device = SettingsBinarySensor(appliance, setting.key, conf)
                     entity_manager.add(device)
 
-        entity_manager.add(ConnectionBinarySensor(appliance, "Connected"))
+        entity_manager.add(ConnectionBinarySensor(appliance, "Connected", conf))
 
         # if len(new_entities)>0:
         #     entity_manager.register_entities(new_entities, async_add_entities)
@@ -57,7 +55,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
-    homeconnect.register_callback(add_appliance, [Events.PAIRED, Events.PROGRAM_STARTED] )
+    homeconnect.register_callback(add_appliance, [Events.PAIRED, Events.DATA_CHANGED, Events.PROGRAM_STARTED, Events.PROGRAM_SELECTED])
     homeconnect.register_callback(remove_appliance, Events.DEPAIRED)
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
@@ -78,7 +76,7 @@ class ProgramOptionBinarySensor(EntityBase, BinarySensorEntity):
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:office-building-cog')
+        return self.get_entity_setting('icon', 'mdi:office-building-cog')
 
     @property
     def available(self) -> bool:
@@ -113,7 +111,7 @@ class StatusBinarySensor(EntityBase, BinarySensorEntity):
     """ Status binary sensor """
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:gauge-full')
+        return self.get_entity_setting('icon', 'mdi:gauge-full')
 
     @property
     def name_ext(self) -> str:
@@ -126,10 +124,9 @@ class StatusBinarySensor(EntityBase, BinarySensorEntity):
     @property
     def is_on(self) -> bool:
         if self._key in self._appliance.status:
-            if 'on_state' in self._conf:
-                return self._appliance.status[self._key].value == self._conf['on_state']
-            else:
-                return self._appliance.status[self._key].value
+            if self.has_entity_setting("on_state"):
+                return self._appliance.status[self._key].value == self.get_entity_setting("on_state")
+            return self._appliance.status[self._key].value
         return None
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
@@ -152,15 +149,14 @@ class SettingsBinarySensor(EntityBase, BinarySensorEntity):
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:tune')
+        return self.get_entity_setting('icon', 'mdi:tune')
 
     @property
     def is_on(self):
         if self._key in self._appliance.settings:
-            if 'on_state' in self._conf:
-                return self._appliance.settings[self._key].value == self._conf['on_state']
-            else:
-                return self._appliance.settings[self._key].value
+            if self.has_entity_setting("on_state"):
+                return self._appliance.settings[self._key].value == self.get_entity_setting("on_state")
+            return self._appliance.settings[self._key].value
         return None
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:

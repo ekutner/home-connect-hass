@@ -2,22 +2,33 @@
     "version": "2.0.0",
     "tasks": [
       {
+        "label": "Tools - Sync Translations",
+        "type": "shell",
+        "command": "${command:python.interpreterPath}",
+        "args": [
+          "tools/sync-translations.py"
+        ],
+        "problemMatcher": []
+      },
+      {
         "label": "Setup proxy custom_components for debugging",
         "type": "shell",
-        "command": "$INTEGRATION_PATH/.devcontainer/scripts/proxy.sh",
+        "command": "$INTEGRATION_PATH/.devcontainer/scripts/proxy.sh"
       },
       {
-          "label": "Upgrade Home Assistant to latest dev",
-          "type": "shell",
-          "command": "$INTEGRATION_PATH/.devcontainer/scripts/install-ha.sh",
-          "problemMatcher": []
+        "label": "Upgrade Home Assistant to latest dev",
+        "type": "shell",
+        "command": "$INTEGRATION_PATH/.devcontainer/scripts/install-ha.sh",
+        "problemMatcher": []
       },
       {
-          "label": "Install a specific version of Home Assistant",
-          "type": "shell",
-          "command": "$INTEGRATION_PATH/.devcontainer/scripts/install-ha.sh",
-          "args": [ "${input:hassVer}" ],
-          "problemMatcher": []
+        "label": "Install a specific version of Home Assistant",
+        "type": "shell",
+        "command": "$INTEGRATION_PATH/.devcontainer/scripts/install-ha.sh",
+        "args": [
+          "${input:hassVer}"
+        ],
+        "problemMatcher": []
       },
       {
         "label": "Pre-launch",

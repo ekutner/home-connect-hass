@@ -11,30 +11,36 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
-from .common import InteractiveEntityBase, EntityManager, is_boolean_enum
-from .const import DOMAIN, SPECIAL_ENTITIES
+from .common import InteractiveEntityBase, EntityManager, is_boolean_enum, Configuration
+from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
     """Add sensors for passed config_entry in HA."""
-    homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
-    entity_manager = EntityManager(async_add_entities)
+    #homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
+    entry_conf:Configuration = hass.data[DOMAIN][config_entry.entry_id]
+    homeconnect:HomeConnect = entry_conf["homeconnect"]
+    entity_manager = EntityManager(async_add_entities, "Switch")
 
     def add_appliance(appliance:Appliance) -> None:
+        conf = entry_conf.get_config()
         if appliance.available_programs:
             for program in appliance.available_programs.values():
                 if program.options:
                     for option in program.options.values():
-                        if option.key not in SPECIAL_ENTITIES['ignore'] and (option.type == "Boolean" or isinstance(option.value, bool)):
-                            device = OptionSwitch(appliance, option.key)
+                        if ( not conf.has_entity_setting(option.key, "type") and (option.type == "Boolean" or isinstance(option.value, bool))) \
+                             or conf.get_entity_setting(option.key, "type") == "Boolean" :
+                            device = OptionSwitch(appliance, option.key, conf)
                             entity_manager.add(device)
 
         if appliance.settings:
             for setting in appliance.settings.values():
-                if setting.key not in SPECIAL_ENTITIES['ignore'] and \
-                    ( setting.type == "Boolean" or isinstance(setting.value, bool) or is_boolean_enum(setting.allowedvalues) ):
-                    device = SettingsSwitch(appliance, setting.key)
+                if ( (not conf.has_entity_setting(setting.key, "type")
+                    and ( setting.type == "Boolean" or isinstance(setting.value, bool) or is_boolean_enum(setting.allowedvalues))) \
+                    or conf.get_entity_setting(setting.key, "type") == "Boolean") \
+                    and setting.access != "read" :
+                    device = SettingsSwitch(appliance, setting.key, conf)
                     entity_manager.add(device)
 
         entity_manager.register()
@@ -43,7 +49,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
     def remove_appliance(appliance:Appliance) -> None:
         entity_manager.remove_appliance(appliance)
 
-    homeconnect.register_callback(add_appliance, [Events.PAIRED, Events.PROGRAM_SELECTED])
+    homeconnect.register_callback(add_appliance, [Events.PAIRED, Events.DATA_CHANGED, Events.PROGRAM_STARTED, Events.PROGRAM_SELECTED])
     homeconnect.register_callback(remove_appliance, Events.DEPAIRED)
     for appliance in homeconnect.appliances.values():
         add_appliance(appliance)
@@ -65,7 +71,7 @@ class OptionSwitch(InteractiveEntityBase, SwitchEntity):
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:office-building-cog')
+        return self.get_entity_setting('icon', 'mdi:office-building-cog')
 
     @property
     def available(self) -> bool:
@@ -86,8 +92,7 @@ class OptionSwitch(InteractiveEntityBase, SwitchEntity):
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to set the option: {ex.error_description} ({ex.code})")
-            else:
-                raise HomeAssistantError(f"Failed to set the option: ({ex.code})")
+            raise HomeAssistantError(f"Failed to set the option: ({ex.code})")
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the entity off."""
@@ -96,8 +101,7 @@ class OptionSwitch(InteractiveEntityBase, SwitchEntity):
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to set the option: {ex.error_description} ({ex.code})")
-            else:
-                raise HomeAssistantError(f"Failed to set the option: ({ex.code})")
+            raise HomeAssistantError(f"Failed to set the option: ({ex.code})")
 
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
@@ -118,7 +122,7 @@ class SettingsSwitch(InteractiveEntityBase, SwitchEntity):
 
     @property
     def icon(self) -> str:
-        return self._conf.get('icon', 'mdi:tune')
+        return self.get_entity_setting('icon', 'mdi:tune')
 
     @property
     def available(self) -> bool:
@@ -126,7 +130,7 @@ class SettingsSwitch(InteractiveEntityBase, SwitchEntity):
         and super().available \
         and (
             "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
-            self._appliance.status["BSH.Common.Status.RemoteControlActive"]
+            self._appliance.status["BSH.Common.Status.RemoteControlActive"].value
         )
 
     @property
@@ -136,10 +140,9 @@ class SettingsSwitch(InteractiveEntityBase, SwitchEntity):
             setting = self._appliance.settings[self._key]
             if setting.allowedvalues and setting.value.lower().endswith(".off"):
                 return False
-            elif setting.allowedvalues and setting.value.lower().endswith(".on"):
+            if setting.allowedvalues and setting.value.lower().endswith(".on"):
                 return True
-            else:
-                return setting.value
+            return setting.value
         return None
 
     def bool_to_enum(self, allowedvalues, val:bool) -> str:
@@ -160,8 +163,7 @@ class SettingsSwitch(InteractiveEntityBase, SwitchEntity):
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to apply the setting: {ex.error_description} ({ex.code})")
-            else:
-                raise HomeAssistantError(f"Failed to apply the setting: ({ex.code})")
+            raise HomeAssistantError(f"Failed to apply the setting: ({ex.code})")
 
 
     async def async_turn_off(self, **kwargs: Any) -> None:
@@ -175,8 +177,7 @@ class SettingsSwitch(InteractiveEntityBase, SwitchEntity):
         except HomeConnectError as ex:
             if ex.error_description:
                 raise HomeAssistantError(f"Failed to apply the setting: {ex.error_description} ({ex.code})")
-            else:
-                raise HomeAssistantError(f"Failed to apply the setting: ({ex.code})")
+            raise HomeAssistantError(f"Failed to apply the setting: ({ex.code})")
 
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:

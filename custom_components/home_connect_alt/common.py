@@ -2,13 +2,12 @@ from __future__ import annotations
 import logging
 import re
 from abc import ABC, abstractmethod
-from typing import Sequence
 
 from home_connect_async import Appliance, Events
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_NAME_TEMPLATE, DOMAIN
+from .const import CONF_NAME_TEMPLATE, CONF_NAME_TEMPLATE_DEFAULT, DOMAIN, DEFAULT_SETTINGS, CONF_ENTITY_SETTINGS, CONF_APPLIANCE_SETTINGS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,16 +25,27 @@ def is_boolean_enum(values:list[str]) -> bool:
 class EntityBase(ABC):
     """Base class with common methods for all the entities """
 
+   #_attr_has_entity_name = True
     should_poll = False
+
     _appliance: Appliance = None
 
-    def __init__(self, appliance:Appliance, key:str=None, conf:dict=None) -> None:
+    def __init__(self, appliance:Appliance, key:str, conf:Configuration, hc_obj=None) -> None:
         """Initialize the sensor."""
         self._appliance = appliance
         self._homeconnect = appliance._homeconnect
         self._key = key
-        self._conf = conf if conf else Configuration()
+        self._conf = conf
         self.entity_id = f'home_connect.{self.unique_id}'
+        self._hc_obj = hc_obj
+
+    def get_entity_setting(self, option, default=None):
+        """ Gets the specified configuration option for the entity """
+        return self._conf.get_entity_setting(self._key, option, default)
+
+    def has_entity_setting(self, option, default=None) -> bool:
+        """ Checks if the specified configuration option exists for the entity """
+        return self._conf.has_entity_setting(self._key, option)
 
     @property
     def haId(self) -> str:
@@ -57,9 +67,8 @@ class EntityBase(ABC):
     def device_class(self) -> str:
         """ Return the device class, if defined """
         if self._conf:
-            return self._conf.get('class')
-        else:
-            return None
+            return self._conf.get_entity_setting(self._key, "class")
+        return None
 
     @property
     def unique_id(self) -> str:
@@ -68,16 +77,20 @@ class EntityBase(ABC):
 
     @property
     def name_ext(self) -> str|None:
-        """ Provide the suffix of the name, can be be overriden by sub-classes to provide a custom or translated display name """
+        """Provide the suffix of the name, can be be overridden by sub-classes to provide a custom or translated display name."""
         return None
 
     @property
     def name(self) -> str:
         """" The name of the entity """
-        if self._conf and CONF_NAME_TEMPLATE in self._conf and self._conf[CONF_NAME_TEMPLATE]:
+        # haId = self._appliance.haId
+        if self._conf and CONF_APPLIANCE_SETTINGS in self._conf and self._conf[CONF_APPLIANCE_SETTINGS] \
+            and self.haId in self._conf[CONF_APPLIANCE_SETTINGS] and CONF_NAME_TEMPLATE in self._conf[CONF_APPLIANCE_SETTINGS][self.haId]:
+            template = self._conf[CONF_APPLIANCE_SETTINGS][self.haId][CONF_NAME_TEMPLATE]
+        elif self._conf and CONF_NAME_TEMPLATE in self._conf and self._conf[CONF_NAME_TEMPLATE]:
             template = self._conf[CONF_NAME_TEMPLATE]
         else:
-            template = "$brand $appliance - $name"
+            template = CONF_NAME_TEMPLATE_DEFAULT
 
         appliance_name = self._appliance.name if self._appliance.name else self._appliance.type
         name = self.name_ext if self.name_ext else self.pretty_enum(self._key)
@@ -85,10 +98,10 @@ class EntityBase(ABC):
 
 
     # This property is important to let HA know if this entity is online or not.
-    # If an entity is offline (return False), the UI will refelect this.
+    # If an entity is offline (return False), the UI will reflect this.
     @property
     def available(self) -> bool:
-        """ Avilability of the enity """
+        """Availability of the entity."""
         return self._appliance.connected
 
     @property
@@ -122,10 +135,11 @@ class EntityBase(ABC):
         pass
 
     def pretty_enum(self, val:str) -> str:
-        """ Extract display string from a Home COnnect Enum string """
+        """Extract display string from a Home Connect Enum string."""
         name = val.split('.')[-1]
         parts = re.findall('[A-Z0-9]+[^A-Z]*', name)
         return' '.join(parts)
+
 
 class InteractiveEntityBase(EntityBase):
     """ Base class for interactive entities (select, switch and number) """
@@ -140,22 +154,23 @@ class InteractiveEntityBase(EntityBase):
         if self._key != "BSH.Common.Status.RemoteControlActive":
             self._appliance.deregister_callback(self.async_on_update, "BSH.Common.Status.RemoteControlActive")
 
+
 class EntityManager():
-    """ Helper class for managing entity registration
+    """Helper class for managing entity registration.
 
-    Dupliaction might happen because there is a race condition between the task that
+    Duplication might happen because there is a race condition between the task that
     loads data from the Home Connect service and the initialization of the platforms.
-    This class prevents that from happening
-
+    This class prevents that from happening.
     """
-    def __init__(self, async_add_entities:AddEntitiesCallback):
+    def __init__(self, async_add_entities:AddEntitiesCallback, platform:str):
         self._existing_ids = set()
         self._pending_entities:dict[str, Entity] = {}
         self._entity_appliance_map = {}
         self._async_add_entities = async_add_entities
+        self._platform = platform
 
     def add(self, entity:Entity) -> None:
-        """ Add a new entiity unless it already esists """
+        """Add a new entity unless it already exists."""
         if entity and (entity.unique_id not in self._existing_ids) and (entity.unique_id not in self._pending_entities):
             self._pending_entities[entity.unique_id] = entity
 
@@ -167,10 +182,12 @@ class EntityManager():
             if entity.haId not in self._entity_appliance_map:
                 self._entity_appliance_map[entity.haId] = set()
             self._entity_appliance_map[entity.haId].add(entity.unique_id)
-        self._async_add_entities(new_entities)
-        self._existing_ids |= new_ids
-        self._pending_entities = {}
-
+        if len(new_ids)>0:
+            _LOGGER.debug("Registering new entities for platform=%s: %s", self._platform, new_ids)
+            _LOGGER.debug("Already registered entities for platform=%s: %s", self._platform, self._existing_ids)
+            self._async_add_entities(new_entities)
+            self._existing_ids |= new_ids
+            self._pending_entities = {}
 
     def remove_appliance(self, appliance:Appliance):
         """ Remove an appliance and all its registered entities """
@@ -185,10 +202,61 @@ class Configuration(dict):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.update(self.__merge(self, DEFAULT_SETTINGS, overwrite=False))
         if Configuration._global_config:
-            self.update(Configuration._global_config)
+            self.update(self.__merge(self, Configuration._global_config, overwrite=False))
+
+    def __merge(self, destination:dict, source:dict, overwrite:bool=True ):
+        for key, value in source.items():
+            if isinstance(value, dict):
+                # get node or create one
+                node = destination.setdefault(key, {})
+                self.__merge(node, value, overwrite)
+            else:
+                if key not in destination or overwrite:
+                    destination[key] = value
+
+        return destination
+
+    def get_entity_setting(self, key:str, option:str, default=None):
+        """ Retrun an entity config setting or None if it doesn't exist """
+        if CONF_ENTITY_SETTINGS in self and  self[CONF_ENTITY_SETTINGS] and key in self[CONF_ENTITY_SETTINGS] and option in self[CONF_ENTITY_SETTINGS][key]:
+            return self[CONF_ENTITY_SETTINGS][key][option]
+        return default
+
+    def has_entity_setting(self, key:str, option:str) -> bool:
+        """Checks if the entity config setting exist """
+        if CONF_ENTITY_SETTINGS in self and self[CONF_ENTITY_SETTINGS] and key in self[CONF_ENTITY_SETTINGS] and option in self[CONF_ENTITY_SETTINGS][key]:
+            return True
+        return False
+
+    def set_entity_setting(self, key:str, option:str, value):
+        """Return an entity config setting or None if it doesn't exist."""
+        if CONF_ENTITY_SETTINGS not in self:
+            self[CONF_ENTITY_SETTINGS] = {}
+        if key not in self[CONF_ENTITY_SETTINGS]:
+            self[CONF_ENTITY_SETTINGS][key] = {}
+        self[CONF_ENTITY_SETTINGS][key][option] = value
+
+    def get_entity_settings(self, key:str):
+        """Return an entity config setting or None if it doesn't exist."""
+        if CONF_ENTITY_SETTINGS in self and  key in self[CONF_ENTITY_SETTINGS]:
+            return self[key]
+        return None
+
+    def get_config(self, extra_conf:dict=None):
+        """Return a new config object which is the merging of the current one with the extra configuration"""
+        c = Configuration(self)
+        if extra_conf:
+            c.update(extra_conf)
+        return c
 
     @classmethod
     def set_global_config(cls, global_config:dict):
-        """ Set the global config once as a static member that will be appende automatically to each config object """
+        """Set the global config once as a static member that will be appended automatically to each config object."""
         cls._global_config = global_config
+
+    @classmethod
+    def get_global_config(cls):
+        """Return the global config"""
+        return cls._global_config if cls._global_config else {}

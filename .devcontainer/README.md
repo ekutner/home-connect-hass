@@ -10,7 +10,7 @@ Opening multiple projects inside of a devcontainer is a bit cluncky so follow th
 
 1. Create a parent directory that will contain both the integration and the API library.
 2. Create a folder for the integration. Make sure it follows the structure required by HACS, in particular it must have "custome_components" subfolder where all the integration code will reside. The .devcontainer folder should also be here.
-3. Create a folder for the API library. Since this library has to be pubuilshed to 
+3. Create a folder for the API library. Since this library has to be published to 
    pypi make sure it has a setup.py file at its root.  
    At this point your folder structure should look something like this:  
     ```

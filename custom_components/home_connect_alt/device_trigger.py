@@ -4,19 +4,15 @@ from __future__ import annotations
 from typing import Any
 
 import voluptuous as vol
-from homeassistant.components.automation import (AutomationActionType,
-                                                 AutomationTriggerInfo)
-from homeassistant.components.device_automation import \
-    DEVICE_TRIGGER_BASE_SCHEMA
-from homeassistant.components.homeassistant.triggers import \
-    event as event_trigger
-from homeassistant.components.homeassistant.triggers import \
-    state as state_trigger
-from homeassistant.const import (CONF_DEVICE_ID, CONF_DOMAIN, CONF_PLATFORM,
-                                 CONF_TYPE)
+#from homeassistant.components.automation import (AutomationActionType, AutomationTriggerInfo)
+from homeassistant.components.device_automation import DEVICE_TRIGGER_BASE_SCHEMA
+from homeassistant.components.homeassistant.triggers import event as event_trigger
+from homeassistant.components.homeassistant.triggers import state as state_trigger
+from homeassistant.const import (CONF_DEVICE_ID, CONF_DOMAIN, CONF_PLATFORM, CONF_TYPE)
 from homeassistant.core import CALLBACK_TYPE, HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import entity_registry
+from homeassistant.helpers.trigger import TriggerActionType, TriggerInfo
 from homeassistant.helpers.typing import ConfigType
 
 from . import DOMAIN, TRIGGERS_CONFIG
@@ -50,8 +46,8 @@ async def async_get_triggers(
 async def async_attach_trigger(
     hass: HomeAssistant,
     config: ConfigType,
-    action: AutomationActionType,
-    automation_info: AutomationTriggerInfo,
+    action: TriggerActionType,
+    trigger_info: TriggerInfo,
 ) -> CALLBACK_TYPE:
     """Attach a trigger."""
 
@@ -69,5 +65,5 @@ async def async_attach_trigger(
         }
     )
     return await event_trigger.async_attach_trigger(
-        hass, event_config, action, automation_info, platform_type="device"
+        hass, event_config, action, trigger_info, platform_type="device"
     )

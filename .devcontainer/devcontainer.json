@@ -4,7 +4,7 @@
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
-			"VARIANT": "3.9",
+			"VARIANT": "3.12",
       "LOCAL_INTEGRATION_FOLDER": "${localWorkspaceFolder}"
 		},
 		"context": ".."
@@ -21,45 +21,49 @@
     "source=${localWorkspaceFolderBasename}_config,target=/config,type=volume",  // create a persistent named volume for the configuration folder
 		"source=${localWorkspaceFolder}/../home-connect-async,target=${containerWorkspaceFolder}/../home-connect-async,type=bind,consistency=consistent"
 	],
+  "remoteUser": "root",
 	"postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-create.sh",
   "postStartCommand":  "${containerWorkspaceFolder}/.devcontainer/scripts/post-start.sh",
-	"extensions": [
-		"github.vscode-pull-request-github",
-		"ms-python.vscode-pylance",
-    "visualstudioexptteam.vscodeintellicode",
-    "redhat.vscode-yaml",
-    "esbenp.prettier-vscode",
-    "eamodio.gitlens",
-    "mhutchie.git-graph"
-	],
-  "settings": {
-    "python.defaultInterpreterPath": "/usr/local/bin/python",
-    "python.autoComplete.extraPaths": [
-      "${containerWorkspaceFolder}",
-      "${containerWorkspaceFolder}/../home-connect-async"
-    ],
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
-    "python.formatting.provider": "black",
-    "python.testing.pytestArgs": ["--no-cov"],
-    "editor.formatOnPaste": false,
-    "editor.formatOnSave": true,
-    "editor.formatOnType": true,
-    "files.trimTrailingWhitespace": true,
-    "terminal.integrated.profiles.linux": {
-      "zsh": {
-        "path": "/usr/bin/zsh"
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.vscode-pylance",
+        "ms-python.pylint",
+        "github.vscode-pull-request-github",
+        "visualstudioexptteam.vscodeintellicode",
+        "redhat.vscode-yaml",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens",
+        "mhutchie.git-graph"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.autoComplete.extraPaths": [
+          "${containerWorkspaceFolder}",
+          "${containerWorkspaceFolder}/../home-connect-async"
+        ],
+        "python.formatting.provider": "black",
+        "python.testing.pytestArgs": ["--no-cov"],
+        "editor.formatOnPaste": false,
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "files.trimTrailingWhitespace": true,
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/usr/bin/zsh"
+          }
+        },
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "yaml.customTags": [
+          "!input scalar",
+          "!secret scalar",
+          "!include_dir_named scalar",
+          "!include_dir_list scalar",
+          "!include_dir_merge_list scalar",
+          "!include_dir_merge_named scalar"
+        ]
       }
-    },
-    "terminal.integrated.defaultProfile.linux": "zsh",
-    "yaml.customTags": [
-      "!input scalar",
-      "!secret scalar",
-      "!include_dir_named scalar",
-      "!include_dir_list scalar",
-      "!include_dir_merge_list scalar",
-      "!include_dir_merge_named scalar"
-    ]
+    }
   }
 
 }
