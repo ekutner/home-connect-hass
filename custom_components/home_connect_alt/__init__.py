@@ -95,12 +95,14 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
 
-    """Set up Home Connect New from a config entry."""
+    """Set up Home Connect Alt from a config entry."""
 
-    all_entries = hass.config_entries.async_entries(DOMAIN)
+    # all_entries = hass.config_entries.async_entries(DOMAIN)
+
+    # save the options to compare later to see if they have changed
+    hass.data[DOMAIN][f"{config_entry.entry_id}_options"] = copy.deepcopy(dict(config_entry.options))
 
     options = OPTIONS_SCHEMA(copy.deepcopy(dict(config_entry.options)))
-    #options.update(config_entry.options)
     conf = Configuration(options)
     hass.data[DOMAIN][config_entry.entry_id] = conf
     if CONF_API_HOST in config_entry.data:
@@ -113,11 +115,6 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     _LOGGER.debug(f"Config entry {config_entry.entry_id} is {'primary' if conf['primary_config_entry'] else 'secondary'}")
     _LOGGER.debug(f"OAuth2={config_entry.data.get('auth_implementation','')} api_host={config_entry.data.get(CONF_API_HOST,'')}")
     _LOGGER.debug(f"options: {config_entry.options}")
-
-
-    # Add event listener to reload the integration when the config entry options change (because the user edited them in the UI)
-    config_entry.async_on_unload(config_entry.add_update_listener(lambda hass, entry: hass.config_entries.async_reload(entry.entry_id)))
-
 
     implementation = await config_entry_oauth2_flow.async_get_config_entry_implementation(hass, config_entry)
     session = config_entry_oauth2_flow.OAuth2Session(hass, config_entry, implementation)
@@ -163,6 +160,12 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     #     asyncio.sleep(delay)
     #     await async_save_to_cache(hass, homeconnect)
 
+    async def on_config_entry_update(hass:HomeAssistant, new_entry:ConfigEntry):
+        if dict(new_entry.options) != hass.data[DOMAIN][f"{config_entry.entry_id}_options"]:
+            _LOGGER.debug("Config entry updated, reloading the integration: %s", str(new_entry.options))
+            await hass.config_entries.async_reload(new_entry.entry_id)
+
+
     async def on_data_loaded(homeconnect:HomeConnect):
         # Save the state of the HomeConnect object to cache
         # if use_cache:
@@ -193,6 +196,10 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
     #endregion
 
+
+    # Add event listener to reload the integration when the config entry options change (because the user edited them in the UI)
+    # config_entry.async_on_unload(config_entry.add_update_listener(lambda hass, entry: hass.config_entries.async_reload(entry.entry_id)))
+    config_entry.async_on_unload(config_entry.add_update_listener(on_config_entry_update))
 
     # Setup all the callback listeners before starting to load the data
 
