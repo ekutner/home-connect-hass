@@ -17,6 +17,7 @@ logger:
     home_connect_alt: debug
     custom_components.home_connect_alt: debug
     homeassistant.helpers.config_entry_oauth2_flow: debug
+    aiohttp_sse_client.client: warn
 
 #home_connect_alt:
   # client_id: !secret home_connect_client_id

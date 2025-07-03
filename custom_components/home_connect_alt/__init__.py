@@ -72,12 +72,16 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the Home Connect New component."""
 
     if DOMAIN not in config:
+        # There is no configuration for this integration in the configuration.yaml file
         # hass.data[DOMAIN] = HC_CONFIG_SCHEMA({})
         hass.data[DOMAIN] = { "global": {} }
+        Configuration.set_global_config(hass, hass.data[DOMAIN])
         return True
 
     # The config now contains configuration coming from the configuration.yaml file
-    Configuration.set_global_config(config[DOMAIN])
+    base_config = { "hass": hass }
+    base_config.update(config[DOMAIN])
+    Configuration.set_global_config(hass, base_config)
     hass.data[DOMAIN] = { "global": {} }
 
     # migrate OAuth credentials from configuration.yaml to credentials manager
