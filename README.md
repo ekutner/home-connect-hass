@@ -277,6 +277,8 @@ In contrast, setting ```sensor_value_translation: server``` will override this b
   When this issue occurs the log file will show a "Bad Request" "400" error.  
   Make sure the email address you used when registering your Home Connect account has ONLY lowercase letters.
 
+* **Some entity IDs start with a digit and can't be used in a template**
+  Starting with version 1.3.0 the integration will no longer create new entities that start with a digit, however, in order to avoid breaking existing automations it will not change existing entities. If you have entities that were created before that version you must delete them first and then restart HA so the integration creates them again with a string prefix. The easiest way to do that is to just uninstall and re-install the integration but disabling it, then deleting the entities and re-enabling should also work.
 </br>
 
 # Dealing with API rate limits
