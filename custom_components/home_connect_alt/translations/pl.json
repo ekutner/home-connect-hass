@@ -1,42 +1,42 @@
 {
   "config": {
     "abort": {
-      "already_configured": "Account is already configured",
-      "already_in_progress": "Configuration flow is already in progress",
-      "cannot_connect": "Failed to connect",
-      "timeout_connect": "Timeout establishing connection",
-      "oauth_error": "Received invalid token data",
+      "already_configured": "Konto jest już skonfigurowane",
+      "already_in_progress": "Przepływ konfiguracji jest już w toku",
+      "cannot_connect": "Niepowodzenie połączenia",
+      "timeout_connect": "Przekroczono limit czasu nawiązywania połączenia",
+      "oauth_error": "Odebrano nieprawidłowe dane tokenu",
       "missing_configuration": "Składnik nie jest skonfigurowany. Postępuj zgodnie z dokumentacją.",
-      "reauth_successful": "Re-authentication was successful",
-      "invalid_access_token": "Invalid access token",
-      "unknown": "Unexpected error"
+      "reauth_successful": "Ponowne uwierzytelnianie powiodło się",
+      "invalid_access_token": "Niepoprawny token dostępu",
+      "unknown": "Niespodziewany błąd"
     },
     "create_entry": {
       "default": "Pomyślnie uwierzytelniono"
     },
     "step": {
       "user": {
-        "title": "Select Server",
+        "title": "Wybierz Serwer",
         "data": {
-          "api_host": "Home Connect Server"
+          "api_host": "Serwer Home Connect"
         },
         "data_description": {
-          "api_host": "Use China only if you are located there, otherwise use Default"
+          "api_host": "Używaj opcji Chiny tylko wtedy, gdy się tam znajdujesz, w przeciwnym razie użyj opcji Domyślne"
         }
       },
       "auth": {
-        "title": "Link Home Connect Account"
+        "title": "Połącz konto Home Connect"
       },
       "reauth_confirm": {
-        "title": "Reauthenticate integration",
-        "description": "The Home Connect integration needs to re-authenticate your account"
+        "title": "Ponowne uwierztelnianie integracji",
+        "description": "Integracja Home Connect potrzebuje ponownie uwierzytelnić twoje konto"
       }
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Advanced settings",
+        "title": "Zaawansowane ustawienia",
         "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
         "data": {
           "language": "Language code",
@@ -65,9 +65,9 @@
   "selector": {
     "api_host": {
       "options": {
-        "https://api.home-connect.com": "Default",
-        "https://api.home-connect.cn": "China",
-        "https://simulator.home-connect.com": "Simulator (for testing only)"
+        "https://api.home-connect.com": "Domyślny",
+        "https://api.home-connect.cn": "Chiny",
+        "https://simulator.home-connect.com": "Simulator (tylko do testowania)"
       }
     },
     "translation_mode": {
