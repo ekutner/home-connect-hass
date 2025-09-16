@@ -16,10 +16,10 @@
 	},
   "appPort": "9123:8123",
 	"mounts": [
-    "source=${localWorkspaceFolderBasename}_profile,target=/root,type=volume",  // create a persistent named volume mounted to /root (home of user root)
-    "target=/root/.vscode-server,type=volume",  // create an anonymous volume mounted to /root/.vscode-server which will be rebuilt with the container
-    "source=${localWorkspaceFolderBasename}_config,target=/config,type=volume",  // create a persistent named volume for the configuration folder
-		"source=${localWorkspaceFolder}/../home-connect-async,target=${containerWorkspaceFolder}/../home-connect-async,type=bind,consistency=consistent"
+        "source=${localWorkspaceFolderBasename}_profile,target=/root,type=volume",  // create a persistent named volume mounted to /root (home of user root)
+        "target=/root/.vscode-server,type=volume",  // create an anonymous volume mounted to /root/.vscode-server which will be rebuilt with the container
+        "source=${localWorkspaceFolderBasename}_config,target=/config,type=volume",  // create a persistent named volume for the configuration folder
+        "source=${localWorkspaceFolder}/../home-connect-async,target=${containerWorkspaceFolder}/../home-connect-async,type=bind,consistency=consistent"
 	],
   "remoteUser": "root",
 	"postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-create.sh",
