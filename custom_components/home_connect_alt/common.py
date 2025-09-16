@@ -52,27 +52,31 @@ class EntityBase(ABC):
         """ Checks if the specified configuration option exists for the entity """
         return self._conf.has_entity_setting(self._key, option)
 
+    @staticmethod
+    def get_non_numeric_haID(hass: HomeAssistant, haid:str, brand:str) -> str:
+        """ Returns a haID that doesn't start with a digit by adding the brand as a prefix if needed """
+        if haid[0].isdigit():
+            # if the haID starts with a digit and there aren't entities that use that haid already then add the brand as a prefix to the haId
+            # This is to avoid issues with using such entities in templates
+            ent_reg = er.async_get(hass)
+            if ent_reg.entities.get(f"binary_sensor.{haid}_connected") is None:
+                # Use the "connected" entity as a representative of the IDs of all the other entities
+                # This is done to avoid breaking existing implementations that already use the haId without the brand prefix
+                haid = brand.lower() + "_" + haid
+            else:
+                _LOGGER.debug("Not adding brand prefix to haID %s because there are existing entities without it", haid)
+
+        return haid
+
     @property
     def haId(self) -> str:
         """ The haID of the appliance """
 
         if self._haid:
-            # If the haId is already set, we return it
+            # If the haId is already set, we return it, so this is only calculated once
             return self._haid
 
-        haid = self._appliance.haId.lower().replace('-','_')
-
-        if haid[0].isdigit():
-            # if the haID starts with a digit and there aren't entities that use that haid already then add the brand as a prefix to the haId
-            # This is to avoid issues with using such entities in templates
-            ent_reg = er.async_get(self._conf.hass)
-            if ent_reg.entities.get(f"binary_sensor.{haid}_connected") is None:
-                # Use the "connected" entity as a representative of the IDs of all the other entities
-                # This is done to avoid breaking existing implementations that already use the haId without the brand prefix
-                haid = self._appliance.brand.lower() + "_" + haid
-            else:
-                _LOGGER.debug("Not adding brand prefix to haID %s because there are existing entities without it", haid)
-
+        haid = EntityBase.get_non_numeric_haID(self._conf.hass, self._appliance.normalized_haId, self._appliance.brand)
         self._haid = haid
         return haid
 

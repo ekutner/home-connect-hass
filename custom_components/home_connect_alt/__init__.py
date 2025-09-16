@@ -22,7 +22,7 @@ from homeassistant.helpers import storage
 from homeassistant.helpers.typing import ConfigType
 
 from . import api, config_flow
-from .common import Configuration
+from .common import Configuration, EntityBase
 from .const import *
 from .services import Services
 
@@ -191,7 +191,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
     async def on_device_removed(appliance:Appliance):
         devreg = dr.async_get(hass)
-        device = devreg.async_get_device({(DOMAIN, appliance.haId.lower().replace('-','_'))})
+        device = devreg.async_get_device({(DOMAIN, appliance.normalized_haId)})
         devreg.async_remove_device(device.id)
 
         # We need to wait for the appliance to be removed from the HomeConnect data
@@ -380,14 +380,20 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
 
 def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect):
     """ Register for publishing events that are offered by this integration """
-    device_reg = dr.async_get(hass)
-    last_event = { 'key': None, 'value': None}    # Used to filter out duplicate events
+    device_reg: dr.DeviceRegistry = dr.async_get(hass)
+    last_event: dict[str, str | None] = { 'key': None, 'value': None}    # Used to filter out duplicate events
 
     async def async_handle_event(appliance:Appliance, key:str, value:str):
         if key != last_event['key'] or value != last_event['value']:
             last_event['key'] = key
             last_event['value'] = value
-            device = device_reg.async_get_device({(DOMAIN, appliance.haId.lower().replace('-','_'))})
+            haid = appliance.normalized_haId
+            if haid[0].isdigit():
+                haid = EntityBase.get_non_numeric_haID(hass, haid, appliance.brand)
+            device = device_reg.async_get_device({(DOMAIN, haid)})
+            if not device:
+                _LOGGER.warning("No device found for appliance %s, cannot publish event %s = %s", appliance.normalized_haId, key, str(value))
+                return
             event_data = {
                 "device_id": device.id,
                 "key": key,
