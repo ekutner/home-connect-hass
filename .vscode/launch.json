@@ -5,7 +5,7 @@
       {
         // Example of attaching to local debug server
         "name": "Home Assistant",
-        "type": "python",
+        "type": "debugpy",
         "request": "launch",
         "justMyCode": false,
         "preLaunchTask": "Pre-launch",
@@ -14,7 +14,7 @@
       },
       {
         "name": "Tools - Sync Translations",
-        "type": "python",
+        "type": "debugpy",
         "request": "launch",
         "justMyCode": true,
         //"module": "tools.sync-translations",
@@ -25,10 +25,12 @@
       {
         // Example of attaching to local debug server
         "name": "Python: Attach Local",
-        "type": "python",
+        "type": "debugpy",
         "request": "attach",
-        "port": 5678,
-        "host": "localhost",
+        "connect": {
+            "port": 5678,
+            "host": "localhost",
+        },
         "pathMappings": [
           {
             "localRoot": "${workspaceFolder}",
@@ -39,10 +41,12 @@
       {
         // Example of attaching to my production server
         "name": "Python: Attach Remote",
-        "type": "python",
+        "type": "debugpy",
         "request": "attach",
-        "port": 5678,
-        "host": "homeassistant.local",
+        "connect": {
+            "port": 5678,
+            "host": "homeassistant.local",
+        },
         "pathMappings": [
           {
             "localRoot": "${workspaceFolder}",
