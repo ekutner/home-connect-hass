@@ -40,6 +40,7 @@ class EntityBase(ABC):
         self._key = key
         self._conf = conf
         self._haid = None
+        self._unique_id = None
         self.entity_id = f'home_connect.{self.unique_id}'
         self._hc_obj = hc_obj
 
@@ -71,14 +72,9 @@ class EntityBase(ABC):
     @property
     def haId(self) -> str:
         """ The haID of the appliance """
-
-        if self._haid:
-            # If the haId is already set, we return it, so this is only calculated once
-            return self._haid
-
-        haid = EntityBase.get_non_numeric_haID(self._conf.hass, self._appliance.normalized_haId, self._appliance.brand)
-        self._haid = haid
-        return haid
+        if not self._haid:
+            self._haid =  self._appliance.haId.lower().replace('-','_')
+        return self._haid
 
 
     @property
@@ -92,7 +88,7 @@ class EntityBase(ABC):
         }
 
     @property
-    def device_class(self) -> str:
+    def device_class(self) -> str|None:
         """ Return the device class, if defined """
         if self._conf:
             return self._conf.get_entity_setting(self._key, "class")
@@ -102,7 +98,22 @@ class EntityBase(ABC):
     def unique_id(self) -> str:
         """" The unique ID of the entity """
 
-        return f"{self.haId}_{self._key.lower().replace('.','_')}"
+        if not self._unique_id:
+            haid = self._appliance.normalized_haId
+            unique_id = f"{haid}_{self._key.lower().replace('.','_')}"
+
+            if haid[0].isdigit():
+                # Don't create new entities with IDs that start with a digit
+                # but leave existing entities as they are to avoid breaking changes
+
+                ent_reg = er.async_get(self._conf.hass)
+                all_entities_ids = ent_reg.entities.keys()
+                existing_entities = [eid for eid in all_entities_ids if eid.endswith(f".{unique_id}")]
+                if not existing_entities:
+                    unique_id = f"{self._appliance.brand.lower()}_{unique_id}"
+
+            self._unique_id =  unique_id
+        return self._unique_id
 
     @property
     def name_ext(self) -> str|None:
