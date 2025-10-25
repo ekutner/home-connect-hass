@@ -1,85 +1,85 @@
 {
   "config": {
     "abort": {
-      "already_configured": "Account is already configured",
-      "already_in_progress": "Configuration flow is already in progress",
-      "cannot_connect": "Failed to connect",
-      "timeout_connect": "Timeout establishing connection",
-      "oauth_error": "Received invalid token data",
+      "already_configured": "Konto ist bereits konfiguriert",
+      "already_in_progress": "Konfigurationsvorgang läuft bereits",
+      "cannot_connect": "Verbindung fehlgeschlagen",
+      "timeout_connect": "Zeitüberschreitung beim Verbindungsaufbau",
+      "oauth_error": "Ungültige Token-Daten empfangen",
       "missing_configuration": "Die Komponente ist nicht konfiguriert. Bitte der Dokumentation folgen.",
-      "reauth_successful": "Re-authentication was successful",
-      "invalid_access_token": "Invalid access token",
-      "unknown": "Unexpected error"
+      "reauth_successful": "Erneute Authentifizierung war erfolgreich",
+      "invalid_access_token": "Ungültiges Zugriffstoken",
+      "unknown": "Unerwarteter Fehler"
     },
     "create_entry": {
       "default": "Erfolgreich authentifiziert"
     },
     "step": {
       "user": {
-        "title": "Select Server",
+        "title": "Server auswählen",
         "data": {
           "api_host": "Home Connect Server"
         },
         "data_description": {
-          "api_host": "Use China only if you are located there, otherwise use Default"
+          "api_host": "Verwenden Sie China nur, wenn Sie sich dort befinden, ansonsten Standard"
         }
       },
       "auth": {
-        "title": "Link Home Connect Account"
+        "title": "Home Connect Konto verknüpfen"
       },
       "reauth_confirm": {
-        "title": "Reauthenticate integration",
-        "description": "The Home Connect integration needs to re-authenticate your account"
+        "title": "Integration erneut authentifizieren",
+        "description": "Die Home Connect Integration muss Ihr Konto erneut authentifizieren"
       }
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Advanced settings",
-        "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
+        "title": "Erweiterte Einstellungen",
+        "description": "Siehe den Konfigurationsabschnitt in der [README](https://github.com/ekutner/home-connect-hass) für eine Erklärung dieser Einstellungen",
         "data": {
-          "language": "Language code",
-          "translation_mode": "Translation mode",
-          "name_template": "Entity name template",
-          "log_mode": "Verbose log mode",
-          "sse_timeout": "SSE Timeout",
-          "appliance_settings": "Advanced appliance settings (YAML)",
-          "entity_settings": "Advanced entity settings (YAML)",
-          "delayed_ops": "Delayed start behavior"
+          "language": "Sprachcode",
+          "translation_mode": "Übersetzungsmodus",
+          "name_template": "Vorlage für Entitätsnamen",
+          "log_mode": "Ausführlicher Log-Modus",
+          "sse_timeout": "SSE-Timeout",
+          "appliance_settings": "Erweiterte Geräteeinstellungen (YAML)",
+          "entity_settings": "Erweiterte Entitätseinstellungen (YAML)",
+          "delayed_ops": "Verhalten bei verzögertem Start"
         },
         "data_description": {
-          "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
-          "log_mode": "Debug logging must be enabled in configuration.yaml for this setting to apply",
-          "sse_timeout": "Timeout in minutes for refreshing the SSE connection (0=disabled)",
-          "appliance_settings": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
-          "entity_settings": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
-          "delayed_ops": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=handling-of-delayed-program-start)"
+          "language": "Nur [Sprachcodes](https://api-docs.home-connect.com/general/#supported-languages) verwenden, die von Home Connect unterstützt werden",
+          "log_mode": "Debug-Logging muss in configuration.yaml aktiviert sein, damit diese Einstellung wirksam wird",
+          "sse_timeout": "Timeout in Minuten für die Aktualisierung der SSE-Verbindung (0=deaktiviert)",
+          "appliance_settings": "Weitere Details finden Sie in der [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
+          "entity_settings": "Weitere Details finden Sie in der [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
+          "delayed_ops": "Weitere Details finden Sie in der [README](https://github.com/ekutner/home-connect-hass?tab=handling-of-delayed-program-start)"
         }
       }
     }
   },
   "application_credentials": {
-    "description": "Follow the setup instructions in the integration's [README]({more_info_url}) file before continuing\n\n"
+    "description": "Folgen Sie den Einrichtungshinweisen in der [README]({more_info_url}) Datei der Integration, bevor Sie fortfahren\n\n"
   },
   "selector": {
     "api_host": {
       "options": {
-        "https://api.home-connect.com": "Default",
+        "https://api.home-connect.com": "Standard",
         "https://api.home-connect.cn": "China",
-        "https://simulator.home-connect.com": "Simulator (for testing only)"
+        "https://simulator.home-connect.com": "Simulator (nur zum Testen)"
       }
     },
     "translation_mode": {
       "options": {
-        "local": "Local",
+        "local": "Lokal",
         "server": "Server"
       }
     },
     "delayed_ops": {
       "options": {
-        "default": "Use delay time span (default behavior)",
-        "absolute_time": "Use absolute time"
+        "default": "Verwende Zeitspanne für Verzögerung (Standardverhalten)",
+        "absolute_time": "Verwende absolute Zeit"
       }
     }
   },
@@ -92,19 +92,19 @@
   "entity": {
     "button": {
       "start_program": {
-        "name": "Start Program"
+        "name": "Programm starten"
       },
       "pause_program": {
-        "name": "Pause Program"
+        "name": "Programm pausieren"
       },
       "resume_program": {
-        "name": "Resume Program"
+        "name": "Programm fortsetzen"
       },
       "stop_program": {
-        "name": "Stop Program"
+        "name": "Programm stoppen"
       },
       "homeconnect_refresh": {
-        "name": "Home Connect Refresh Data"
+        "name": "Home Connect Daten aktualisieren"
       },
       "homeconnect_debug": {
         "name": "Home Connect Dump Debug Info"
@@ -836,7 +836,10 @@
           "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus2": "+2",
           "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus3": "+3",
           "LaundryCare.Washer.Option.SpinSpeed": "Schleuderdrehzahl",
-          "LaundryCare.Washer.Option.Temperature": "Temperatur"
+          "LaundryCare.Washer.Option.Temperature": "Temperatur",          
+          "LaundryCare.WasherDryer.EnumType.ProgramMode.Washing": "Waschen",
+          "LaundryCare.WasherDryer.EnumType.ProgramMode.Drying": "Trocknen",
+          "LaundryCare.WasherDryer.EnumType.ProgramMode.WashingAndDrying": "Waschen & Trocknen"
         }
       },
       "programs": {
@@ -1033,18 +1036,38 @@
           "LaundryCare.Washer.Program.WaterProof": "Waschen: Outdoor Imprägnieren",
           "LaundryCare.Washer.Program.Wool": "Waschen: Wolle",
           "LaundryCare.Washer.Program.Wool.Wool.Wool": "Waschen: Wolle",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDry": "Schranktrocken",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDryPlus": "Schranktrocken Plus",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.GentleDry": "Schonend trocknen",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.IronDry": "Bügeltrocken",
+          "LaundryCare.WasherDryer.Program.Automatic30.Auto30.Auto30": "Waschen&Trocknen: Automatik Sanft",
+          "LaundryCare.WasherDryer.Program.Automatic4060.Auto40.Auto40": "Waschen&Trocknen: Automatik 40°C",  
           "LaundryCare.WasherDryer.Program.Cotton": "Waschen&Trocknen: Baumwolle",
           "LaundryCare.WasherDryer.Program.Cotton.Eco4060": "Waschen&Trocknen: Eco 40-60",
+          "LaundryCare.WasherDryer.Program.DelicatesSilk": "Waschen&Trocknen: Fein/Seide",
+          "LaundryCare.WasherDryer.Program.DrumCleanAndDry.DrumCare": "Waschen&Trocknen: Trommelreinigung&Trocknen",
           "LaundryCare.WasherDryer.Program.EasyCare": "Waschen&Trocknen: Pflegeleicht",
+          "LaundryCare.WasherDryer.Program.EasyCare.HHSynthetics.HHSynthetics": "Waschen&Trocknen: Pflegeleicht",
+          "LaundryCare.WasherDryer.Program.FastWashDry.WD45.WD45": "Waschen&Trocknen:  Waschen&Trocknen 45'",
+          "LaundryCare.WasherDryer.Program.HygieneDryLaundry.FastHygiene.FastHygiene": "Waschen&Trocknen: Fast Hygiene",
+          "LaundryCare.WasherDryer.Program.LaundryWarming.LaundryWarming.LaundryWarming": "Waschen&Trocknen: Wäsche erwärmen",
           "LaundryCare.WasherDryer.Program.Mix": "Waschen&Trocknen: Mix",
+          "LaundryCare.WasherDryer.Program.HHMix.HHMix": "Waschen&Trocknen: Mix",
+          "LaundryCare.WasherDryer.Program.MoistRemove.DrumDry.DrumDry": "Waschen&Trocknen: Feuchtigkeit entfernen",
+          "LaundryCare.WasherDryer.Program.RefreshWD.Refresh.Refresh": "Waschen&Trocknen: Auffrischen",
+          "LaundryCare.WasherDryer.Program.Rinse": "Waschen&Trocknen: Spülen",
           "LaundryCare.WasherDryer.Program.Rinse.Rinse": "Waschen&Trocknen: Spülen",
           "LaundryCare.WasherDryer.Program.Rinse.RinseSpin": "Waschen&Trocknen: Spülen & Schleudern",
-          "LaundryCare.WasherDryer.Program.ShirtsBlouses.ShirtsBlouses": "Waschen&Trocknen: Hemden/Business",
+          "LaundryCare.WasherDryer.Program.Spin": "Waschen&Trocknen: Schleudern & Abpumpen",
+          "LaundryCare.WasherDryer.Program.ShirtsBlouses": "Waschen&Trocknen: Hemden/Blusen",
+          "LaundryCare.WasherDryer.Program.ShirtsBlouses.ShirtsBlouses": "Waschen&Trocknen: Hemden/Blusen",
+          "LaundryCare.WasherDryer.Program.SportFitness": "Waschen&Trocknen: Sportbekleidung",
           "LaundryCare.WasherDryer.Program.Towels.Towels": "Waschen&Trocknen: Handtücher",
-          "LaundryCare.WasherDryer.Program.WashAndDry.60": "Waschen&Trocknen: Wash & Dry 60'",
+          "LaundryCare.WasherDryer.Program.WashAndDry.60": "Waschen&Trocknen: Waschen&Trocknen 60'",
           "LaundryCare.WasherDryer.Program.WashAndDry.90": "Waschen&Trocknen: Waschen&Trocknen 90'",
           "LaundryCare.WasherDryer.Program.WaterProof.WaterProof": "Waschen&Trocknen: Outdoor Imprägnieren",
-          "LaundryCare.WasherDryer.Program.Wool.Wool": "Waschen&Trocknen: Wolle"
+          "LaundryCare.WasherDryer.Program.Wool.Wool": "Waschen&Trocknen: Wolle",
+          "LaundryCare.WasherDryer.Program.Wool": "Waschen&Trocknen: Wolle"
         }
       },
       "settings": {
