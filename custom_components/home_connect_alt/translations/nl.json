@@ -91,8 +91,11 @@
   },
   "entity": {
     "button": {
-      "start_program": {
-        "name": "Programma starten"
+      "homeconnect_debug": {
+        "name": "Home Connect Debug Info"
+      },
+      "homeconnect_refresh": {
+        "name": "Home Connect vernieuwen"
       },
       "pause_program": {
         "name": "Pauzeren"
@@ -100,17 +103,17 @@
       "resume_program": {
         "name": "Programma hervatten"
       },
+      "start_program": {
+        "name": "Programma starten"
+      },
       "stop_program": {
         "name": "Programma stoppen"
       },
-      "hc_refresh": {
-        "name": "Home Connect vernieuwen"
-      },
-      "hc_debug_info": {
-        "name": "Home Connect Debug Info"
-      }
     },
-    "select": {
+     "select": {
+      "homeconnect_status": {
+        "name": "Home Connect Status"
+      },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "Looptijd",
@@ -837,6 +840,13 @@
           "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus3": "+3",
           "LaundryCare.Washer.Option.SpinSpeed": "Centrifugeren",
           "LaundryCare.Washer.Option.Temperature": "Temperatuur"
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDry": "Kastdroog",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDryPlus": "Kastdroog Plus",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.GentleDry": "Geleidelijk Droog",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.IronDry": "Strijkdroog",
+          "LaundryCare.WasherDryer.EnumType.ProgramMode.Washing": "Wassen",
+          "LaundryCare.WasherDryer.EnumType.ProgramMode.Drying": "Drogen",
+          "LaundryCare.WasherDryer.EnumType.ProgramMode.WashingAndDrying": "Wassen & Wassen"
         }
       },
       "programs": {
@@ -1045,6 +1055,21 @@
           "LaundryCare.WasherDryer.Program.WashAndDry.90": "Wasdroger: Wassen & Drogen 90°C",
           "LaundryCare.WasherDryer.Program.WaterProof.WaterProof": "Wasdroger: Waterbestendig",
           "LaundryCare.WasherDryer.Program.Wool.Wool": "Wasdroger: Wol"
+          "LaundryCare.WasherDryer.Program.Automatic30.Auto30.Auto30": "Wasdroger: Auto 30°C",
+          "LaundryCare.WasherDryer.Program.Automatic4060.Auto40.Auto40": "Wasdroger: Auto 40°C",  
+          "LaundryCare.WasherDryer.Program.DelicatesSilk": "Wasdroger: Fijne Zijde",
+          "LaundryCare.WasherDryer.Program.DrumCleanAndDry.DrumCare": "Wasdroger: Trommel Reinigen",
+          "LaundryCare.WasherDryer.Program.EasyCare.HHSynthetics.HHSynthetics": "Wasdroger: Kreukherstellend",
+          "LaundryCare.WasherDryer.Program.FastWashDry.WD45.WD45": "Wasdroger: Wasdroger 45'",
+          "LaundryCare.WasherDryer.Program.HygieneDryLaundry.FastHygiene.FastHygiene": "Wasdroger: Snelle Hygiëne",
+          "LaundryCare.WasherDryer.Program.LaundryWarming.LaundryWarming.LaundryWarming": "Wasdroger: Wasgoed Opwarmen",
+          "LaundryCare.WasherDryer.Program.MoistRemove.DrumDry.DrumDry": "Wasdroger: Vocht Verwijderen",
+          "LaundryCare.WasherDryer.Program.RefreshWD.Refresh.Refresh": "Wasdroger: Verversen",
+          "LaundryCare.WasherDryer.Program.Rinse": "Wasdroger: Spoelen",
+          "LaundryCare.WasherDryer.Program.Spin": "Wasdroger: Spoelen & Centriguren",
+          "LaundryCare.WasherDryer.Program.ShirtsBlouses": "Wasdroger: Overhemden",
+          "LaundryCare.WasherDryer.Program.SportFitness": "Wasdroger: Sport Fitness",
+          "LaundryCare.WasherDryer.Program.Wool": "Wasdroger: Wol"
         }
       },
       "settings": {
