@@ -52,7 +52,7 @@ class StartButton(EntityBase, ButtonEntity):
     """ Class for buttons that start the selected program """
     @property
     def unique_id(self) -> str:
-        return f'{self.haId}_start_pause'
+        return f'{self.safe_haId}_start_pause'
 
     @property
     def name_ext(self) -> str:
@@ -158,7 +158,7 @@ class StopButton(EntityBase, ButtonEntity):
     """ Class for buttons that start the selected program """
     @property
     def unique_id(self) -> str:
-        return f'{self.haId}_stop'
+        return f'{self.safe_haId}_stop'
 
     @property
     def name_ext(self) -> str:

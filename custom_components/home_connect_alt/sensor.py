@@ -89,7 +89,7 @@ class ProgramSensor(EntityBase, SensorEntity):
 
     @property
     def unique_id(self) -> str:
-        return f"{self.haId}_{self._conf['program_type']}_program"
+        return f"{self.safe_haId}_{self._conf['program_type']}_program"
 
     @property
     def name_ext(self) -> str:

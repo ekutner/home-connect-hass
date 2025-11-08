@@ -388,9 +388,10 @@ def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect):
             last_event['key'] = key
             last_event['value'] = value
             haid = appliance.normalized_haId
-            if haid[0].isdigit():
-                haid = EntityBase.get_non_numeric_haID(hass, haid, appliance.brand)
             device = device_reg.async_get_device({(DOMAIN, haid)})
+            if not device:
+                haid = EntityBase.get_safe_haID(hass, appliance)
+                device = device_reg.async_get_device({(DOMAIN, haid)})
             if not device:
                 _LOGGER.warning("No device found for appliance %s, cannot publish event %s = %s", appliance.normalized_haId, key, str(value))
                 return

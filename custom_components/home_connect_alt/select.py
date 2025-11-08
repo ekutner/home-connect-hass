@@ -69,7 +69,7 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
 
     @property
     def unique_id(self) -> str:
-        return f'{self.haId}_programs'
+        return f'{self.safe_haId}_programs'
 
     @property
     def translation_key(self) -> str:
