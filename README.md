@@ -152,7 +152,8 @@ The following very advanced options can only be defined using YAML. Generally yo
 
 * **appliance_settings** (optional) - Overrides some settings for specific appliances.    
   This setting requires specifying the identifier (HAID) of the appliance. The easiest way to find it is to look at the entity ID of the "Connected" sensor of the appliance. 
-  This would look something like ```binary_sensor.bosch_wat286h0gb_68a64f51deb_connected```, and the ID in this case is ```bosch_wat286h0gb_68a64f51deb```.
+  This would look something like ```binary_sensor.bosch_wat286h0gb_68a64f51deb_connected```, and the HAID in this case is ```bosch_wat286h0gb_68a64f51deb```.  
+  However, if the string after the brand name starts with a digit then you should only use the part of the ID that is to the right of the brand name. For example, if the entity ID is: ```binary_sensor.bosch_6732863023_68a64f51deb_connected``` then the HAID is ```6732863023_68a64f51deb```
 
   Currently supported settings:  
   **_name_template_** - override the global name_template setting  
@@ -236,11 +237,12 @@ In contrast, setting ```sensor_value_translation: server``` will override this b
   **NOTE:** If you are modifying an existing Home-Connect App then it may take up to 2 hours for the changes to take effect, so make sure you wait long enough.
 
 * **Some of my appliances are not showing up after I added the integration**  
-  This is most commonly caused by two reasons:
-  1. The appliance must be powered on and connected to the Home Connect service to be discovered. Once the missing devices are turned on and connected, they will automatically be discovered and added by the integration.
-  This can be verified in the Home Connect mobile app **but only while the wifi on the phone is turned OFF**. If some devices still do not show app in the integration, restart them (power cycle/unplug power cord, do not just turn them off and on). If the devices are active in the mobile app while the phone's wifi is turned off then please open an issue with a debug log to report it.
-  3. Due to some unreasonable rate limits set by BSH, there is a limit of about 5
-  appliances loaded per minute. If you have more, expect the initial load to take longer. The integration will wait for the service to become available and continue loading the rest of the appliances. You may have to refresh your screen to see them in Home Assistant after they were added. See more details in the next item.
+  This is most commonly caused by one of the following reaons:
+  1. The appliance was turned off or not connected to the Home Connect service when the integration was installed. Once the missing devices are turned on and connected, they will be discovered automatically and added by the integration. You don't have to uninstall the integration for this to happen.
+  
+  2. The appliance is not properly connected to Home Connect. The sympthom of this issue is that the appliance can be controlled using the mobile app while the phone is connected to the home WiFi network but not when the phone is on the mobile network. To verify this turn off WiFi on your mobile phone and try to connect to the missing appliance from the Home Connect mobile app. If it doesn't work then you have this issue. To solve it you should first try a physical power cycle (unplug power cord, do not just turn off and on), and if that doesn't work then you'll have to follow the appliance's manual to disconnect it and then reconnect it to the Home Connect service.
+  
+  3. Due to some unreasonable rate limits set by BSH, there is a limit of about 4-5 appliances that can be loaded per minute and there are daily limits as well. If you have more appliances, expect the initial load to take longer. The integration will wait for the service to become available and continue loading the rest of the appliances. Depending on the situation this wait can be anything from minutes to 24 hours. You may have to refresh your screen to see them in Home Assistant after they were added. See more details in the next item.
 
 * **The Home Connect Status sensor is showing the value BLOCKED and nothing works**  
   Congratulations, you've hit one of Home Connects annoying API rate limits. It will get automatically lifted anytime between a few minutes and 24 hours. If you have many appliances and hitting this issue frequently then see the [Dealing with API rate limits](#dealing-with-api-rate-limits) section below.
