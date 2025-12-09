@@ -72,7 +72,7 @@ Before installing the integration you need to create an "application" in the Hom
 3. Fill in the application creation form:  
    **Application ID**: A unique ID for the application, can be home-connect-alt, or whatever you like.  
    **OAuth Flow**: Authorization Code Grant Flow  
-   **Home Connect User Account for Testing**: Leave blank  
+   **Home Connect User Account for Testing**: Enter the email address used in the Home Connect mobile app  
    **Redirect URI**: https://my.home-assistant.io/redirect/oauth  
    **Add additional redirect URIs**: Leave unchecked  
    **Enable One Time Token Mode**: Leave unchecked  
