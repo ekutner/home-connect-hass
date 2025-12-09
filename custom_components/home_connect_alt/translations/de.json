@@ -486,7 +486,7 @@
           "LaundryCare.Washer.Program.LabelEU19.LabelEU19.Eco4060": "Waschen: Eco 40-60",
           "LaundryCare.Washer.Program.Mix": "Waschen: Schnell/Mix",
           "LaundryCare.Washer.Program.Mix.Mix.Mix": "Waschen: Mix",
-          "LaundryCare.Washer.Program.Mix.NightWash": "Wash: Night Wash",
+          "LaundryCare.Washer.Program.Mix.NightWash": "Waschen: Schnell/Mix extra leise",
           "LaundryCare.Washer.Program.Monsoon": "Waschen: Monsoon",
           "LaundryCare.Washer.Program.MyTime": "Waschen: myTime",
           "LaundryCare.Washer.Program.Outdoor": "Waschen: Outdoor",
@@ -507,7 +507,7 @@
           "LaundryCare.Washer.Program.SportFitness": "Waschen: Sport Fitness",
           "LaundryCare.Washer.Program.SportShoes": "Waschen: Sportschuhe",
           "LaundryCare.Washer.Program.Steaming.Steaming.Steaming": "Waschen: Dampf",
-          "LaundryCare.Washer.Program.Super153045.Super15": "Wash: Super 15",
+          "LaundryCare.Washer.Program.Super153045.Super15": "Waschen: Extra Kurz 15",
           "LaundryCare.Washer.Program.Super153045.Super1530": "Waschen: Super 15-30",
           "LaundryCare.Washer.Program.Super153045.Super1530.Super1530": "Wash: Super 15-30",
           "LaundryCare.Washer.Program.Towels": "Waschen: Handtücher",
@@ -517,6 +517,8 @@
           "LaundryCare.Washer.Program.WaterProof": "Waschen: Outdoor Imprägnieren",
           "LaundryCare.Washer.Program.Wool": "Waschen: Wolle",
           "LaundryCare.Washer.Program.Wool.Wool.Wool": "Waschen: Wolle",
+          "LaundryCare.Washer.Program.Rinse.RinseSpinDrain": "Waschen: Spülen & Schleudern & Abpumpen"
+          "LaundryCare.Washer.Program.DownDuvet.Duvet": "Waschen: Steppdecken"
           "LaundryCare.WasherDryer.Program.Cotton": "Waschen&Trocknen: Baumwolle",
           "LaundryCare.WasherDryer.Program.Cotton.Eco4060": "Waschen&Trocknen: Eco 40-60",
           "LaundryCare.WasherDryer.Program.EasyCare": "Waschen&Trocknen: Pflegeleicht",
