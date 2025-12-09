@@ -1,73 +1,73 @@
 {
+  "application_credentials": {
+    "description": "Volg de installatie-instructies in het [README]({more_info_url})-bestand van de integratie voordat je doorgaat\n\n"
+  },
   "config": {
     "abort": {
-      "already_configured": "Account is al ingesteld",
-      "already_in_progress": "Configuratie flow is al bezig",
-      "cannot_connect": "Verbinden mislukt",
-      "timeout_connect": "Verbinding timeout ",
-      "oauth_error": "Invalide token data ontvangen",
+      "already_configured": "Account is al geconfigureerd",
+      "already_in_progress": "Configuratieproces is al bezig",
+      "cannot_connect": "Verbinding maken mislukt",
+      "invalid_access_token": "Ongeldige toegangstoken",
       "missing_configuration": "Het component is niet geconfigureerd. Volg de documentatie.",
-      "reauth_successful": "Re-authentication gelukt",
-      "invalid_access_token": "Ongeldig access token",
-      "unknown": "Onverwachte foutmelding"
+      "oauth_error": "Ongeldige tokengegevens ontvangen",
+      "reauth_successful": "Het opnieuw authenticeren was succesvol",
+      "timeout_connect": "Time-out bij het maken van verbinding",
+      "unknown": "Onverwachte fout"
     },
     "create_entry": {
-      "default": "Succesvol geverifieerd"
+      "default": "Succesvol geauthenticeerd"
     },
     "step": {
-      "user": {
-        "title": "Voorkeurslocatie server selecteren",
-        "data": {
-          "api_host": "Home Connect Server"
-        },
-        "data_description": {
-          "api_host": "Kies Default tenzij je in China bent."
-        }
-      },
       "auth": {
-        "title": "Link Home Connect Account"
+        "title": "Koppel Home Connect-account"
       },
       "reauth_confirm": {
-        "title": "Herbevestig authenticatie van de integratie",
-        "description": "De Home Connect integratie moet je account opnieuw bevestigen."
+        "description": "De Home Connect-integratie moet je account opnieuw authenticeren",
+        "title": "Integratie opnieuw authenticeren"
+      },
+      "user": {
+        "data": {
+          "api_host": "Home Connect-server"
+        },
+        "data_description": {
+          "api_host": "Gebruik China alleen als je daar woont, anders standaard"
+        },
+        "title": "Selecteer server"
       }
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Geavanceerde instellingen",
-        "description": "Bekijk de configuratie sectie op [README](https://github.com/ekutner/home-connect-hass) voor uitleg over deze instellingen",
         "data": {
-          "language": "Taal code",
-          "translation_mode": "Vertalingsmode",
-          "name_template": "Template voor entiteitsnamen in Home Assistant",
-          "log_mode": "Verbose log mode",
-          "sse_timeout": "SSE timeout",
-          "appliance_settings": "Geavanceerde apparaat configuratie (YAML)",
-          "entity_settings": "Geavanceerde entity configuratie (YAML)",
-          "delayed_ops": "instellingen 'Vertraagde start'"
+          "language": "Taalcode",
+          "log_mode": "Uitgebreide logmodus",
+          "name_template": "Template voor entiteitnaam",
+          "sse_timeout": "SSE-time-out",
+          "translation_mode": "Vertaalmodus",
+          "appliance_settings": "Geavanceerde apparaatinstellingen (YAML)",
+          "entity_settings": "Geavanceerde entiteitinstellingen (YAML)",
+          "delayed_ops": "Gedrag bij uitgestelde start"
         },
         "data_description": {
-          "language": "Gebruik enkel [language codes](https://api-docs.home-connect.com/general/#supported-languages) ondersteund door Home Connect",
-          "log_mode": "Debug logging moet aan staan in configuration.yaml voor deze instelling.",
-          "sse_timeout": "Timeout in minutes for refreshing the SSE connection (0=disabled)",
-          "appliance_settings": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
-          "entity_settings": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
-          "delayed_ops": "See further details in the [README](https://github.com/ekutner/home-connect-hass?tab=handling-of-delayed-program-start)"
-        }
+          "language": "Gebruik alleen [taalcodes](https://api-docs.home-connect.com/general/#supported-languages) die door Home Connect worden ondersteund",
+          "log_mode": "Debuglogging moet ingeschakeld zijn in configuration.yaml voordat deze instelling werkt",
+          "sse_timeout": "Time-out voor het verversen van de SSE-verbinding (0 = uitgeschakeld)",
+          "appliance_settings": "Zie meer details in de [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
+          "entity_settings": "Zie meer details in de [README](https://github.com/ekutner/home-connect-hass?tab=readme-ov-file#advanced-options)",
+          "delayed_ops": "Zie meer details in de [README](https://github.com/ekutner/home-connect-hass?tab=handling-of-delayed-program-start)"
+        },
+        "description": "Bekijk de configuratiesectie in de [README](https://github.com/ekutner/home-connect-hass) voor uitleg over deze instellingen",
+        "title": "Geavanceerde instellingen"
       }
     }
-  },
-  "application_credentials": {
-    "description": "Volg de setup instructies in de integrattie's [README]({more_info_url}) file voor je verder gaat\n\n"
   },
   "selector": {
     "api_host": {
       "options": {
-        "https://api.home-connect.com": "Default",
         "https://api.home-connect.cn": "China",
-        "https://simulator.home-connect.com": "Simulator (for testing only)"
+        "https://api.home-connect.com": "Standaard",
+        "https://simulator.home-connect.com": "Simulator (alleen voor testen)"
       }
     },
     "translation_mode": {
@@ -78,39 +78,42 @@
     },
     "delayed_ops": {
       "options": {
-        "default": "Gebruik vertraagde tijdsperiode (standaard)",
-        "absolute_time": "Gebruik het absolute tijdsmoment"
+        "default": "Gebruik tijdsduur vertraging (standaardgedrag)",
+        "absolute_time": "Gebruik absolute tijd"
       }
     }
   },
   "device_automation": {
     "trigger_type": {
-      "program_finished": "Programma is klaar",
-      "program_started": "Programma is gestart"
+      "program_finished": "Programma voltooid",
+      "program_started": "Programma gestart"
     }
   },
   "entity": {
     "button": {
-      "start_program": {
-        "name": "Programma starten"
+      "homeconnect_debug": {
+        "name": "Home Connect-debuginfo"
+      },
+      "homeconnect_refresh": {
+        "name": "Home Connect verversen"
       },
       "pause_program": {
-        "name": "Pauzeren"
+        "name": "Programma pauzeren"
       },
       "resume_program": {
         "name": "Programma hervatten"
       },
+      "start_program": {
+        "name": "Programma starten"
+      },
       "stop_program": {
         "name": "Programma stoppen"
-      },
-      "hc_refresh": {
-        "name": "Home Connect vernieuwen"
-      },
-      "hc_debug_info": {
-        "name": "Home Connect Debug Info"
       }
     },
     "select": {
+      "homeconnect_status": {
+        "name": "Home Connect-status"
+      },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "Looptijd",
@@ -175,12 +178,12 @@
           "ConsumerProducts.CoffeeMaker.Option.MultipleBeverages": "Meerdere Uitgiften",
           "Cooking.Common.Option.Hood.IntensiveLevel": "Afzuigkap",
           "Cooking.Common.Option.Hood.VentingLevel": "Afzuigkap",
-          "Cooking.Hood.EnumType.ColorTemperature.cold": "Cold",
-          "Cooking.Hood.EnumType.ColorTemperature.custom": "Custom",
-          "Cooking.Hood.EnumType.ColorTemperature.neutral": "Neutral",
-          "Cooking.Hood.EnumType.ColorTemperature.neutralToCold": "Neutral to cold",
+          "Cooking.Hood.EnumType.ColorTemperature.cold": "Koud",
+          "Cooking.Hood.EnumType.ColorTemperature.custom": "Aangepast",
+          "Cooking.Hood.EnumType.ColorTemperature.neutral": "Neutraal",
+          "Cooking.Hood.EnumType.ColorTemperature.neutralToCold": "Neutraal tot koud",
           "Cooking.Hood.EnumType.ColorTemperature.warm": "Warm",
-          "Cooking.Hood.EnumType.ColorTemperature.warmToNeutral": "Warm to neutral",
+          "Cooking.Hood.EnumType.ColorTemperature.warmToNeutral": "Warm tot neutraal",
           "Cooking.Hood.EnumType.IntensiveStage.IntensiveStage1": "Boost",
           "Cooking.Hood.EnumType.IntensiveStage.IntensiveStage2": "Power Boost",
           "Cooking.Hood.EnumType.Stage.FanStage01": "Stage 1",
@@ -282,24 +285,24 @@
           "LaundryCare.Washer.EnumType.SpinSpeed.UlLow": "Laag",
           "LaundryCare.Washer.EnumType.SpinSpeed.UlMedium": "Medium",
           "LaundryCare.Washer.EnumType.SpinSpeed.UlOff": "Uit",
-          "LaundryCare.Washer.EnumType.Stains.Babyfood": "Baby food",
-          "LaundryCare.Washer.EnumType.Stains.Blood": "Blood",
-          "LaundryCare.Washer.EnumType.Stains.Butteroil": "Grease and Oil",
-          "LaundryCare.Washer.EnumType.Stains.Chocolate": "Chocolate",
-          "LaundryCare.Washer.EnumType.Stains.Coffee": "Coffee",
-          "LaundryCare.Washer.EnumType.Stains.Cosmetics": "Cosmetics",
-          "LaundryCare.Washer.EnumType.Stains.Egg": "Egg",
-          "LaundryCare.Washer.EnumType.Stains.Grass": "Grass",
-          "LaundryCare.Washer.EnumType.Stains.Mud": "Soil and Sand",
+          "LaundryCare.Washer.EnumType.Stains.Babyfood": "Babyvoeding",
+          "LaundryCare.Washer.EnumType.Stains.Blood": "Bloed",
+          "LaundryCare.Washer.EnumType.Stains.Butteroil": "Vet and Olie",
+          "LaundryCare.Washer.EnumType.Stains.Chocolate": "Chocolade",
+          "LaundryCare.Washer.EnumType.Stains.Coffee": "Koffie",
+          "LaundryCare.Washer.EnumType.Stains.Cosmetics": "Cosmetica",
+          "LaundryCare.Washer.EnumType.Stains.Egg": "Ei",
+          "LaundryCare.Washer.EnumType.Stains.Grass": "Gras",
+          "LaundryCare.Washer.EnumType.Stains.Mud": "Modder en Zand",
           "LaundryCare.Washer.EnumType.Stains.Off": "Uit",
           "LaundryCare.Washer.EnumType.Stains.On": "Aan",
-          "LaundryCare.Washer.EnumType.Stains.Orange": "Orange",
+          "LaundryCare.Washer.EnumType.Stains.Orange": "Sinaasappelsap",
           "LaundryCare.Washer.EnumType.Stains.Perspiration": "Transpiratie",
-          "LaundryCare.Washer.EnumType.Stains.Redwine": "Red wine",
-          "LaundryCare.Washer.EnumType.Stains.Socks": "Dirty socks",
-          "LaundryCare.Washer.EnumType.Stains.Strawberry": "Strawberry",
-          "LaundryCare.Washer.EnumType.Stains.Tea": "Tea",
-          "LaundryCare.Washer.EnumType.Stains.TomatoSauce": "Tomato",
+          "LaundryCare.Washer.EnumType.Stains.Redwine": "Rode Wijn",
+          "LaundryCare.Washer.EnumType.Stains.Socks": "Vieze Sokken",
+          "LaundryCare.Washer.EnumType.Stains.Strawberry": "Aardbei",
+          "LaundryCare.Washer.EnumType.Stains.Tea": "Thee",
+          "LaundryCare.Washer.EnumType.Stains.TomatoSauce": "Tomaat",
           "LaundryCare.Washer.EnumType.Temperature.Auto": "Auto",
           "LaundryCare.Washer.EnumType.Temperature.Cold": "Cold",
           "LaundryCare.Washer.EnumType.Temperature.GC20": "20°C",
@@ -474,7 +477,7 @@
           "LaundryCare.Washer.Program.DarkWash": "Wasmachine: Donkere Was",
           "LaundryCare.Washer.Program.DarkWash.DarkWash.DarkWash": "Wasmachine: Donkere Was",
           "LaundryCare.Washer.Program.DelicatesSilk": "Wasmachine: Fijne Zijde",
-          "LaundryCare.Washer.Program.DelicatesSilk.DelicatesSilk.DelicatesSilk": "Wasmachine: Fijne Zijde",
+          "LaundryCare.Washer.Program.DelicatesSilk.DelicatesSilk.DelicatesSilk": "Wasmachine: Fijne Was",
           "LaundryCare.Washer.Program.Dessous": "Wasmachine: Ondergoed",
           "LaundryCare.Washer.Program.DrumClean": "Wasmachine: Trommel Reinigen",
           "LaundryCare.Washer.Program.DrumClean.DrumClean.DrumClean": "Wasmachine: Trommel Reinigen",
@@ -486,8 +489,8 @@
           "LaundryCare.Washer.Program.LabelEU19.LabelEU19.Eco4060": "Wasmachine: Eco 40-60",
           "LaundryCare.Washer.Program.Mix": "Wasmachine: Mix",
           "LaundryCare.Washer.Program.Mix.Mix.Mix": "Wasmachine: Mix",
-          "LaundryCare.Washer.Program.Mix.NightWash": "Wash: Night Wash",
-          "LaundryCare.Washer.Program.Monsoon": "Wasmachine: Monsoon",
+          "LaundryCare.Washer.Program.Mix.NightWash": "Wash: Nachtwas",
+          "LaundryCare.Washer.Program.Monsoon": "Wasmachine: Moesson",
           "LaundryCare.Washer.Program.MyTime": "Wasmachine: Mijn Tijd",
           "LaundryCare.Washer.Program.Outdoor": "Wasmachine: Buiten Sporten",
           "LaundryCare.Washer.Program.Outdoor.Outdoor.Outdoor": "Wasmachine: Buiten Sporten",
@@ -504,8 +507,8 @@
           "LaundryCare.Washer.Program.ShirtsBlouses.ShirtsBlouses.ShirtsBlouses": "Wasmachine: Overhemden",
           "LaundryCare.Washer.Program.Spin.Spin.SpinDrain": "Wasmachine: Centrifugeren Afpompen",
           "LaundryCare.Washer.Program.Spin.SpinDrain": "Wasmachine: Centrifugeren Afpompen",
-          "LaundryCare.Washer.Program.SportFitness": "Wasmachine: Sport Fitness",
-          "LaundryCare.Washer.Program.SportShoes": "Wash: Sport Shoes",
+          "LaundryCare.Washer.Program.SportFitness": "Wasmachine: Sportkleding",
+          "LaundryCare.Washer.Program.SportShoes": "Wash: Sportschoenen",
           "LaundryCare.Washer.Program.Steaming.Steaming.Steaming": "Wasmachine: Stomen",
           "LaundryCare.Washer.Program.Super153045.Super15": "Wash: Super 15°C",
           "LaundryCare.Washer.Program.Super153045.Super1530": "Wasmachine: Extra Snel 15-30°C",
@@ -516,38 +519,33 @@
           "LaundryCare.Washer.Program.WashAndDry.90": "Wasmachine: Wassen & Drogen 90°C",
           "LaundryCare.Washer.Program.WaterProof": "Wasmachine: Waterbestendig",
           "LaundryCare.Washer.Program.Wool": "Wasmachine: Wol",
-          "LaundryCare.Washer.Program.Wool.Wool.Wool": "Wasmachine: Wol",
-          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDry": "Schranktrocken",
-          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDryPlus": "Schranktrocken Plus",
-          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.GentleDry": "Schonend trocknen",
-          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.IronDry": "Bügeltrocken",
-          "LaundryCare.WasherDryer.Program.Automatic30.Auto30.Auto30": "Wash&Dry: Auto 30",
-          "LaundryCare.WasherDryer.Program.Automatic4060.Auto40.Auto40": "Wash&Dry: Autom 40",
+          "LaundryCare.Washer.Program.Wool.Wool.Wool": "Wassen: Wol",
+          "LaundryCare.WasherDryer.Program.Automatic30.Auto30.Auto30": "Wasdroger: Auto 30",
+          "LaundryCare.WasherDryer.Program.Automatic4060.Auto40.Auto40": "Wasdroger: Auto 40",
           "LaundryCare.WasherDryer.Program.Cotton": "Wasdroger: Katoen",
-          "LaundryCare.WasherDryer.Program.Cotton.Eco4060": "Wasdroger: Eco 40-60°C",
-          "LaundryCare.WasherDryer.Program.DelicatesSilk": "Wash&Dry: Delicates/Silk",
-          "LaundryCare.WasherDryer.Program.DrumCleanAndDry.DrumCare": "Wash&Dry: Drum clean&dry",
+          "LaundryCare.WasherDryer.Program.Cotton.Eco4060": "Wasdroger: Eco 40-60",
+          "LaundryCare.WasherDryer.Program.DelicatesSilk": "Wasdroger: Fijne Was",
+          "LaundryCare.WasherDryer.Program.DrumCleanAndDry.DrumCare": "Wasdroger: Trommel reinigen&drogen",
           "LaundryCare.WasherDryer.Program.EasyCare": "Wasdroger: Kreukherstellend",
-          "LaundryCare.WasherDryer.Program.EasyCare.HHSynthetics.HHSynthetics": "Wash&Dry: Easy Care",
-          "LaundryCare.WasherDryer.Program.FastWashDry.WD45.WD45": "Wash&Dry: Wash & Dry 45'",
-          "LaundryCare.WasherDryer.Program.HHMix.HHMix": "Waschen&Trocknen: Mix",
-          "LaundryCare.WasherDryer.Program.HygieneDryLaundry.FastHygiene.FastHygiene": "Wash&Dry: Fast Hygiene",
-          "LaundryCare.WasherDryer.Program.LaundryWarming.LaundryWarming.LaundryWarming": "Wash&Dry: Laundry warming",
+          "LaundryCare.WasherDryer.Program.EasyCare.HHSynthetics.HHSynthetics": "Wasdroger: Kreukherstellend",
+          "LaundryCare.WasherDryer.Program.FastWashDry.WD45.WD45": "Wasdroger: Wassen & Drogen 45'",
+          "LaundryCare.WasherDryer.Program.HygieneDryLaundry.FastHygiene.FastHygiene": "Wasdroger: Snelle Hygiëne",
+          "LaundryCare.WasherDryer.Program.LaundryWarming.LaundryWarming.LaundryWarming": "Wasdroger: Was opwarmen",
           "LaundryCare.WasherDryer.Program.Mix": "Wasdroger: Mix",
-          "LaundryCare.WasherDryer.Program.MoistRemove.DrumDry.DrumDry": "Wash&Dry: Moist remove",
-          "LaundryCare.WasherDryer.Program.RefreshWD.Refresh.Refresh": "Wash&Dry: Refresh",
-          "LaundryCare.WasherDryer.Program.Rinse": "Wash&Dry: Rinse",
+          "LaundryCare.WasherDryer.Program.MoistRemove.DrumDry.DrumDry": "Wasdroger: Vocht verwijderen",
+          "LaundryCare.WasherDryer.Program.RefreshWD.Refresh.Refresh": "Wasdroger: Opfrissen",
+          "LaundryCare.WasherDryer.Program.Rinse": "Wasdroger: Spoelen",
           "LaundryCare.WasherDryer.Program.Rinse.Rinse": "Wasdroger: Spoelen",
-          "LaundryCare.WasherDryer.Program.Rinse.RinseSpin": "Wasdroger: Spoelen & Centrigure",
-          "LaundryCare.WasherDryer.Program.ShirtsBlouses": "Wash&Dry: Shirts/Blouses",
-          "LaundryCare.WasherDryer.Program.ShirtsBlouses.ShirtsBlouses": "Wasdroger: Overhemden",
-          "LaundryCare.WasherDryer.Program.Spin": "Wash&Dry: Rinse & pump",
-          "LaundryCare.WasherDryer.Program.SportFitness": "Wash&Dry: SportFitness",
+          "LaundryCare.WasherDryer.Program.Rinse.RinseSpin": "Wasdroger: Spoelen & Centrifugeren",
+          "LaundryCare.WasherDryer.Program.ShirtsBlouses": "Wasdroger: Overhemden/Blouses",
+          "LaundryCare.WasherDryer.Program.ShirtsBlouses.ShirtsBlouses": "Wasdroger: Overhemden Blouses",
+          "LaundryCare.WasherDryer.Program.Spin": "Wasdroger: Spoelen & afpompen",
+          "LaundryCare.WasherDryer.Program.SportFitness": "Wasdroger: Sportkleding",
           "LaundryCare.WasherDryer.Program.Towels.Towels": "Wasdroger: Handdoeken",
-          "LaundryCare.WasherDryer.Program.WashAndDry.60": "Wasdroger: Wassen & Drogen 60°C",
-          "LaundryCare.WasherDryer.Program.WashAndDry.90": "Wasdroger: Wassen & Drogen 90°C",
-          "LaundryCare.WasherDryer.Program.WaterProof.WaterProof": "Wasdroger: Waterbestendig",
-          "LaundryCare.WasherDryer.Program.Wool": "Wash&Dry: Wool",
+          "LaundryCare.WasherDryer.Program.WashAndDry.60": "Wasdroger: Wassen en Drogen 60",
+          "LaundryCare.WasherDryer.Program.WashAndDry.90": "Wasdroger: Wassen en Drogen 90",
+          "LaundryCare.WasherDryer.Program.WaterProof.WaterProof": "Wasdroger: Waterdicht",
+          "LaundryCare.WasherDryer.Program.Wool": "Wasdroger: Wol",
           "LaundryCare.WasherDryer.Program.Wool.Wool": "Wasdroger: Wol"
         }
       },
@@ -601,11 +599,11 @@
           "Cooking.Oven.EnumType.AddedSteam.Off": "Added Steam Off",
           "Cooking.Oven.EnumType.AddedSteam.On": "Added Steam Oמ",
           "Cooking.Oven.Setting.SabbathMode": "Rust Modus",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "High",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Low",
-          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middle",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Pull",
-          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Push",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.HighForce": "Hoog",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.LowForce": "Laag",
+          "Refrigeration.Common.EnumType.Door.AssistantForce.MiddleForce": "Middenin",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Pull": "Trekken",
+          "Refrigeration.Common.EnumType.Door.AssistantTrigger.Push": "Duwen",
           "Refrigeration.Common.Setting.BottleCooler.SetpointTemperature": "Flessenkoeler",
           "Refrigeration.Common.Setting.ChillerCommon.SetpointTemperature": "Koelmachine Gemeenschappelijk",
           "Refrigeration.Common.Setting.ChillerLeft.SetpointTemperature": "Koelmachine Links ",
@@ -818,24 +816,24 @@
           "LaundryCare.Washer.EnumType.SpinSpeed.UlLow": "Laag",
           "LaundryCare.Washer.EnumType.SpinSpeed.UlMedium": "Medium",
           "LaundryCare.Washer.EnumType.SpinSpeed.UlOff": "Uit",
-          "LaundryCare.Washer.EnumType.Stains.Babyfood": "Baby food",
-          "LaundryCare.Washer.EnumType.Stains.Blood": "Blood",
-          "LaundryCare.Washer.EnumType.Stains.Butteroil": "Grease and Oil",
-          "LaundryCare.Washer.EnumType.Stains.Chocolate": "Chocolate",
-          "LaundryCare.Washer.EnumType.Stains.Coffee": "Coffee",
-          "LaundryCare.Washer.EnumType.Stains.Cosmetics": "Cosmetics",
-          "LaundryCare.Washer.EnumType.Stains.Egg": "Egg",
-          "LaundryCare.Washer.EnumType.Stains.Grass": "Grass",
-          "LaundryCare.Washer.EnumType.Stains.Mud": "Soil and Sand",
+          "LaundryCare.Washer.EnumType.Stains.Babyfood": "Babyvoeding",
+          "LaundryCare.Washer.EnumType.Stains.Blood": "Bloed",
+          "LaundryCare.Washer.EnumType.Stains.Butteroil": "Vet en Olie",
+          "LaundryCare.Washer.EnumType.Stains.Chocolate": "Chocolade",
+          "LaundryCare.Washer.EnumType.Stains.Coffee": "Kofie",
+          "LaundryCare.Washer.EnumType.Stains.Cosmetics": "Cosmetica",
+          "LaundryCare.Washer.EnumType.Stains.Egg": "Ei",
+          "LaundryCare.Washer.EnumType.Stains.Grass": "Gras",
+          "LaundryCare.Washer.EnumType.Stains.Mud": "Modder en Zand",
           "LaundryCare.Washer.EnumType.Stains.Off": "Uit",
           "LaundryCare.Washer.EnumType.Stains.On": "Aan",
-          "LaundryCare.Washer.EnumType.Stains.Orange": "Orange",
+          "LaundryCare.Washer.EnumType.Stains.Orange": "Sinaasappelsap",
           "LaundryCare.Washer.EnumType.Stains.Perspiration": "Transpiratie",
-          "LaundryCare.Washer.EnumType.Stains.Redwine": "Red wine",
-          "LaundryCare.Washer.EnumType.Stains.Socks": "Dirty socks",
-          "LaundryCare.Washer.EnumType.Stains.Strawberry": "Strawberry",
-          "LaundryCare.Washer.EnumType.Stains.Tea": "Tea",
-          "LaundryCare.Washer.EnumType.Stains.TomatoSauce": "Tomato",
+          "LaundryCare.Washer.EnumType.Stains.Redwine": "Rode wijn",
+          "LaundryCare.Washer.EnumType.Stains.Socks": "Vieze sokken",
+          "LaundryCare.Washer.EnumType.Stains.Strawberry": "Aardbei",
+          "LaundryCare.Washer.EnumType.Stains.Tea": "Thee",
+          "LaundryCare.Washer.EnumType.Stains.TomatoSauce": "Tomaat",
           "LaundryCare.Washer.EnumType.Temperature.Auto": "Auto",
           "LaundryCare.Washer.EnumType.Temperature.Cold": "Cold",
           "LaundryCare.Washer.EnumType.Temperature.GC20": "20°C",
@@ -857,6 +855,13 @@
           "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus3": "+3",
           "LaundryCare.Washer.Option.SpinSpeed": "Centrifugeren",
           "LaundryCare.Washer.Option.Temperature": "Temperatuur"
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDry": "Kastdroog",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDryPlus": "Kastdroog Plus",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.GentleDry": "Zacht droog",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.IronDry": "Strijkdroog",
+          "LaundryCare.WasherDryer.EnumType.ProgramMode.Drying": "Drogen",
+          "LaundryCare.WasherDryer.EnumType.ProgramMode.Washing": "Wassen",
+          "LaundryCare.WasherDryer.EnumType.ProgramMode.WashingAndDrying": "Wassen & Droger"
         }
       },
       "programs": {
@@ -983,7 +988,7 @@
           "LaundryCare.Dryer.Program.Outdoor": "Droger: Buiten Sporten",
           "LaundryCare.Dryer.Program.Outdoor.Sportswear": "Droger: Sportkleding",
           "LaundryCare.Dryer.Program.Pillow": "Droger: Kussens",
-          "LaundryCare.Dryer.Program.Refresh.RefreshwoHS": "Droger: Refresh",
+          "LaundryCare.Dryer.Program.Refresh.RefreshwoHS": "Droger: Vernieuwen",
           "LaundryCare.Dryer.Program.Shirts15": "Droger: Overhemden 15",
           "LaundryCare.Dryer.Program.SilentDry.SilentDry.SilentDry": "Droger: Stille Modus",
           "LaundryCare.Dryer.Program.Super40": "Droger: Super 40",
@@ -1009,8 +1014,8 @@
           "LaundryCare.Washer.Program.Curtains": "Wasmachine: Gordijnen",
           "LaundryCare.Washer.Program.DarkWash": "Wasmachine: Donkere Was",
           "LaundryCare.Washer.Program.DarkWash.DarkWash.DarkWash": "Wasmachine: Donkere Was",
-          "LaundryCare.Washer.Program.DelicatesSilk": "Wasmachine: Fijne Zijde",
-          "LaundryCare.Washer.Program.DelicatesSilk.DelicatesSilk.DelicatesSilk": "Wasmachine: Fijne Zijde",
+          "LaundryCare.Washer.Program.DelicatesSilk": "Wasmachine: Fijne Was",
+          "LaundryCare.Washer.Program.DelicatesSilk.DelicatesSilk.DelicatesSilk": "Wasmachine: Fijne Was",
           "LaundryCare.Washer.Program.Dessous": "Wasmachine: Ondergoed",
           "LaundryCare.Washer.Program.DrumClean": "Wasmachine: Trommel Reinigen",
           "LaundryCare.Washer.Program.DrumClean.DrumClean.DrumClean": "Wasmachine: Trommel Reinigen",
@@ -1023,7 +1028,7 @@
           "LaundryCare.Washer.Program.Mix": "Wasmachine: Mix",
           "LaundryCare.Washer.Program.Mix.Mix.Mix": "Wasmachine: Mix",
           "LaundryCare.Washer.Program.Mix.NightWash": "Wash: Night Wash",
-          "LaundryCare.Washer.Program.Monsoon": "Wasmachine: Monsoon",
+          "LaundryCare.Washer.Program.Monsoon": "Wasmachine: Moesson",
           "LaundryCare.Washer.Program.MyTime": "Wasmachine: Mijn Tijd",
           "LaundryCare.Washer.Program.Outdoor": "Wasmachine: Buiten Sporten",
           "LaundryCare.Washer.Program.Outdoor.Outdoor.Outdoor": "Wasmachine: Buiten Sporten",
@@ -1040,8 +1045,8 @@
           "LaundryCare.Washer.Program.ShirtsBlouses.ShirtsBlouses.ShirtsBlouses": "Wasmachine: Overhemden",
           "LaundryCare.Washer.Program.Spin.Spin.SpinDrain": "Wasmachine: Centrifugeren Afpompen",
           "LaundryCare.Washer.Program.Spin.SpinDrain": "Wasmachine: Centrifugeren Afpompen",
-          "LaundryCare.Washer.Program.SportFitness": "Wasmachine: Sport Fitness",
-          "LaundryCare.Washer.Program.SportShoes": "Wash: Sport Shoes",
+          "LaundryCare.Washer.Program.SportFitness": "Wasmachine: Sportkleding",
+          "LaundryCare.Washer.Program.SportShoes": "Wash: Sportschoenen",
           "LaundryCare.Washer.Program.Steaming.Steaming.Steaming": "Wasmachine: Stomen",
           "LaundryCare.Washer.Program.Super153045.Super15": "Wash: Super 15°C",
           "LaundryCare.Washer.Program.Super153045.Super1530": "Wasmachine: Extra Snel 15-30°C",
@@ -1053,37 +1058,37 @@
           "LaundryCare.Washer.Program.WaterProof": "Wasmachine: Waterbestendig",
           "LaundryCare.Washer.Program.Wool": "Wasmachine: Wol",
           "LaundryCare.Washer.Program.Wool.Wool.Wool": "Wasmachine: Wol",
-          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDry": "Schranktrocken",
-          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDryPlus": "Schranktrocken Plus",
-          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.GentleDry": "Schonend trocknen",
-          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.IronDry": "Bügeltrocken",
-          "LaundryCare.WasherDryer.Program.Automatic30.Auto30.Auto30": "Wash&Dry: Auto 30",
-          "LaundryCare.WasherDryer.Program.Automatic4060.Auto40.Auto40": "Wash&Dry: Autom 40",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDry": Wasdroger: Kastdroog",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDryPlus": Wasdroger: Kastdroog Plus",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.GentleDry": Wasdroger: Voorzichtig drogen",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.IronDry": Wasdroger: Strijkdroog",
+          "LaundryCare.WasherDryer.Program.Automatic30.Auto30.Auto30": Wasdroger: Auto 30°C",
+          "LaundryCare.WasherDryer.Program.Automatic4060.Auto40.Auto40": Wasdroger: Auto 40°C",
           "LaundryCare.WasherDryer.Program.Cotton": "Wasdroger: Katoen",
           "LaundryCare.WasherDryer.Program.Cotton.Eco4060": "Wasdroger: Eco 40-60°C",
-          "LaundryCare.WasherDryer.Program.DelicatesSilk": "Wash&Dry: Delicates/Silk",
-          "LaundryCare.WasherDryer.Program.DrumCleanAndDry.DrumCare": "Wash&Dry: Drum clean&dry",
+          "LaundryCare.WasherDryer.Program.DelicatesSilk": "Wasdroger: Fijne Was",
+          "LaundryCare.WasherDryer.Program.DrumCleanAndDry.DrumCare": "Wasdroger: Trommel reinigen & drogen",
           "LaundryCare.WasherDryer.Program.EasyCare": "Wasdroger: Kreukherstellend",
-          "LaundryCare.WasherDryer.Program.EasyCare.HHSynthetics.HHSynthetics": "Wash&Dry: Easy Care",
-          "LaundryCare.WasherDryer.Program.FastWashDry.WD45.WD45": "Wash&Dry: Wash & Dry 45'",
-          "LaundryCare.WasherDryer.Program.HHMix.HHMix": "Waschen&Trocknen: Mix",
-          "LaundryCare.WasherDryer.Program.HygieneDryLaundry.FastHygiene.FastHygiene": "Wash&Dry: Fast Hygiene",
-          "LaundryCare.WasherDryer.Program.LaundryWarming.LaundryWarming.LaundryWarming": "Wash&Dry: Laundry warming",
+          "LaundryCare.WasherDryer.Program.EasyCare.HHSynthetics.HHSynthetics": "Wasdroger: Kreukherstellend",
+          "LaundryCare.WasherDryer.Program.FastWashDry.WD45.WD45": "Wasdroger: Wassen & Drogen 45'",
+          "LaundryCare.WasherDryer.Program.HHMix.HHMix": "Wasdroger:  Mix",
+          "LaundryCare.WasherDryer.Program.HygieneDryLaundry.FastHygiene.FastHygiene": "Wasdroger: Snelle Hygiëne",
+          "LaundryCare.WasherDryer.Program.LaundryWarming.LaundryWarming.LaundryWarming": "Wasdroger:  Was Opwarmen",
           "LaundryCare.WasherDryer.Program.Mix": "Wasdroger: Mix",
-          "LaundryCare.WasherDryer.Program.MoistRemove.DrumDry.DrumDry": "Wash&Dry: Moist remove",
-          "LaundryCare.WasherDryer.Program.RefreshWD.Refresh.Refresh": "Wash&Dry: Refresh",
-          "LaundryCare.WasherDryer.Program.Rinse": "Wash&Dry: Rinse",
+          "LaundryCare.WasherDryer.Program.MoistRemove.DrumDry.DrumDry": "Wasdroger: Vocht verwijderen",
+          "LaundryCare.WasherDryer.Program.RefreshWD.Refresh.Refresh": "Wasdroger: Vernieuwen",
+          "LaundryCare.WasherDryer.Program.Rinse": "Wasdroger: Spoelen",
           "LaundryCare.WasherDryer.Program.Rinse.Rinse": "Wasdroger: Spoelen",
-          "LaundryCare.WasherDryer.Program.Rinse.RinseSpin": "Wasdroger: Spoelen & Centrigure",
-          "LaundryCare.WasherDryer.Program.ShirtsBlouses": "Wash&Dry: Shirts/Blouses",
+          "LaundryCare.WasherDryer.Program.Rinse.RinseSpin": "Wasdroger: Spoelen & Centrifugeren",
+          "LaundryCare.WasherDryer.Program.ShirtsBlouses": "Wasdroger: Overhemden/Blouses",
           "LaundryCare.WasherDryer.Program.ShirtsBlouses.ShirtsBlouses": "Wasdroger: Overhemden",
-          "LaundryCare.WasherDryer.Program.Spin": "Wash&Dry: Rinse & pump",
-          "LaundryCare.WasherDryer.Program.SportFitness": "Wash&Dry: SportFitness",
+          "LaundryCare.WasherDryer.Program.Spin": "Wasdroger: Spoelen & Centrifugeren",
+          "LaundryCare.WasherDryer.Program.SportFitness": "Wasdroger: Sportkleding",
           "LaundryCare.WasherDryer.Program.Towels.Towels": "Wasdroger: Handdoeken",
           "LaundryCare.WasherDryer.Program.WashAndDry.60": "Wasdroger: Wassen & Drogen 60°C",
           "LaundryCare.WasherDryer.Program.WashAndDry.90": "Wasdroger: Wassen & Drogen 90°C",
           "LaundryCare.WasherDryer.Program.WaterProof.WaterProof": "Wasdroger: Waterbestendig",
-          "LaundryCare.WasherDryer.Program.Wool": "Wash&Dry: Wool",
+          "LaundryCare.WasherDryer.Program.Wool": "Wasdroger: Wol",
           "LaundryCare.WasherDryer.Program.Wool.Wool": "Wasdroger: Wol"
         }
       },
