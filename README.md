@@ -281,17 +281,29 @@ In contrast, setting ```sensor_value_translation: server``` will override this b
 
 * **Some entity IDs start with a digit and can't be used in a template**
   Starting with version 1.3.0 the integration will no longer create new entities that start with a digit, however, in order to avoid breaking existing automations it will not change existing entities. If you have entities that were created before that version you must delete them first and then restart HA so the integration creates them again with a string prefix. The easiest way to do that is to just uninstall and re-install the integration but disabling it, then deleting the entities and re-enabling should also work.
+
+* **I disabled some appliances using appliance_settings but they still show up**
+  The integration doesn't delete entities that were created in the past even if it stops using them. All the entities that are associated with disabled appliances should show up as "unavailable" in Home Assistant and can be safely deleted manually.  
 </br>
 
 # Dealing with API rate limits
 If you have more than 5 appliances you may occasionally hit the Home Connect API rate limit which only allows up to 1000 daily API calls, regardless of how many appliances you own. This limit ends up hurting their best customers and it doesn't make any sense, it should be adjusted based on the number of appliances in the account. If you hit that limit then I strongly encourage you to reach out to Home Connect and protest. Until hey listen there is an annoying workaround:  
-1. Create a second developer app in the Home COnnect developers portal with exactly the same settings you used for the first one.
-2. In Home Assistant go to Settings -> Devices & services then click the three dot menu at the top right and select "Application credentials" and then click the "Add Application Credential" button at the button right corner.
-3. In the popup dialog select "Home Connect Alt" as the integration, give your credentials some useful name, like "Home Connect 2" and then copy and paste the client ID and client secret for the second app you created in step 1.
-4. Go back to the Integrations page and click on "Home Connect Alt". Under "Integrations entries" click on "ADD ENTRY".
-5. This will start a new login flow to Home Connect. Complete the flow and you should now have two instances of the integration running in parallel.
-6. Now you must use the "CONFIGURE" button of each entry to change the Application settings advanced options so that half of your appliances are disabled in each entry. See details [above](#advanced-options) how to do that.
-7. If you've reached this far then you should now have two instances running, using different Home Connect apps and each one responsible for half of your appliances. If it still getting rate limit then just add a third one.
+1. Create a second developer app in the Home COnnect developers portal with exactly the same 
+   settings you used for the first one.
+2. In Home Assistant go to Settings -> Devices & services then click the three dot menu at the 
+   top right and select "Application credentials" and then click the "Add Application Credential" button at the button right corner.
+3. In the popup dialog select "Home Connect Alt" as the integration, give your credentials some
+   useful name, like "Home Connect 2" and then copy and paste the client ID and client secret for the second app you created in step 1.
+4. Go back to the Integrations page and click on "Home Connect Alt". Under "Integrations
+   entries" click on "ADD ENTRY".
+5. This will start a new login flow to Home Connect. Complete the flow and you should now have
+   two instances of the integration running in parallel.
+6. Now you must use the "CONFIGURE" button of each entry to change the Application settings
+   advanced options so that half of your appliances are disabled in each entry. See details [above](#advanced-options) how to do that.
+7. If you've reached this far then you should now have two instances running, using different
+   Home Connect apps and each one responsible for half of your appliances. If it still getting rate limit then just add a third one.
+8. You may still have entities that were created by the disabled appliances. They would show up
+   as "unavilable" in Home Assistant and can be safely deleted manually. The integration itself  never deletes existing entities even if it doesn't use them any more.
 
 <br>
 
@@ -327,7 +339,8 @@ Use one of these two methods enable debug logging:
       home_connect_alt: debug
       custom_components.home_connect_alt: debug
   ```
-  If you're using this method you will have to download the log directly from the Home Assistant server in order to attach it to the bug report.
+  If you're using this method you will have to download the log directly from the Home Assistant server in order to attach it to the bug report. Since the release of Home Assistant 2025.11 
+  the log file is no longer automatically created. Starting with release 2026.1 it is possible to bring the log file back by running `ha core options --duplicate-log-file=true` in command line. If you don't know how to do that then just use the first method.
 
 ### Setting Log Mode
 If while analyzing an issue you reported you are requested to set a specific **Log Mode**:
