@@ -339,8 +339,13 @@ Use one of these two methods enable debug logging:
       home_connect_alt: debug
       custom_components.home_connect_alt: debug
   ```
-  If you're using this method you will have to download the log directly from the Home Assistant server in order to attach it to the bug report. Since the release of Home Assistant 2025.11 
-  the log file is no longer automatically created. Starting with release 2026.1 it is possible to bring the log file back by running `ha core options --duplicate-log-file=true` in command line. If you don't know how to do that then just use the first method.
+  If you're using this method you will have to download the log directly from the Home Assistant server in order to attach it to the bug report. Since the release of Home Assistant 2025.11 the log file is no longer automatically created. Starting with release 2026.1 it is possible to bring the log file back by running the following commands in the host console. If you don't know how to do that then just use the first method. 
+  ```
+  ha core options --duplicate-log-file=true
+  ha core rebuild
+  ha core restart
+  ``` 
+  
 
 ### Setting Log Mode
 If while analyzing an issue you reported you are requested to set a specific **Log Mode**:
