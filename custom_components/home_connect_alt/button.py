@@ -252,7 +252,6 @@ class HomeConnectRefreshButton(ButtonEntity):
     def __init__(self, homeconnect:HomeConnect, name_suffix:str) -> None:
         self._homeconnect = homeconnect
         self._name_suffix = name_suffix
-        self.entity_id = f'home_connect.{self.unique_id}'
 
     @property
     def device_info(self):
@@ -292,7 +291,6 @@ class HomeConnectDebugButton(ButtonEntity):
     def __init__(self, homeconnect:HomeConnect, name_suffix:str) -> None:
         self._homeconnect = homeconnect
         self._name_suffix = name_suffix
-        self.entity_id = f'home_connect.{self.unique_id}'
 
     @property
     def device_info(self):

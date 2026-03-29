@@ -41,7 +41,6 @@ class EntityBase(ABC):
         self._haid:str = ""
         self._safe_haid: str = ""
         self._unique_id:str = ""
-        self.entity_id = f'home_connect.{self.unique_id}'
         self._hc_obj = hc_obj
 
 
