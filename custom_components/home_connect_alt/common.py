@@ -241,12 +241,20 @@ class Configuration(dict):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.update(self.__merge(self, DEFAULT_SETTINGS, overwrite=False))
+        # __merge mutates self in place and returns self; no further .update needed.
+        self.__merge(self, DEFAULT_SETTINGS, overwrite=False)
         if Configuration._global_config:
-            self.update(self.__merge(self, Configuration._global_config, overwrite=False))
+            self.__merge(self, Configuration._global_config, overwrite=False)
 
     def __merge(self, destination:dict, source:dict, overwrite:bool=True ):
         for key, value in source.items():
+            # Configuration instances are per-entry runtime storage, not config
+            # to be merged. Skipping them keeps __merge robust even if a future
+            # change re-introduces aliasing between _global_config and the
+            # integration's hass.data[DOMAIN] (the original source of the
+            # RecursionError that this guard defends against).
+            if isinstance(value, Configuration):
+                continue
             if isinstance(value, dict):
                 # get node or create one
                 node = destination.setdefault(key, {})
