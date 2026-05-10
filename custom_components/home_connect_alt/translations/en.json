@@ -324,6 +324,13 @@
           "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus3": "+3",
           "LaundryCare.Washer.Option.SpinSpeed": "Spin Speed",
           "LaundryCare.Washer.Option.Temperature": "Temperature"
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDry": "Cupboard Dry",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDryPlus": "Cupboard Dry Plus",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.GentleDry": "Gentle Dry",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.IronDry": "Iron Dry",
+          "LaundryCare.WasherDryer.EnumType.ProgramMode.Drying": "Drying",
+          "LaundryCare.WasherDryer.EnumType.ProgramMode.Washing": "Washing",
+          "LaundryCare.WasherDryer.EnumType.ProgramMode.WashingAndDrying": "Washing & Drying"
         }
       },
       "programs": {
