@@ -111,6 +111,9 @@
       }
     },
     "select": {
+      "homeconnect_status": {
+        "name": "Home Connect Status"
+      },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "Looptijd",
