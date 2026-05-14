@@ -75,7 +75,15 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         # There is no configuration for this integration in the configuration.yaml file
         # hass.data[DOMAIN] = HC_CONFIG_SCHEMA({})
         hass.data[DOMAIN] = { "global": {} }
-        Configuration.set_global_config(hass, hass.data[DOMAIN])
+        # _global_config is merged into every per-entry Configuration in
+        # Configuration.__init__. Pass only the inner "global" dict, not
+        # the whole hass.data[DOMAIN] (which subsequent async_setup_entry
+        # calls populate with each entry's Configuration under its
+        # entry_id). Aliasing _global_config with the entry storage caused
+        # __merge to recurse into other entries' Configurations, building
+        # plain-dict shadows that compounded across reloads until Python's
+        # recursion limit was reached.
+        Configuration.set_global_config(hass, hass.data[DOMAIN]["global"])
         return True
 
     # The config now contains configuration coming from the configuration.yaml file
