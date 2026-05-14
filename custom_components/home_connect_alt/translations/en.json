@@ -111,9 +111,6 @@
       }
     },
     "select": {
-      "homeconnect_status": {
-        "name": "Home Connect Status"
-      },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "Duration",
@@ -323,7 +320,7 @@
           "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus2": "+2",
           "LaundryCare.Washer.EnumType.WaterAndRinsePlus.Plus3": "+3",
           "LaundryCare.Washer.Option.SpinSpeed": "Spin Speed",
-          "LaundryCare.Washer.Option.Temperature": "Temperature"
+          "LaundryCare.Washer.Option.Temperature": "Temperature",
           "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDry": "Cupboard Dry",
           "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDryPlus": "Cupboard Dry Plus",
           "LaundryCare.WasherDryer.EnumType.DryingTargetWD.GentleDry": "Gentle Dry",

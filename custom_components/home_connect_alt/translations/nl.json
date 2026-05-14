@@ -111,9 +111,6 @@
       }
     },
     "select": {
-      "homeconnect_status": {
-        "name": "Home Connect Status"
-      },
       "options": {
         "state": {
           "BSH.Common.Option.Duration": "Looptijd",
@@ -326,7 +323,7 @@
           "LaundryCare.Washer.Option.Temperature": "Temperatuur",
           "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDry": "Kastdroog",
           "LaundryCare.WasherDryer.EnumType.DryingTargetWD.CupboardDryPlus": "Kastdroog Plus",
-          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.GentleDry": "Zacht Droog,",
+          "LaundryCare.WasherDryer.EnumType.DryingTargetWD.GentleDry": "Zacht Droog",
           "LaundryCare.WasherDryer.EnumType.DryingTargetWD.IronDry": "Strijkdroog",
           "LaundryCare.WasherDryer.EnumType.ProgramMode.Drying": "Drogen",
           "LaundryCare.WasherDryer.EnumType.ProgramMode.Washing": "Wassen",
@@ -492,12 +489,12 @@
           "LaundryCare.Washer.Program.DrumClean.DrumClean70.DrumClean70": "Wasmachine: Trommel Reinigen 70°C",
           "LaundryCare.Washer.Program.EasyCare": "Wasmachine: Kreukherstellend",
           "LaundryCare.Washer.Program.EasyCare.EasyCare.EasyCare": "Wasmachine: Kreukherstellend",
-          "LaundryCare.Washer.Program.HygienePlus": "Wasmachine: Hygiene Plus",
+          "LaundryCare.Washer.Program.HygienePlus": "Hygiene Plus",
           "LaundryCare.Washer.Program.HygienicSteam.DrumClean": "Wasmachine: Trommel Reinigen",
           "LaundryCare.Washer.Program.LabelEU19.LabelEU19.Eco4060": "Wasmachine: Eco 40-60",
           "LaundryCare.Washer.Program.Mix": "Wasmachine: Mix",
           "LaundryCare.Washer.Program.Mix.Mix.Mix": "Wasmachine: Mix",
-          "LaundryCare.Washer.Program.Mix.NightWash": "Wasmachine: Nachtwas",
+          "LaundryCare.Washer.Program.Mix.NightWash": "Wash: Night Wash",
           "LaundryCare.Washer.Program.Monsoon": "Wasmachine: Moesson",
           "LaundryCare.Washer.Program.MyTime": "Wasmachine: Mijn Tijd",
           "LaundryCare.Washer.Program.Outdoor": "Wasmachine: Buiten Sporten",
@@ -517,9 +514,9 @@
           "LaundryCare.Washer.Program.Spin.Spin.SpinDrain": "Wasmachine: Centrifugeren Afpompen",
           "LaundryCare.Washer.Program.Spin.SpinDrain": "Wasmachine: Centrifugeren Afpompen",
           "LaundryCare.Washer.Program.SportFitness": "Wasmachine: Sportkleding",
-          "LaundryCare.Washer.Program.SportShoes": "Wasmachine: Sportschoenen",
+          "LaundryCare.Washer.Program.SportShoes": "Wash: Sportschoenen",
           "LaundryCare.Washer.Program.Steaming.Steaming.Steaming": "Wasmachine: Stomen",
-          "LaundryCare.Washer.Program.Super153045.Super15": "Wasmachine: Super 15°C",
+          "LaundryCare.Washer.Program.Super153045.Super15": "Wash: Super 15°C",
           "LaundryCare.Washer.Program.Super153045.Super1530": "Wasmachine: Extra Snel 15-30°C",
           "LaundryCare.Washer.Program.Super153045.Super1530.Super1530": "Wasmachine: Extra Snel 15-30°C",
           "LaundryCare.Washer.Program.Towels": "Wasmachine: Handdoeken",
@@ -538,7 +535,7 @@
           "LaundryCare.WasherDryer.Program.Cotton": "Wasdroger: Katoen",
           "LaundryCare.WasherDryer.Program.Cotton.Eco4060": "Wasdroger: Eco 40-60°C",
           "LaundryCare.WasherDryer.Program.DelicatesSilk": "Wasdroger: Fijne Was",
-          "LaundryCare.WasherDryer.Program.DrumCleanAndDry.DrumCare": "Wasdroger: Trommel Reinigen & Drogen",
+          "LaundryCare.WasherDryer.Program.DrumCleanAndDry.DrumCare": "Wasdroger: Trommel Reinigen & drogen",
           "LaundryCare.WasherDryer.Program.EasyCare": "Wasdroger: Kreukherstellend",
           "LaundryCare.WasherDryer.Program.EasyCare.HHSynthetics.HHSynthetics": "Wasdroger: Kreukherstellend",
           "LaundryCare.WasherDryer.Program.FastWashDry.WD45.WD45": "Wasdroger: Wassen & Drogen 45'",
