@@ -16,6 +16,6 @@
   "requirements": ["home-connect-async==0.8.5"],
   "loggers": ["home_connect_alt", "home_connect_async"],
   "ssdp": [],
-  "version": "1.3.6",
+  "version": "1.4.0",
   "zeroconf": []
 }
