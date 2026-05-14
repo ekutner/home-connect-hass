@@ -41,8 +41,16 @@ class EntityBase(ABC):
         self._haid:str = ""
         self._safe_haid: str = ""
         self._unique_id:str = ""
-        self.entity_id = f'home_connect.{self.unique_id}'
+        self.entity_id = f'{self._platform_domain()}.{self.unique_id}'
         self._hc_obj = hc_obj
+
+    def _platform_domain(self) -> str:
+        """Return the HA platform domain (sensor, switch, ...) derived from the MRO."""
+        for cls in type(self).__mro__:
+            mod = getattr(cls, "__module__", "")
+            if mod.startswith("homeassistant.components."):
+                return mod.split(".")[2]
+        return DOMAIN
 
 
     def get_entity_setting(self, option, default=None):
