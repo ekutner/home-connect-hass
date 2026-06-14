@@ -4,10 +4,17 @@
 DOMAIN = "home_connect_alt"
 NAME = "Home Connect Alt"
 DEFAULT_API_HOST = "https://api.home-connect.com"
+PRIVATE_API_HOST = "https://na.services.home-connect.com"
 
 ENDPOINT_AUTHORIZE = "/security/oauth/authorize"
 ENDPOINT_TOKEN = "/security/oauth/token"
 SCOPES = "IdentifyAppliance Monitor Control Settings"
+PRIVATE_CAMERA_REDIRECT_URI = "https://qr.home-connect.com/authorize/prod/"
+PRIVATE_CAMERA_CLIENT_ID = "9B75AC9EC512F36C84256AC47D813E2C1DD0D6520DF774B020E1E6E2EB29B1F3"
+PRIVATE_CAMERA_SCOPES = "Control DeleteAppliance IdentifyAppliance Images Monitor ReadAccount ReadOrigApi Settings WriteAppliance WriteOrigApi"
+PRIVATE_CAMERA_AUTH_NOTIFICATION_ID = f"{DOMAIN}_private_camera_auth"
+PRIVATE_CAMERA_AUTH_STORAGE_VERSION = 1
+PRIVATE_CAMERA_AUTH_STORAGE_KEY = f"{DOMAIN}_private_camera_auth"
 CONF_API_HOST = "api_host"
 CONF_API_HOST_OPTIONS = [ "https://api.home-connect.com", "https://api.home-connect.cn", "https://simulator.home-connect.com" ]
 # CONF_API_HOST_OPTIONS = [
@@ -76,4 +83,3 @@ TRIGGERS_CONFIG = {
     "program_started": { "key": "BSH.Common.Status.OperationState", "value": "BSH.Common.EnumType.OperationState.Run" },
     "program_finished": { "key": "BSH.Common.Status.OperationState", "value": "BSH.Common.EnumType.OperationState.Finished" }
 }
-

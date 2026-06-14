@@ -53,6 +53,7 @@ This integration attempts to address those issues and has the following features
 * "Program Started" and "Program Finished" events are exposed as triggers for easier building of automation scripts.
 * A "Start Program" Button entity is provided to start the operation of the selected program.
 * Program and option selections are also available as a service for easier integration in scripts.
+* Home Connect ovens that expose still snapshots in the mobile app can optionally create a camera entity using the private mobile API.
 * The state of all entities is updated in real time with a cloud push type integration.
 * Clean handling of appliances disconnecting and reconnecting from the cloud.
 * Clean handling of new appliances being added or removed from the service.
@@ -107,6 +108,24 @@ Before installing the integration you need to create an "application" in the Hom
    Home Connect Alt will now start downloading the data for your
    appliances and will add the entities for them to Home Assistant.  
    Note that the integration dynamically discovers entities as they are made available by the API, so expect new entities to be added in the first few uses of the appliances.
+
+### Optional private oven camera setup
+
+Some Home Connect ovens expose still-image snapshots in the official mobile app, but not in the public developer API.
+For those ovens the integration can create a `camera` entity by using the same private mobile backend that the app uses for snapshots.
+
+This requires a second one-time login flow because the mobile camera backend uses a different OAuth client than the public developer API.
+
+1. Call the `home_connect_alt.start_private_camera_auth` service.
+2. Open the link from the created persistent notification and complete the Home Connect login flow.
+3. After the browser lands on `https://qr.home-connect.com/authorize/prod/?code=...`, copy the full URL.
+4. Call the `home_connect_alt.finish_private_camera_auth` service and paste the full callback URL into `callback_url`.
+5. Wait a few seconds for the oven `camera` entity to refresh.
+
+Notes:
+* This feature only supports still-image snapshots, not video streaming.
+* It is currently limited to ovens because that is the private media flow that has been validated.
+* The private snapshot route was derived from the Android app and validated against live responses before being implemented here.
 
 # Configuration options
 Starting with version 0.7.0 the integration supports the UI configuration flow for most configuration options. Existing config values will be read however, once the options are saved in the UI they will override the values from the config file.
@@ -251,6 +270,11 @@ In contrast, setting ```sensor_value_translation: server``` will override this b
   This integration doesn't know anything about any specific appliance, it is using the official Home Connect API to explore the available options for each appliance and automatically exposes them as appropriate Home Assistant entities. The type of entities is automatically determined by information received from the API. The Home Connect mobile app is using a private API that is not available to the public and has more capabilities than those in the official API. Therefor it is expected that there will be some data, controls or events that are available in the app but not in the integration, this is NOT a problem with the integration but a limitation of the API.  
   **DO NOT open bugs or feature requests related to such issues unless you can demonstrate that the missing item is actually available in the API**
 
+* **My oven camera entity stays on the placeholder image**  
+  Start by checking the entity attributes. If `private_auth_configured` is `false`, complete the steps in the [Optional private oven camera setup](#optional-private-oven-camera-setup) section above.  
+  If auth is configured but `last_snapshot_status` is not `200`, enable debug logging and inspect the logs for private camera request failures.  
+  Also note that this feature currently relies on the validated oven snapshot flow only and will not work for appliances that do not expose still snapshots in the mobile app.
+
 * **I've restarted Home Assistant a few times and now all my appliances are unavailable**  
   This is, again, related to the Home Connect rate limits. Every time you restart Home Assistant the integration makes a few API calls to the service and if that happens too often it may block for up to 24 hours. The best way to fix this is to wait a day and restart Home Assistant again.
 
@@ -308,7 +332,9 @@ If you have more than 5 appliances you may occasionally hit the Home Connect API
 <br>
 
 # Known Issues
-See the FAQ above.
+* The private oven camera support currently targets the validated `na.services.home-connect.com` mobile backend.
+* Only still-image snapshots are supported. Live video and streaming are intentionally out of scope.
+* The oven camera feature depends on private mobile endpoints that are not part of the public Home Connect developer API and may change without notice.
 </br>
 
 # Reporting Issues and Bugs

@@ -14,6 +14,7 @@ This integration attempts to address those issues and has the following features
 * "Program Started" and "Program Finished" events are exposed as triggers for easier building of automation scripts.
 * A "Start Program" Button entity is provided to start operation of the selected program.
 * Program and option selections are also available as a service for easier integration in scripts.
+* Home Connect ovens that expose still snapshots in the mobile app can optionally create a camera entity using the private mobile API.
 * The state of all entities is updated at real time with a cloud push type integration.
 * Clean handling of appliances disconnecting and reconnecting from the cloud.
 * Clean handling of new appliances being added or removed from the service.

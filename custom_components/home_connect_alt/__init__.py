@@ -65,7 +65,7 @@ OPTIONS_SCHEMA = vol.Schema(
     extra=vol.REMOVE_EXTRA
 )
 
-PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.SELECT, Platform.NUMBER, Platform.BUTTON, Platform.SWITCH, Platform.TIME]
+PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.SELECT, Platform.NUMBER, Platform.BUTTON, Platform.SWITCH, Platform.TIME, Platform.CAMERA]
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
@@ -143,11 +143,13 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     #use_cache = conf[CONF_CACHE]
     logmode = conf[CONF_LOG_MODE] if conf[CONF_LOG_MODE] else ConditionalLogger.LogMode.REQUESTS
 
+    websession = aiohttp_client.async_get_clientsession(hass)
 
     # If using an aiohttp-based API lib
-    auth = api.AsyncConfigEntryAuth(
-        aiohttp_client.async_get_clientsession(hass), session, api_host
-    )
+    auth = api.AsyncConfigEntryAuth(websession, session, api_host)
+    private_auth = api.MobilePrivateAuth(hass, config_entry.entry_id, websession)
+    await private_auth.async_initialize()
+    private_api = api.AsyncMobilePrivateApi(private_auth, websession)
 
     # homeconnect:HomeConnect = None
     # if use_cache:
@@ -165,7 +167,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang, disabled_appliances=disabled_appliances, sse_timeout=conf[CONF_SSE_TIMEOUT])
     services = register_services(hass, homeconnect)
 
-    conf.update({ "homeconnect": homeconnect, "services": services, "auth": auth })
+    conf.update({ "homeconnect": homeconnect, "services": services, "auth": auth, "private_api": private_api })
 
     #region internal event handlers
     # async def async_delayed_update_cache(delay:float = 0):
@@ -381,6 +383,21 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
         }
     )
     hass.services.async_register(DOMAIN, "run_command", services.async_run_command, schema=run_command_schema)
+
+    start_private_camera_auth_schema = vol.Schema(
+        {
+            vol.Optional('config_entry_id'): cv.string
+        }
+    )
+    hass.services.async_register(DOMAIN, "start_private_camera_auth", services.async_start_private_camera_auth, schema=start_private_camera_auth_schema)
+
+    finish_private_camera_auth_schema = vol.Schema(
+        {
+            vol.Required('callback_url'): cv.string,
+            vol.Optional('config_entry_id'): cv.string
+        }
+    )
+    hass.services.async_register(DOMAIN, "finish_private_camera_auth", services.async_finish_private_camera_auth, schema=finish_private_camera_auth_schema)
 
 
     return services
