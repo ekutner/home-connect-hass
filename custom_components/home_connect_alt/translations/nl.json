@@ -37,8 +37,18 @@
     }
   },
   "options": {
+    "error": {
+      "private_camera_auth_failed": "Private camera-autorisatie is mislukt. Start deze stap opnieuw en plak de volledige laatste QR-callback-URL."
+    },
     "step": {
       "init": {
+        "menu_options": {
+          "options": "Geavanceerde instellingen",
+          "private_camera": "Private oven camera-auth"
+        },
+        "title": "Home Connect Alt configureren"
+      },
+      "options": {
         "data": {
           "language": "Taalcode",
           "log_mode": "Uitgebreide logmodus",
@@ -59,6 +69,16 @@
         },
         "description": "Bekijk de configuratiesectie in de [README](https://github.com/ekutner/home-connect-hass) voor uitleg over deze instellingen",
         "title": "Geavanceerde instellingen"
+      },
+      "private_camera": {
+        "data": {
+          "callback_url": "Laatste QR-callback-URL"
+        },
+        "data_description": {
+          "callback_url": "Plak de volledige URL uit de browser nadat Home Connect naar qr.home-connect.com doorstuurt."
+        },
+        "description": "Open deze private Home Connect mobiele autorisatie-URL, log in en plak daarna de laatste `https://qr.home-connect.com/authorize/prod/?code=...` callback-URL hier.\n\n{auth_url}",
+        "title": "Private oven camera-auth"
       }
     }
   },

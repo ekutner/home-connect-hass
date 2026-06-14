@@ -116,16 +116,19 @@ For those ovens the integration can create a `camera` entity by using the same p
 
 This requires a second one-time login flow because the mobile camera backend uses a different OAuth client than the public developer API.
 
-1. Call the `home_connect_alt.start_private_camera_auth` service.
-2. Open the link from the created persistent notification and complete the Home Connect login flow.
-3. After the browser lands on `https://qr.home-connect.com/authorize/prod/?code=...`, copy the full URL.
-4. Call the `home_connect_alt.finish_private_camera_auth` service and paste the full callback URL into `callback_url`.
-5. Wait a few seconds for the oven `camera` entity to refresh.
+1. Open **Settings** -> **Devices & services** -> **Home Connect Alt** -> **Configure**.
+2. Select **Private oven camera auth**.
+3. Open the generated Home Connect authorization URL and complete the login flow.
+4. After the browser lands on `https://qr.home-connect.com/authorize/prod/?code=...`, copy the full URL.
+5. Paste that full callback URL into the options flow and submit it.
+6. Wait a few seconds for the oven `camera` entity and private camera metadata sensors to refresh.
 
 Notes:
 * This feature only supports still-image snapshots, not video streaming.
 * It is currently limited to ovens because that is the private media flow that has been validated.
 * The private snapshot route was derived from the Android app and validated against live responses before being implemented here.
+* The private camera sensors expose only useful snapshot metadata that was observed in live responses: last snapshot time, snapshot age, upload status, image counter, image resolution, image size, camera temperature and camera door state.
+* Private camera switches are intentionally not added yet. The Android app contains camera-related setting names, but no reproducible private read/write endpoint has been validated.
 
 # Configuration options
 Starting with version 0.7.0 the integration supports the UI configuration flow for most configuration options. Existing config values will be read however, once the options are saved in the UI they will override the values from the config file.

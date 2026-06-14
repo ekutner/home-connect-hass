@@ -14,9 +14,9 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
 from .api import (
-    AsyncMobilePrivateApi,
     PrivateCameraAuthRequiredError,
     PrivateSnapshot,
+    PrivateSnapshotCoordinator,
 )
 from .common import Configuration, EntityBase, EntityManager
 from .const import DOMAIN
@@ -31,7 +31,7 @@ PLACEHOLDER_IMAGE = b"""<svg xmlns="http://www.w3.org/2000/svg" width="1280" hei
 <rect x="70" y="70" width="1140" height="580" rx="42" fill="#242424" stroke="#d7aa58" stroke-width="6"/>
 <text x="640" y="250" fill="#f8f1df" font-family="Verdana, sans-serif" font-size="52" text-anchor="middle">Home Connect Oven Camera</text>
 <text x="640" y="340" fill="#f8f1df" font-family="Verdana, sans-serif" font-size="34" text-anchor="middle">No private snapshot is available yet.</text>
-<text x="640" y="405" fill="#c9c1b0" font-family="Verdana, sans-serif" font-size="26" text-anchor="middle">Run the private camera auth services to enable oven snapshots.</text>
+<text x="640" y="405" fill="#c9c1b0" font-family="Verdana, sans-serif" font-size="26" text-anchor="middle">Configure private camera auth in the integration options.</text>
 </svg>"""
 
 
@@ -43,14 +43,14 @@ async def async_setup_entry(
     """Set up Home Connect camera entities."""
     entry_conf: Configuration = hass.data[DOMAIN][config_entry.entry_id]
     homeconnect: HomeConnect = entry_conf["homeconnect"]
-    private_api: AsyncMobilePrivateApi = entry_conf["private_api"]
+    private_snapshot_coordinator: PrivateSnapshotCoordinator = entry_conf["private_snapshot_coordinator"]
     entity_manager = EntityManager(async_add_entities, "Camera")
 
     def add_appliance(appliance: Appliance) -> None:
         if appliance.type.lower() != "oven":
             return
         entity_manager.add(
-            HomeConnectCamera(appliance, "camera", entry_conf, private_api)
+            HomeConnectCamera(appliance, "camera", entry_conf, private_snapshot_coordinator)
         )
         entity_manager.register()
 
@@ -71,16 +71,17 @@ class HomeConnectCamera(EntityBase, Camera):
         appliance: Appliance,
         key: str,
         conf: Configuration,
-        private_api: AsyncMobilePrivateApi,
+        private_snapshot_coordinator: PrivateSnapshotCoordinator,
     ) -> None:
         EntityBase.__init__(self, appliance, key, conf)
         self._content_type = "image/svg+xml"
         Camera.__init__(self)
-        self._private_api = private_api
+        self._private_snapshot_coordinator = private_snapshot_coordinator
         self._downloaded_identifier: str | None = None
         self._image: bytes | None = None
         self._last_error: str | None = None
         self._last_fetch: float = 0.0
+        self._last_snapshot: PrivateSnapshot | None = None
         self._last_snapshot_id: str | None = None
         self._last_snapshot_status: int | None = None
         self._last_snapshot_timestamp_ms: int | None = None
@@ -105,15 +106,18 @@ class HomeConnectCamera(EntityBase, Camera):
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
-        return {
+        attributes = {
             "downloaded_identifier": self._downloaded_identifier,
             "last_error": self._last_error,
             "last_snapshot_id": self._last_snapshot_id,
             "last_snapshot_status": self._last_snapshot_status,
             "last_snapshot_timestamp_ms": self._last_snapshot_timestamp_ms,
             "private_ha_id": self._private_ha_id,
-            "private_auth_configured": self._private_api.is_configured,
+            "private_auth_configured": self._private_snapshot_coordinator.is_configured,
         }
+        if self._last_snapshot:
+            attributes.update(_snapshot_attributes(self._last_snapshot))
+        return attributes
 
     @property
     def is_streaming(self) -> bool:
@@ -150,9 +154,10 @@ class HomeConnectCamera(EntityBase, Camera):
 
         self._refreshing = True
         try:
-            snapshot = await self._private_api.async_get_latest_snapshot(
+            snapshot = await self._private_snapshot_coordinator.async_get_snapshot(
                 self._appliance.haId,
                 self._appliance.type,
+                min_interval=MIN_IMAGE_INTERVAL,
             )
             self._last_snapshot_status = 200
             self._last_fetch = time.monotonic()
@@ -163,6 +168,7 @@ class HomeConnectCamera(EntityBase, Camera):
                 return
 
             self._private_ha_id = snapshot.private_ha_id
+            self._last_snapshot = snapshot
             self._last_snapshot_id = snapshot.identifier
             self._last_snapshot_timestamp_ms = snapshot.timestamp_ms
 
@@ -181,7 +187,7 @@ class HomeConnectCamera(EntityBase, Camera):
             self.async_write_ha_state()
         except PrivateCameraAuthRequiredError:
             self._last_error = (
-                "Private camera auth is not configured. Run the auth services first."
+                "Private camera auth is not configured. Configure it from the integration options."
             )
             self.async_write_ha_state()
         except ClientResponseError as err:
@@ -210,7 +216,7 @@ class HomeConnectCamera(EntityBase, Camera):
     ) -> tuple[bytes, str, str]:
         """Download the full-size snapshot and fall back to the preview when needed."""
         try:
-            image_bytes, content_type = await self._private_api.async_download_media(
+            image_bytes, content_type = await self._private_snapshot_coordinator.async_download_media(
                 snapshot.private_ha_id,
                 snapshot.identifier,
             )
@@ -223,7 +229,7 @@ class HomeConnectCamera(EntityBase, Camera):
             if not snapshot.preview_identifier:
                 raise
 
-        image_bytes, content_type = await self._private_api.async_download_media(
+        image_bytes, content_type = await self._private_snapshot_coordinator.async_download_media(
             snapshot.private_ha_id,
             snapshot.preview_identifier,
         )
@@ -250,3 +256,47 @@ def _guess_content_type(image_bytes: bytes, response_content_type: str) -> str:
     if image_bytes.startswith(b"\x89PNG\r\n\x1a\n"):
         return "image/png"
     return response_content_type or "application/octet-stream"
+
+
+def _snapshot_attributes(snapshot: PrivateSnapshot) -> dict[str, Any]:
+    """Expose low-level private metadata as camera diagnostics, not extra entities."""
+    metadata = snapshot.metadata
+    return {
+        "camera_fw_version": metadata.get("cameraFWVersion"),
+        "camera_door_state": metadata.get("doorState"),
+        "camera_temperature": _as_float(metadata.get("currentCavTempCelsius")),
+        "exposure_time": _as_float(metadata.get("exposureTime")),
+        "gain": _as_float(metadata.get("gain")),
+        "hash": snapshot.hash_value,
+        "image_counter": _as_int(metadata.get("imageCounter")),
+        "image_resolution": metadata.get("resolution"),
+        "image_size": _as_int(metadata.get("length")),
+        "media_type": snapshot.media_type,
+        "object_detection_image_id": snapshot.object_detection_identifier,
+        "origin_acquisition_timestamp_s": _as_int(metadata.get("originAcquisitionTimestampS")),
+        "program_start_time_s": _as_int(metadata.get("programStartTimeS")),
+        "sequence_id": metadata.get("sequenceId"),
+        "smm_sw_version": metadata.get("smmSwVersion"),
+        "upload_status": snapshot.upload_status,
+        "white_balance_matrix": metadata.get("whiteBalanceMatrix"),
+    }
+
+
+def _as_int(value: Any) -> int | None:
+    """Convert private metadata values that arrive as strings."""
+    if value in (None, ""):
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _as_float(value: Any) -> float | None:
+    """Convert private metadata values that arrive as strings."""
+    if value in (None, ""):
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None

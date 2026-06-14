@@ -74,6 +74,8 @@ class PrivateSnapshot:
     preview_identifier: str | None
     private_ha_id: str
     timestamp_ms: int
+    upload_status: str | None
+    metadata: dict[str, Any]
 
 
 class MobilePrivateAuth:
@@ -265,6 +267,8 @@ class AsyncMobilePrivateApi:
             preview_identifier=latest.get("previewImageIdentifier"),
             private_ha_id=private_ha_id,
             timestamp_ms=int(latest.get("timestamp", 0) or 0),
+            upload_status=latest.get("uploadStatus"),
+            metadata=_metadata_list_to_dict(latest.get("metaData") or []),
         )
 
     async def async_download_media(
@@ -282,6 +286,51 @@ class AsyncMobilePrivateApi:
         content_type = response.headers.get("Content-Type", "application/octet-stream")
         response.close()
         return data, content_type
+
+
+class PrivateSnapshotCoordinator:
+    """Cache private snapshot metadata so camera and sensors share one request path."""
+
+    def __init__(self, private_api: AsyncMobilePrivateApi) -> None:
+        self._private_api = private_api
+        self._snapshots: dict[str, PrivateSnapshot | None] = {}
+        self._last_fetch: dict[str, float] = {}
+
+    @property
+    def is_configured(self) -> bool:
+        """Return whether private camera auth is available."""
+        return self._private_api.is_configured
+
+    async def async_get_snapshot(
+        self,
+        appliance_ha_id: str,
+        appliance_type: str | None,
+        min_interval: int = 5,
+    ) -> PrivateSnapshot | None:
+        """Return cached snapshot metadata, refreshing when the cache is stale."""
+        now = time.monotonic()
+        last_fetch = self._last_fetch.get(appliance_ha_id, 0)
+        if appliance_ha_id in self._snapshots and (now - last_fetch) < min_interval:
+            return self._snapshots[appliance_ha_id]
+
+        snapshot = await self._private_api.async_get_latest_snapshot(
+            appliance_ha_id,
+            appliance_type,
+        )
+        self._snapshots[appliance_ha_id] = snapshot
+        self._last_fetch[appliance_ha_id] = now
+        return snapshot
+
+    async def async_download_media(
+        self,
+        private_ha_id: str,
+        media_identifier: str,
+    ) -> tuple[bytes, str]:
+        """Download a private media object through the shared private API."""
+        return await self._private_api.async_download_media(
+            private_ha_id,
+            media_identifier,
+        )
 
 
 def _generate_code_verifier() -> str:
@@ -323,6 +372,15 @@ def _normalize_token_payload(payload: dict[str, Any]) -> dict[str, Any]:
     if "expires_in" in payload:
         normalized["expires_at"] = fetched_at + int(payload["expires_in"])
     return normalized
+
+
+def _metadata_list_to_dict(metadata: list[dict[str, Any]]) -> dict[str, Any]:
+    """Convert the mobile backend metadata list into a convenient dictionary."""
+    return {
+        item["key"]: item.get("value")
+        for item in metadata
+        if isinstance(item, dict) and item.get("key")
+    }
 
 
 def _normalize_private_ha_id(appliance_ha_id: str) -> str:

@@ -9,6 +9,11 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
+from .api import (
+    PrivateCameraAuthRequiredError,
+    PrivateSnapshot,
+    PrivateSnapshotCoordinator,
+)
 from .common import Configuration, EntityBase, EntityManager
 from .const import (
     CONF_TRANSLATION_MODE_SERVER,
@@ -21,11 +26,61 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
+PRIVATE_CAMERA_SENSOR_TYPES = {
+    "last_snapshot_time": {
+        "name": "Last Snapshot Time",
+        "icon": "mdi:camera-clock",
+        "device_class": "timestamp",
+        "metadata_key": None,
+    },
+    "snapshot_age": {
+        "name": "Snapshot Age",
+        "icon": "mdi:timer-sand",
+        "unit": "s",
+        "metadata_key": None,
+    },
+    "upload_status": {
+        "name": "Upload Status",
+        "icon": "mdi:cloud-upload",
+        "metadata_key": None,
+    },
+    "image_counter": {
+        "name": "Image Counter",
+        "icon": "mdi:counter",
+        "metadata_key": "imageCounter",
+    },
+    "image_resolution": {
+        "name": "Image Resolution",
+        "icon": "mdi:image-size-select-large",
+        "metadata_key": "resolution",
+    },
+    "image_size": {
+        "name": "Image Size",
+        "icon": "mdi:file-image",
+        "unit": "B",
+        "metadata_key": "length",
+    },
+    "camera_temperature": {
+        "name": "Camera Temperature",
+        "icon": "mdi:thermometer",
+        "unit": "°C",
+        "device_class": "temperature",
+        "metadata_key": "currentCavTempCelsius",
+    },
+    "camera_door_state": {
+        "name": "Camera Door State",
+        "icon": "mdi:door",
+        "metadata_key": "doorState",
+    },
+}
+
+
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigType, async_add_entities: AddEntitiesCallback,) -> None:
     """Add sensors for passed config_entry in HA"""
     #homeconnect: HomeConnect = hass.data[DOMAIN]["homeconnect"]
     entry_conf:Configuration = hass.data[DOMAIN][config_entry.entry_id]
     homeconnect:HomeConnect = entry_conf["homeconnect"]
+    private_snapshot_coordinator: PrivateSnapshotCoordinator = entry_conf["private_snapshot_coordinator"]
 
     entity_manager = EntityManager(async_add_entities, "Sensor")
 
@@ -68,6 +123,17 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigType, async
                 if setting.type != "Boolean" and not isinstance(setting.value, bool) and conf.get_entity_setting(setting.key, "type") != "Boolean":
                     device = SettingsSensor(appliance, setting.key, conf)
                     entity_manager.add(device)
+
+        if appliance.type.lower() == "oven" and private_snapshot_coordinator.is_configured:
+            conf = entry_conf.get_config()
+            for key in PRIVATE_CAMERA_SENSOR_TYPES:
+                device = PrivateCameraSensor(
+                    appliance,
+                    key,
+                    conf,
+                    private_snapshot_coordinator,
+                )
+                entity_manager.add(device)
 
         entity_manager.register()
 
@@ -331,6 +397,117 @@ class SettingsSensor(EntityBase, SensorEntity):
         self.async_write_ha_state()
 
 
+class PrivateCameraSensor(EntityBase, SensorEntity):
+    """Sensor backed by private oven camera snapshot metadata."""
+
+    should_poll = True
+
+    def __init__(
+        self,
+        appliance: Appliance,
+        key: str,
+        conf: Configuration,
+        private_snapshot_coordinator: PrivateSnapshotCoordinator,
+    ) -> None:
+        super().__init__(appliance, key, conf)
+        self._private_snapshot_coordinator = private_snapshot_coordinator
+        self._snapshot: PrivateSnapshot | None = None
+        self._last_error: str | None = None
+
+    @property
+    def _description(self) -> dict[str, Any]:
+        return PRIVATE_CAMERA_SENSOR_TYPES[self._key]
+
+    @property
+    def unique_id(self) -> str:
+        return f"{self.safe_haId}_private_camera_{self._key}"
+
+    @property
+    def name_ext(self) -> str:
+        return self._description["name"]
+
+    @property
+    def icon(self) -> str:
+        return self._description["icon"]
+
+    @property
+    def device_class(self) -> str | None:
+        return self._description.get("device_class")
+
+    @property
+    def native_unit_of_measurement(self) -> str | None:
+        return self._description.get("unit")
+
+    @property
+    def available(self) -> bool:
+        return (
+            super().available
+            and self._private_snapshot_coordinator.is_configured
+            and self._last_error is None
+        )
+
+    @property
+    def native_value(self):
+        """Return the selected private snapshot metadata value."""
+        if not self._snapshot:
+            return None
+
+        if self._key == "last_snapshot_time":
+            if not self._snapshot.timestamp_ms:
+                return None
+            return datetime.fromtimestamp(
+                self._snapshot.timestamp_ms / 1000,
+                timezone.utc,
+            )
+        if self._key == "snapshot_age":
+            if not self._snapshot.timestamp_ms:
+                return None
+            return max(
+                0,
+                int(datetime.now(timezone.utc).timestamp())
+                - int(self._snapshot.timestamp_ms / 1000),
+            )
+        if self._key == "upload_status":
+            return self._snapshot.upload_status
+
+        value = self._snapshot.metadata.get(self._description["metadata_key"])
+        if self._key in ("image_counter", "image_size"):
+            return _as_int(value)
+        if self._key == "camera_temperature":
+            return _as_float(value)
+        return value
+
+    @property
+    def extra_state_attributes(self) -> Mapping[str, Any] | None:
+        return {
+            "last_error": self._last_error,
+            "private_auth_configured": self._private_snapshot_coordinator.is_configured,
+        }
+
+    async def async_update(self) -> None:
+        """Poll the shared private snapshot coordinator."""
+        try:
+            self._snapshot = await self._private_snapshot_coordinator.async_get_snapshot(
+                self._appliance.haId,
+                self._appliance.type,
+            )
+            self._last_error = None
+        except PrivateCameraAuthRequiredError:
+            self._last_error = "Private camera auth is not configured"
+        except Exception:
+            self._last_error = "Error fetching private camera metadata"
+            _LOGGER.debug(
+                "Error updating private camera sensor %s for %s",
+                self._key,
+                self._appliance.name,
+                exc_info=True,
+            )
+
+    async def async_on_update(self, appliance: Appliance, key: str, value) -> None:
+        await self.async_update()
+        self.async_write_ha_state()
+
+
 class HomeConnectStatusSensor(SensorEntity):
     """Global Home Connect status sensor"""
 
@@ -369,3 +546,23 @@ class HomeConnectStatusSensor(SensorEntity):
             "blocked_until": self._homeconnect.health.get_blocked_until(),
             "blocked_for": self._homeconnect.health.get_block_time_str(),
         }
+
+
+def _as_int(value: Any) -> int | None:
+    """Convert private metadata values that arrive as strings."""
+    if value in (None, ""):
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _as_float(value: Any) -> float | None:
+    """Convert private metadata values that arrive as strings."""
+    if value in (None, ""):
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None

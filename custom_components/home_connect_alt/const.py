@@ -12,7 +12,6 @@ SCOPES = "IdentifyAppliance Monitor Control Settings"
 PRIVATE_CAMERA_REDIRECT_URI = "https://qr.home-connect.com/authorize/prod/"
 PRIVATE_CAMERA_CLIENT_ID = "9B75AC9EC512F36C84256AC47D813E2C1DD0D6520DF774B020E1E6E2EB29B1F3"
 PRIVATE_CAMERA_SCOPES = "Control DeleteAppliance IdentifyAppliance Images Monitor ReadAccount ReadOrigApi Settings WriteAppliance WriteOrigApi"
-PRIVATE_CAMERA_AUTH_NOTIFICATION_ID = f"{DOMAIN}_private_camera_auth"
 PRIVATE_CAMERA_AUTH_STORAGE_VERSION = 1
 PRIVATE_CAMERA_AUTH_STORAGE_KEY = f"{DOMAIN}_private_camera_auth"
 CONF_API_HOST = "api_host"

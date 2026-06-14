@@ -1,12 +1,8 @@
 """ Implement the services of this implementation """
 from home_connect_async import HomeConnect, HomeConnectError, Appliance
-from homeassistant.components import persistent_notification
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import device_registry as dr
-
-from .api import PrivateCameraAuthError
-from .const import DOMAIN, PRIVATE_CAMERA_AUTH_NOTIFICATION_ID
 
 
 class Services():
@@ -15,51 +11,6 @@ class Services():
         self.homeconnect = homeconnect
         self.hass = hass
         self.dr = dr.async_get(hass)
-
-    async def async_start_private_camera_auth(self, call) -> None:
-        """ Service for starting the private camera auth flow """
-        private_api = self._get_private_api(call.data.get('config_entry_id'))
-        auth_url = await private_api.async_build_authorize_url()
-        persistent_notification.async_create(
-            self.hass,
-            (
-                "1. Open the link below in a browser and sign in to Home Connect.\n"
-                "2. After the final redirect reaches `https://qr.home-connect.com/authorize/prod/`, copy the full callback URL.\n"
-                "3. Call `home_connect_alt.finish_private_camera_auth` with that callback URL.\n\n"
-                f"{auth_url}"
-            ),
-            title="Home Connect Alt private camera auth",
-            notification_id=PRIVATE_CAMERA_AUTH_NOTIFICATION_ID,
-        )
-
-    async def async_finish_private_camera_auth(self, call) -> None:
-        """ Service for completing the private camera auth flow """
-        private_api = self._get_private_api(call.data.get('config_entry_id'))
-        try:
-            await private_api.async_exchange_callback_url(call.data['callback_url'])
-        except PrivateCameraAuthError as ex:
-            raise HomeAssistantError(str(ex)) from ex
-        persistent_notification.async_dismiss(self.hass, PRIVATE_CAMERA_AUTH_NOTIFICATION_ID)
-
-    def _get_private_api(self, config_entry_id):
-        """ Helper function to get the private API wrapper for a config entry """
-        entry_id = config_entry_id
-        if not entry_id:
-            entry_id = next(
-                (
-                    key
-                    for key, value in self.hass.data[DOMAIN].items()
-                    if key != "global" and isinstance(value, dict) and "private_api" in value
-                ),
-                None,
-            )
-        if not entry_id or entry_id not in self.hass.data[DOMAIN]:
-            raise HomeAssistantError("No Home Connect Alt config entry found for private camera auth")
-
-        conf = self.hass.data[DOMAIN][entry_id]
-        if "private_api" not in conf:
-            raise HomeAssistantError("Private camera API is not initialized for this config entry")
-        return conf["private_api"]
 
     async def async_select_program(self, call) -> None:
         """ Service for selecting a program """

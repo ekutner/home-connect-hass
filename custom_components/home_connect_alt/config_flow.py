@@ -8,9 +8,10 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult, FlowHandler
 from homeassistant.const import CONF_CLIENT_ID, CONF_CLIENT_SECRET
-from homeassistant.helpers import config_entry_oauth2_flow, config_validation as cv
+from homeassistant.helpers import aiohttp_client, config_entry_oauth2_flow, config_validation as cv
 from homeassistant.helpers.selector import selector
 
+from . import api
 from .common import Configuration
 from .const import *
 
@@ -140,6 +141,15 @@ class OptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
+        """Show the options menu."""
+        return self.async_show_menu(
+            step_id="init",
+            menu_options=["options", "private_camera"],
+        )
+
+    async def async_step_options(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
         """ Manage the options """
         if user_input is not None:
             # Save the config entry when the user input has been received
@@ -187,7 +197,39 @@ class OptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
 
         data_schema = self.add_suggested_values_to_schema(data_schema=vol.Schema(data_schema), suggested_values=defaults)
 
-        return self.async_show_form(step_id="init", data_schema=data_schema)
+        return self.async_show_form(step_id="options", data_schema=data_schema)
 
+    async def async_step_private_camera(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Configure the private mobile token used by supported oven cameras."""
+        private_auth = api.MobilePrivateAuth(
+            self.hass,
+            self.config_entry.entry_id,
+            aiohttp_client.async_get_clientsession(self.hass),
+        )
+        await private_auth.async_initialize()
+        errors: dict[str, str] = {}
 
+        if user_input is not None:
+            try:
+                await private_auth.async_exchange_callback_url(user_input["callback_url"])
+            except api.PrivateCameraAuthError:
+                errors["base"] = "private_camera_auth_failed"
+            else:
+                self.hass.async_create_task(
+                    self.hass.config_entries.async_reload(self.config_entry.entry_id)
+                )
+                return self.async_create_entry(
+                    title="",
+                    data=dict(self.config_entry.options),
+                )
+
+        auth_url = await private_auth.async_build_authorize_url()
+        return self.async_show_form(
+            step_id="private_camera",
+            data_schema=vol.Schema({vol.Required("callback_url"): cv.string}),
+            description_placeholders={"auth_url": auth_url},
+            errors=errors,
+        )
 

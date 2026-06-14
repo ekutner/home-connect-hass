@@ -37,8 +37,18 @@
     }
   },
   "options": {
+    "error": {
+      "private_camera_auth_failed": "Private camera authorization failed. Start the step again and paste the full final QR callback URL."
+    },
     "step": {
       "init": {
+        "menu_options": {
+          "options": "Advanced settings",
+          "private_camera": "Private oven camera auth"
+        },
+        "title": "Configure Home Connect Alt"
+      },
+      "options": {
         "data": {
           "language": "Language code",
           "log_mode": "Verbose log mode",
@@ -59,6 +69,16 @@
         },
         "description": "Review the configuration section in the [README](https://github.com/ekutner/home-connect-hass) for explanation of these settings",
         "title": "Advanced settings"
+      },
+      "private_camera": {
+        "data": {
+          "callback_url": "Final QR callback URL"
+        },
+        "data_description": {
+          "callback_url": "Paste the full URL from the browser after Home Connect redirects to qr.home-connect.com."
+        },
+        "description": "Open this private Home Connect mobile authorization URL, sign in, then paste the final `https://qr.home-connect.com/authorize/prod/?code=...` callback URL here.\n\n{auth_url}",
+        "title": "Private oven camera auth"
       }
     }
   },

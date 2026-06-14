@@ -213,36 +213,3 @@ run_command:
       required: true
       selector:
         text:
-
-start_private_camera_auth:
-  name: Start private camera auth
-  description: Starts the PKCE login flow used for the private oven camera backend
-  fields:
-    config_entry_id:
-      description: >
-        Optional Home Connect Alt config entry id when more than one entry is configured
-      name: Config entry id
-      required: false
-      advanced: true
-      selector:
-        text:
-
-finish_private_camera_auth:
-  name: Finish private camera auth
-  description: Exchanges the final QR callback URL for the private oven camera token
-  fields:
-    callback_url:
-      description: >
-        The full final redirect URL from https://qr.home-connect.com/authorize/prod/?code=...
-      name: Callback URL
-      required: true
-      selector:
-        text:
-    config_entry_id:
-      description: >
-        Optional Home Connect Alt config entry id when more than one entry is configured
-      name: Config entry id
-      required: false
-      advanced: true
-      selector:
-        text:
