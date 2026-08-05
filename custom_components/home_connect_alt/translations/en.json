@@ -47,7 +47,8 @@
           "translation_mode": "Translation mode",
           "appliance_settings": "Advanced appliance settings (YAML)",
           "entity_settings": "Advanced entity settings (YAML)",
-          "delayed_ops": "Delayed start behavior"
+          "delayed_ops": "Delayed start behavior",
+          "consumption_mode": "Consumption sensor mode"
         },
         "data_description": {
           "language": "Only use [language codes](https://api-docs.home-connect.com/general/#supported-languages) supported by Home Connect",
@@ -80,6 +81,12 @@
       "options": {
         "default": "Use delay time span (default behavior)",
         "absolute_time": "Use absolute time"
+      }
+    },
+    "consumption_mode": {
+      "options": {
+        "step": "Step - add the full amount when a cycle finishes",
+        "linear": "Linear - ramp up over the cycle duration"
       }
     }
   },

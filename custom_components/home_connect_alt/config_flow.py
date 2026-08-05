@@ -164,6 +164,14 @@ class OptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
                         "translation_key": CONF_DELAYED_OPS
                     },
                 }),
+            vol.Optional(CONF_CONSUMPTION_MODE, default=CONF_CONSUMPTION_MODE_DEFAULT):
+                selector({
+                    "select": {
+                        "options": CONF_CONSUMPTION_MODES,
+                        "mode": "list",
+                        "translation_key": CONF_CONSUMPTION_MODE
+                    },
+                }),
             vol.Optional(CONF_LOG_MODE, default=0): vol.All(int, vol.Range(min=0, max=7)),
             vol.Optional(CONF_NAME_TEMPLATE, default=CONF_NAME_TEMPLATE_DEFAULT): str,
             vol.Optional(CONF_SSE_TIMEOUT, default=CONF_SSE_TIMEOUT_DEFAULT): int,

@@ -77,3 +77,17 @@ TRIGGERS_CONFIG = {
     "program_finished": { "key": "BSH.Common.Status.OperationState", "value": "BSH.Common.EnumType.OperationState.Finished" }
 }
 
+# Appliance types for which cumulative energy/water consumption sensors are created.
+# These are the types whose programs expose reference consumption via the
+# program-assistant service (the same values the official app's usage statistics use).
+CONSUMPTION_APPLIANCE_TYPES = ["Dishwasher", "Washer", "Dryer", "WasherDryer"]
+
+# How the cumulative consumption sensors advance:
+#   "step"   - jump by the full program reference value when the cycle finishes
+#   "linear" - ramp up over the program's expected runtime, reaching the full value at the end
+CONF_CONSUMPTION_MODE = "consumption_mode"
+CONF_CONSUMPTION_MODE_STEP = "step"
+CONF_CONSUMPTION_MODE_LINEAR = "linear"
+CONF_CONSUMPTION_MODES = [CONF_CONSUMPTION_MODE_STEP, CONF_CONSUMPTION_MODE_LINEAR]
+CONF_CONSUMPTION_MODE_DEFAULT = CONF_CONSUMPTION_MODE_STEP
+

@@ -56,6 +56,7 @@ This integration attempts to address those issues and has the following features
 * Clean handling of new appliances being added or removed from the service.
 * All the names support translation, but currently only the English translation is provided.
 * Using pure async implementation for reduced load on the platform.
+* Cumulative energy (kWh) and water (liter) consumption sensors for supported appliances (dishwashers, washers, dryers). These accumulate each completed program's reference consumption - the same values shown in the official app's usage statistics - and are published with `state_class: total_increasing` so they can be used directly in the Home Assistant Energy Dashboard. A "Consumption sensor mode" option selects how the total advances: `step` (default) adds the full amount when a cycle finishes, while `linear` ramps the value up over the cycle's expected duration. The accumulated total is restored across restarts.
 
 </br>
 
