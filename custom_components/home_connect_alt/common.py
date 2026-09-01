@@ -1,5 +1,8 @@
 from __future__ import annotations
+from functools import lru_cache
+import json
 import logging
+from pathlib import Path
 import re
 from abc import ABC, abstractmethod
 
@@ -12,6 +15,45 @@ from homeassistant.helpers import entity_registry as er
 from .const import CONF_NAME_TEMPLATE, CONF_NAME_TEMPLATE_DEFAULT, DOMAIN, DEFAULT_SETTINGS, CONF_ENTITY_SETTINGS, CONF_APPLIANCE_SETTINGS
 
 _LOGGER = logging.getLogger(__name__)
+
+
+@lru_cache(maxsize=8)
+def _program_translations(language: str) -> dict[str, str]:
+    """Load program state labels for a Home Assistant language."""
+    languages = [language]
+    if "-" in language:
+        languages.append(language.split("-", 1)[0])
+    languages.append("en")
+
+    for candidate in dict.fromkeys(languages):
+        path = Path(__file__).parent / "translations" / f"{candidate}.json"
+        try:
+            with path.open(encoding="utf-8") as translation_file:
+                translations = json.load(translation_file)
+        except (OSError, json.JSONDecodeError):
+            continue
+
+        labels = {}
+        for platform in ("select", "sensor"):
+            labels.update(
+                translations.get("entity", {})
+                .get(platform, {})
+                .get("programs", {})
+                .get("state", {})
+            )
+        if labels:
+            return labels
+
+    return {}
+
+
+def get_program_display_name(hass: HomeAssistant, program) -> str:
+    """Return the translated display label without changing the API key."""
+    language = getattr(getattr(hass, "config", None), "language", "en")
+    label = _program_translations(str(language)).get(program.key)
+    if label:
+        return label
+    return program.name or program.key.rsplit(".", 1)[-1]
 
 def find_delayed_operation_option(appliance:Appliance, conf:"Configuration"):
     """ Return the first option marked as 'DelayedOperation' found on the appliance, looking first in the available program options and falling back to the currently selected program's options. Returns None if no such option exists. """

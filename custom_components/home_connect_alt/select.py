@@ -9,7 +9,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.helpers.entity_registry import async_get
 
-from .common import InteractiveEntityBase, EntityManager, is_boolean_enum, Configuration, find_delayed_operation_option
+from .common import InteractiveEntityBase, EntityManager, is_boolean_enum, Configuration, find_delayed_operation_option, get_program_display_name
 from .const import CONF_DELAYED_OPS, CONF_DELAYED_OPS_ABSOLUTE_TIME, CONF_DELAYED_OPS_DEFAULT, CONF_TRANSLATION_MODE, CONF_TRANSLATION_MODE_SERVER, DEVICE_ICON_MAP, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -121,6 +121,17 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
         else:
             CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Current program is None")
         return None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, str] | None:
+        """Expose the technical key and translated label separately."""
+        current_program = self._appliance.get_applied_program()
+        if not current_program:
+            return None
+        return {
+            "program_key": current_program.key,
+            "program_name": get_program_display_name(self._conf.hass, current_program),
+        }
 
 
     async def async_select_option(self, option: str) -> None:

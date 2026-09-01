@@ -9,7 +9,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType
 
-from .common import Configuration, EntityBase, EntityManager
+from .common import Configuration, EntityBase, EntityManager, get_program_display_name
 from .const import (
     CONF_TRANSLATION_MODE_SERVER,
     DEVICE_ICON_MAP,
@@ -118,6 +118,17 @@ class ProgramSensor(EntityBase, SensorEntity):
                 return prog.name
             return prog.key
         return None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, str] | None:
+        """Expose the technical key and translated label separately."""
+        prog = self._appliance.selected_program if self._conf["program_type"] == "selected" else self._appliance.active_program
+        if not prog:
+            return None
+        return {
+            "program_key": prog.key,
+            "program_name": get_program_display_name(self._conf.hass, prog),
+        }
 
     async def async_on_update(self, appliance: Appliance, key: str, value) -> None:
         _LOGGER.debug("Updating sensor %s => %s", self.unique_id, self.native_value)
