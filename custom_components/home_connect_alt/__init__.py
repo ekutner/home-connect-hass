@@ -217,7 +217,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
     #hass.config_entries.async_setup_platforms(entry, PLATFORMS)
     await hass.config_entries.async_forward_entry_setups(config_entry, PLATFORMS)
-    register_events_publisher(hass, homeconnect)
+    register_events_publisher(hass, homeconnect, config_entry.entry_id)
 
     # Continue loading the HomeConnect data model and set the callback to be notified when done
     homeconnect.start_load_data_task(on_complete=on_data_loaded, on_error= on_data_load_error)
@@ -386,7 +386,7 @@ def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
     return services
 
 
-def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect):
+def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect, config_entry_id:str):
     """ Register for publishing events that are offered by this integration """
     device_reg: dr.DeviceRegistry = dr.async_get(hass)
     last_event: dict[str, str | None] = { 'key': None, 'value': None}    # Used to filter out duplicate events
@@ -396,7 +396,7 @@ def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect):
             last_event['key'] = key
             last_event['value'] = value
             haid = appliance.normalized_haId
-            device = device_reg.async_get_device_by_identifier((DOMAIN, haid))
+            device = device_reg.async_get_device_by_identifier((DOMAIN, haid), config_entry_id=config_entry_id)
             if not device:
                 haid = EntityBase.get_safe_haID(hass, appliance)
                 device = device_reg.async_get_device({(DOMAIN, haid)})
