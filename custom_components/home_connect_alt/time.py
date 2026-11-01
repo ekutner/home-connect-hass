@@ -1,7 +1,8 @@
 from __future__ import annotations
 import logging
 import datetime
-from  homeassistant.components.time import TimeEntity, time, timedelta
+from datetime import time, timedelta
+from  homeassistant.components.time import TimeEntity
 from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events, ConditionalLogger as CL
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
