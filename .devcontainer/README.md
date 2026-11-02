@@ -11,7 +11,7 @@ The repository is cloned **into a Docker volume** rather than mounted from the h
 
 1. In VSCode press `F1` and select **Dev Containers: Clone Repository in Container Volume...**, then give it this repository. Let the container build — this takes a while the first time.
 
-2. The container clones the SDK (`home-connect-async`) in beside the integration and opens a two-folder workspace automatically. If it doesn't, use *File -> Open Workspace...* and pick `home-connect-dev.code-workspace` from the root of this repository.
+2. The container clones the SDK (`home-connect-async`) in beside the integration and opens a two-folder workspace automatically. If it doesn't, use *File -> Open Workspace...* and pick `/workspaces/home-connect-dev.code-workspace`, a link the container creates to the file in `.devcontainer`. The window reloads once while this happens, after the extensions have finished installing.
 
 That's it. There is no host folder structure to set up and no workspace file to save by hand.
 
@@ -19,7 +19,7 @@ That's it. There is no host folder structure to set up and no workspace file to 
 
 ## Working on a different library
 
-To develop against your own fork of the SDK, or a different library altogether, change `SDK_REPO_URL` (and `SDK_PATH`) in `devcontainer.json` and rebuild. If the folder name changes, update it in `home-connect-dev.code-workspace` too. Any folder in `/workspaces` that has a `setup.py` is pip installed as editable on every container start, so additional libraries can simply be cloned in alongside.
+To develop against your own fork of the SDK, or a different library altogether, change `SDK_REPO_URL` (and `SDK_PATH`) in `devcontainer.json` and rebuild. If the folder name changes, update it in `.devcontainer/home-connect-dev.code-workspace` too. Any folder in `/workspaces` that has a `setup.py` is pip installed as editable on every container start, so additional libraries can simply be cloned in alongside.
 
 # How it works
 

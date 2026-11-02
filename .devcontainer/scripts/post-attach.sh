@@ -13,15 +13,26 @@
 set -u
 
 SCRIPT_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-INTEGRATION_PATH="${INTEGRATION_PATH:-$( dirname "$( dirname "$SCRIPT_PATH" )" )}"
-WORKSPACE_FILE="${WORKSPACE_FILE:-$INTEGRATION_PATH/home-connect-dev.code-workspace}"
+DEVCONTAINER_PATH=$( dirname "$SCRIPT_PATH" )
+INTEGRATION_PATH="${INTEGRATION_PATH:-$( dirname "$DEVCONTAINER_PATH" )}"
+WORKSPACE_FILE="${WORKSPACE_FILE:-$DEVCONTAINER_PATH/home-connect-dev.code-workspace}"
+# VSCode offers to open any workspace file in the root of an open folder, which
+# would compete with this script. So the file stays in .devcontainer and is
+# opened through a link beside the repos, outside the folder that is open.
+WORKSPACE_LINK="${WORKSPACE_LINK:-$( dirname "$INTEGRATION_PATH" )/home-connect-dev.code-workspace}"
 # Opening the workspace reloads the window, which runs this script again, so the
 # marker stops that from looping. /tmp is not a volume: the marker survives the
 # reload and container restarts, and only a rebuild clears it. It must not live
 # on a persistent volume, or a failed open could never recover.
 MARKER="${WORKSPACE_MARKER:-/tmp/.hc-workspace-opened}"
 
-if [ -f "$MARKER" ] || [ ! -f "$WORKSPACE_FILE" ]; then
+if [ ! -f "$WORKSPACE_FILE" ]; then
+    exit 0
+fi
+
+ln -sfn "$WORKSPACE_FILE" "$WORKSPACE_LINK"
+
+if [ -f "$MARKER" ]; then
     exit 0
 fi
 
@@ -33,6 +44,10 @@ CODE_CLI=$( ls -t "$HOME"/.vscode-server/bin/*/bin/remote-cli/code 2> /dev/null 
 IPC_SOCKET_DIR="${IPC_SOCKET_DIR:-/tmp}"
 # Seconds to wait for a socket. It can appear well after the attach starts.
 IPC_WAIT="${IPC_WAIT:-120}"
+# Seconds to wait for the extensions to install, and for how long the installed
+# list must stay unchanged, which covers the dependencies they pull in.
+EXTENSION_WAIT="${EXTENSION_WAIT:-600}"
+EXTENSION_SETTLE="${EXTENSION_SETTLE:-10}"
 
 # Not every socket can be used. The extension host and each terminal have one
 # that serves the CLI, but the agent host listens on one that never replies, so
@@ -59,7 +74,37 @@ if [ -n "$CODE_CLI" ]; then
 fi
 
 if [ -z "$IPC_SOCKET" ]; then
-    echo "Open $WORKSPACE_FILE to get both repos in one window"
+    echo "Open $WORKSPACE_LINK to get both repos in one window"
+    exit 0
+fi
+
+# Opening the workspace reloads the window. VSCode installs the extensions at the
+# same time as this script runs, and a reload abandons any that haven't finished
+# without retrying them, so hold it back until they are all in place.
+wait_for_extensions() {
+    local expected installed extension missing previous=""
+    expected=$( sed -n '/"extensions": \[/,/\]/p' "$DEVCONTAINER_PATH/devcontainer.json" | grep -oE '"[^"]+\.[^"]+"' | tr -d '"' )
+    SECONDS=0
+    while [ "$SECONDS" -lt "$EXTENSION_WAIT" ]
+    do
+        installed=$( VSCODE_IPC_HOOK_CLI="$IPC_SOCKET" timeout 5 "$CODE_CLI" --list-extensions 2> /dev/null )
+        missing=""
+        for extension in $expected
+        do
+            echo "$installed" | grep -qixF "$extension" || missing="$missing $extension"
+        done
+        if [ -z "$missing" ] && [ "$installed" = "$previous" ]; then
+            return 0
+        fi
+        echo "Waiting for extensions to install:${missing:- dependencies}"
+        previous="$installed"
+        sleep "$EXTENSION_SETTLE"
+    done
+    return 1
+}
+
+if ! wait_for_extensions; then
+    echo "Extensions are still not installed, so not reloading the window. Open $WORKSPACE_LINK once they are"
     exit 0
 fi
 
@@ -68,12 +113,12 @@ fi
 # the call timed out: the request may still have been delivered, and retrying
 # could then reload the window in a loop.
 touch "$MARKER"
-echo "Opening $WORKSPACE_FILE"
-VSCODE_IPC_HOOK_CLI="$IPC_SOCKET" timeout 10 "$CODE_CLI" --reuse-window "$WORKSPACE_FILE"
+echo "Opening $WORKSPACE_LINK"
+VSCODE_IPC_HOOK_CLI="$IPC_SOCKET" timeout 10 "$CODE_CLI" --reuse-window "$WORKSPACE_LINK"
 OPEN_RESULT=$?
 if [ "$OPEN_RESULT" -ne 0 ]; then
     [ "$OPEN_RESULT" -eq 124 ] || rm -f "$MARKER"
-    echo "Open $WORKSPACE_FILE to get both repos in one window"
+    echo "Open $WORKSPACE_LINK to get both repos in one window"
 fi
 
 # Opening the workspace is a convenience; never fail the attach over it.
