@@ -1,47 +1,82 @@
 // See https://aka.ms/vscode-remote/devcontainer.json for format details.
+//
+// This container is designed to be opened with
+//   F1 -> "Dev Containers: Clone Repository in Container Volume..."
+// so the source lives in a Docker volume instead of on the host filesystem.
+// Nothing here references ${localWorkspaceFolder}, which is unsupported in that
+// mode, so plain "Reopen in Container" on a host clone should also still work.
+// See .devcontainer/README.md.
 {
-	"name": "Home Connect Alt Integration Development",
-	"build": {
-		"dockerfile": "Dockerfile",
-		"args": {
-			"VARIANT": "3.14",
-      "LOCAL_INTEGRATION_FOLDER": "${localWorkspaceFolder}"
-		},
-		"context": ".."
-	},
-	"containerEnv": {
+  "name": "Home Connect Alt Integration Development",
+  "image": "mcr.microsoft.com/devcontainers/python:3.14-trixie",
+
+  "features": {
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+  },
+
+  "containerEnv": {
     "TZ": "Asia/Jerusalem",
-		"INTEGRATION_PATH": "${containerWorkspaceFolder}",
-    "GIT_EDITOR": "code"
-	},
-  "appPort": "9123:8123",
-	"mounts": [
-        "source=${localWorkspaceFolderBasename}_profile,target=/root,type=volume",  // create a persistent named volume mounted to /root (home of user root)
-        "target=/root/.vscode-server,type=volume",  // create an anonymous volume mounted to /root/.vscode-server which will be rebuilt with the container
-        "source=${localWorkspaceFolderBasename}_config,target=/config,type=volume",  // create a persistent named volume for the configuration folder
-        "source=${localWorkspaceFolder}/../home-connect-async,target=${containerWorkspaceFolder}/../home-connect-async,type=bind,consistency=consistent"
-	],
+    "INTEGRATION_PATH": "${containerWorkspaceFolder}",
+    "GIT_EDITOR": "code",
+    // The SDK developed alongside this integration. post-create.sh clones it
+    // into the same volume. Point SDK_REPO_URL at your own fork if you don't
+    // push to ekutner/.
+    "SDK_REPO_URL": "https://github.com/ekutner/home-connect-async.git",
+    "SDK_PATH": "/workspaces/home-connect-async",
+    // Secrets, and anything else that must outlive the volume, live here
+    // (bind mounted from the host - see "mounts" below).
+    "HOST_DATA_PATH": "/root/.home-connect-dev"
+  },
+
+  "appPort": "8123:8123",
+
+  "mounts": [
+    // Volume names are literal: ${localWorkspaceFolderBasename} is NOT expanded
+    // when cloning into a container volume. These are the same names it used to
+    // resolve to, so an existing /config volume - HA .storage, config entries,
+    // OAuth tokens - is reattached rather than recreated. Renaming either of
+    // these silently resets Home Assistant to onboarding.
+    "source=home-connect-hass_profile,target=/root,type=volume", // persistent home of user root
+    "target=/root/.vscode-server,type=volume", // anonymous volume, rebuilt with the container
+    "source=home-connect-hass_config,target=/config,type=volume", // the Home Assistant configuration folder
+    // Host folder for secrets. Deliberately outside the workspace so it is not
+    // in the volume and not in the repo. HOME is set on macOS/Linux and
+    // USERPROFILE on Windows, so exactly one of the two contributes a path.
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.home-connect-dev,target=/root/.home-connect-dev,type=bind,consistency=cached"
+  ],
+
   "remoteUser": "root",
-	"postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/scripts/post-create.sh",
-  "postStartCommand":  "${containerWorkspaceFolder}/.devcontainer/scripts/post-start.sh",
+
+  // Invoked via bash rather than directly: a fresh clone has these scripts at
+  // mode 0644 unless the executable bit is committed, and the host bind mount
+  // used to mask that by reporting every file as executable.
+  "postCreateCommand": "bash ${containerWorkspaceFolder}/.devcontainer/scripts/post-create.sh",
+  "postStartCommand": "bash ${containerWorkspaceFolder}/.devcontainer/scripts/post-start.sh",
+  "postAttachCommand": "bash ${containerWorkspaceFolder}/.devcontainer/scripts/post-attach.sh",
+  "waitFor": "postCreateCommand",
+
   "customizations": {
     "vscode": {
       "extensions": [
-		"ms-python.vscode-pylance",
-		"ms-python.pylint",
-		"github.vscode-pull-request-github",
-		"visualstudioexptteam.vscodeintellicode",
-		"redhat.vscode-yaml",
-		"esbenp.prettier-vscode",
-		"eamodio.gitlens",
-		"mhutchie.git-graph",
-		"Anthropic.claude-code"
-	],
+        "ms-python.vscode-pylance",
+        "ms-python.pylint",
+        "github.vscode-pull-request-github",
+        "visualstudioexptteam.vscodeintellicode",
+        "redhat.vscode-yaml",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        "Anthropic.claude-code"
+      ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",
         "python.autoComplete.extraPaths": [
           "${containerWorkspaceFolder}",
-          "${containerWorkspaceFolder}/../home-connect-async"
+          "/workspaces/home-connect-async"
+        ],
+        "python.analysis.extraPaths": [
+          "${containerWorkspaceFolder}",
+          "/workspaces/home-connect-async"
         ],
         "python.formatting.provider": "black",
         "python.testing.pytestArgs": ["--no-cov"],
@@ -66,5 +101,4 @@
       }
     }
   }
-
 }

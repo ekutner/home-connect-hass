@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "home-connect-hass"
+		},
+		{
+			"path": "home-connect-async"
+		}
+	],
+	"settings": {
+		"[python]": {
+			"editor.defaultFormatter": "ms-python.black-formatter"
+		},
+		"python.formatting.provider": "none"
+	}
+}

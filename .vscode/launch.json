@@ -10,7 +10,11 @@
         "justMyCode": false,
         "preLaunchTask": "Pre-launch",
         "module": "homeassistant",
-        "args": ["--debug", "-c", "/config"] //, "--skip-pip"]
+        // --skip-pip-packages keeps Home Assistant from installing the
+        // home-connect-async wheel from PyPI over the editable install of
+        // /workspaces/home-connect-async, which would silently run the
+        // published SDK instead of the one being developed here.
+        "args": ["--debug", "-c", "/config", "--skip-pip-packages", "home-connect-async"]
       },
       {
         "name": "Tools - Sync Translations",

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-hassver="$1"
+hassver="${1:-}"
 if [ "$hassver" = "" ]; then
     hassver="dev"
-    echo "Fetching Home Assistant branch: $hassVer"
 fi
+echo "Fetching Home Assistant branch: $hassver"
 
 # Update Home Assistant to the latest version
 sudo python3 -m pip --disable-pip-version-check install --upgrade git+https://github.com/home-assistant/home-assistant.git@$hassver
@@ -14,8 +14,27 @@ import json, os
 
 base = os.path.dirname(__import__('homeassistant').__file__) + '/components'
 
-# Start with default_config, plus any integrations from the config entries
-seeds = ['default_config']
+# Home Assistant always sets up its base entity platforms, whether or not any
+# configured integration references them. They are reachable neither from
+# default_config nor from the config entries, so without seeding them here
+# their requirements are never collected and setup fails with
+# 'No module named ...' - e.g. 'radio_frequency' needs rf-protocols and
+# 'infrared' needs infrared-protocols. Reading the list from the installed
+# Home Assistant keeps it correct as that list changes.
+try:
+    from homeassistant.const import BASE_PLATFORMS
+except ImportError:
+    # Renamed or removed upstream: fall back to the old behaviour rather than
+    # taking the whole environment setup down with us.
+    BASE_PLATFORMS = set()
+    print('# warning: homeassistant.const.BASE_PLATFORMS not found')
+
+# Anything still missed. Normally empty.
+EXTRA_DOMAINS = []
+
+# Start with default_config and the base platforms, plus any integrations
+# from the config entries
+seeds = ['default_config'] + sorted(BASE_PLATFORMS) + EXTRA_DOMAINS
 config_entries = '/config/.storage/core.config_entries'
 if os.path.exists(config_entries):
     data = json.load(open(config_entries))

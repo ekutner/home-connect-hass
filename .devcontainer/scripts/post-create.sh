@@ -1,26 +1,83 @@
 #!/usr/bin/env bash
+#
+# Runs once, when the container is created. Prepares the workspace volume
+# before the (slow) Home Assistant install, so a failure later still leaves a
+# usable checkout behind.
 
+set -u
+
+SCRIPT_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+DEVCONTAINER_PATH=$( dirname "$SCRIPT_PATH" )
+INTEGRATION_PATH="${INTEGRATION_PATH:-$( dirname "$DEVCONTAINER_PATH" )}"
+SDK_REPO_URL="${SDK_REPO_URL:-https://github.com/ekutner/home-connect-async.git}"
+SDK_PATH="${SDK_PATH:-/workspaces/home-connect-async}"
+HOST_DATA_PATH="${HOST_DATA_PATH:-/root/.home-connect-dev}"
+# The volume is mounted at /workspaces as a whole, i.e. the parent of this repo
+WORKSPACES_PATH=$( dirname "$INTEGRATION_PATH" )
+WORKSPACE_FILE="$WORKSPACES_PATH/home-connect-dev.code-workspace"
+
+# ---------------------------------------------------------------------------
+# The SDK is developed in parallel with the integration, so it has to be a
+# real repo sitting next to it rather than a pip dependency. /workspaces IS the
+# container volume, so this clone persists across rebuilds - hence the guard,
+# which also leaves an existing sibling clone alone when the workspace happens
+# to be bind mounted from the host instead.
+# ---------------------------------------------------------------------------
+if [ -d "$SDK_PATH/.git" ]; then
+    echo "SDK already present at $SDK_PATH, skipping clone"
+else
+    echo "Cloning SDK from $SDK_REPO_URL into $SDK_PATH"
+    git clone "$SDK_REPO_URL" "$SDK_PATH"
+fi
+
+# Both repos are owned by root inside the container; without this git refuses
+# to touch them ("dubious ownership") and GitLens / Git Graph come up empty.
+# /root is a persistent volume, so a plain --add would pile up duplicate
+# entries on every rebuild.
+for repo in "$INTEGRATION_PATH" "$SDK_PATH"
+do
+    if ! git config --global --get-all safe.directory | grep -qxF "$repo"; then
+        git config --global --add safe.directory "$repo"
+    fi
+done
+
+# ---------------------------------------------------------------------------
+# Secrets live on the host, outside the workspace, so that deleting the
+# container volume doesn't take the Home Connect credentials with it.
+# ---------------------------------------------------------------------------
+mkdir -p "$HOST_DATA_PATH"
+LEGACY_SECRETS="$DEVCONTAINER_PATH/config/secrets.yaml"
+if [ ! -f "$HOST_DATA_PATH/secrets.yaml" ] || grep -q "YOUR_CLIENT_ID" "$HOST_DATA_PATH/secrets.yaml" 2>/dev/null
+then
+    if [ -f "$LEGACY_SECRETS" ]; then
+        # Only reachable when the workspace is bind mounted from the host, or
+        # when someone has dropped their old file into the repo by hand.
+        echo "Migrating existing secrets.yaml from $LEGACY_SECRETS to $HOST_DATA_PATH"
+        cp "$LEGACY_SECRETS" "$HOST_DATA_PATH/secrets.yaml"
+    elif [ ! -f "$HOST_DATA_PATH/secrets.yaml" ]; then
+        echo "Seeding secrets.yaml template into $HOST_DATA_PATH - you must fill it in"
+        cp "$DEVCONTAINER_PATH/config/secrets.yaml.template" "$HOST_DATA_PATH/secrets.yaml"
+    fi
+fi
+
+# ---------------------------------------------------------------------------
+# Multi-root workspace file. It has to live in /workspaces, not in the repo:
+# VSCode only supports workspace files that reference folders below themselves,
+# and /workspaces is the volume so it persists.
+# ---------------------------------------------------------------------------
+if [ ! -f "$WORKSPACE_FILE" ]; then
+    echo "Creating $WORKSPACE_FILE"
+    cp "$DEVCONTAINER_PATH/home-connect-dev.code-workspace.template" "$WORKSPACE_FILE"
+fi
+
+# ---------------------------------------------------------------------------
+# Home Assistant and its build dependencies
+# ---------------------------------------------------------------------------
 sudo apt update -y
 sudo apt install -y libffi-dev libssl-dev libjpeg-dev zlib1g-dev autoconf build-essential libopenjp2-7 libturbojpeg0 tzdata libpcap-dev ffmpeg
 # libtiff5-dev
-pip3 install isort colorlog 
+pip3 install isort colorlog
 
-SCRIPT_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 # This chmod is a safety measure for scripts that are added after the container was first created
 sudo chmod +x $SCRIPT_PATH/*
 sudo $SCRIPT_PATH/install-ha.sh
-
-
-
-# # Install mounted python dependencies
-# if [ -d "/config/deps" ]
-# then
-#     for filepath in /config/deps/*
-#     do
-#         echo "Installing python dependency: $filepath"
-#         pip3 install -e $filepath
-#     done
-# else
-#     mkdir -p /config/deps
-# fi
-
