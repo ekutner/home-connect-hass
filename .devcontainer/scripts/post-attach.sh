@@ -14,7 +14,7 @@ set -u
 
 SCRIPT_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 INTEGRATION_PATH="${INTEGRATION_PATH:-$( dirname "$( dirname "$SCRIPT_PATH" )" )}"
-WORKSPACE_FILE="${WORKSPACE_FILE:-$( dirname "$INTEGRATION_PATH" )/home-connect-dev.code-workspace}"
+WORKSPACE_FILE="${WORKSPACE_FILE:-$INTEGRATION_PATH/home-connect-dev.code-workspace}"
 # Opening the workspace reloads the window, which runs this script again, so the
 # marker stops that from looping. /tmp is not a volume: the marker survives the
 # reload and container restarts, and only a rebuild clears it. It must not live

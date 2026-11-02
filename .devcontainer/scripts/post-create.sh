@@ -11,9 +11,6 @@ DEVCONTAINER_PATH=$( dirname "$SCRIPT_PATH" )
 INTEGRATION_PATH="${INTEGRATION_PATH:-$( dirname "$DEVCONTAINER_PATH" )}"
 SDK_REPO_URL="${SDK_REPO_URL:-https://github.com/ekutner/home-connect-async.git}"
 SDK_PATH="${SDK_PATH:-/workspaces/home-connect-async}"
-# The volume is mounted at /workspaces as a whole, i.e. the parent of this repo
-WORKSPACES_PATH=$( dirname "$INTEGRATION_PATH" )
-WORKSPACE_FILE="$WORKSPACES_PATH/home-connect-dev.code-workspace"
 
 # ---------------------------------------------------------------------------
 # The SDK is developed in parallel with the integration, so it has to be a
@@ -39,16 +36,6 @@ do
         git config --global --add safe.directory "$repo"
     fi
 done
-
-# ---------------------------------------------------------------------------
-# Multi-root workspace file. It has to live in /workspaces, not in the repo:
-# VSCode only supports workspace files that reference folders below themselves,
-# and /workspaces is the volume so it persists.
-# ---------------------------------------------------------------------------
-if [ ! -f "$WORKSPACE_FILE" ]; then
-    echo "Creating $WORKSPACE_FILE"
-    cp "$DEVCONTAINER_PATH/home-connect-dev.code-workspace.template" "$WORKSPACE_FILE"
-fi
 
 # ---------------------------------------------------------------------------
 # Home Assistant and its build dependencies

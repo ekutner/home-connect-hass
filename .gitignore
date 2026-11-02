@@ -4,5 +4,6 @@ __pycache__
 *_cache
 
 *.code-workspace
+!/home-connect-dev.code-workspace
 
 secrets.yaml

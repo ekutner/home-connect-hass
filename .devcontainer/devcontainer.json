@@ -49,6 +49,7 @@
       "extensions": [
         "ms-python.vscode-pylance",
         "ms-python.pylint",
+        "ms-python.black-formatter",
         "github.vscode-pull-request-github",
         "redhat.vscode-yaml",
         "esbenp.prettier-vscode",

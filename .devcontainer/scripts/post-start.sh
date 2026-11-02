@@ -19,9 +19,6 @@ fi
 
 for folder in /workspaces/*
 do
-    # /workspaces also holds the .code-workspace file
-    [ -d "$folder" ] || continue
-
     if [ -f "$folder/setup.py" ]
     then
         echo "Installing python dependency: $folder"

@@ -1,10 +1,10 @@
 {
 	"folders": [
 		{
-			"path": "home-connect-hass"
+			"path": "."
 		},
 		{
-			"path": "home-connect-async"
+			"path": "../home-connect-async"
 		}
 	],
 	"settings": {
