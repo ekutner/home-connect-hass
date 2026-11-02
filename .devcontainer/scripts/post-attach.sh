@@ -29,21 +29,50 @@ fi
 # resolves to the image's /usr/local/bin/code stub, which exits 127 because the
 # real CLI isn't on PATH. Call the real CLI directly and point it at the client.
 CODE_CLI=$( ls -t "$HOME"/.vscode-server/bin/*/bin/remote-cli/code 2> /dev/null | head -n 1 )
-IPC_SOCKET="${VSCODE_IPC_HOOK_CLI:-$( ls -t /tmp/vscode-ipc-*.sock 2> /dev/null | head -n 1 )}"
+# Where VSCode creates its sockets. Overridable only for testing.
+IPC_SOCKET_DIR="${IPC_SOCKET_DIR:-/tmp}"
+# Seconds to wait for a socket. It can appear well after the attach starts.
+IPC_WAIT="${IPC_WAIT:-120}"
 
-# The socket has to be checked here: without it the CLI prints an error but
-# still exits 0.
-if [ -z "$CODE_CLI" ] || [ ! -S "$IPC_SOCKET" ]; then
+# Not every socket can be used. The extension host and each terminal have one
+# that serves the CLI, but the agent host listens on one that never replies, so
+# probe them with a request that returns quickly and has no side effects. The
+# socket is required, as without one the CLI prints an error but still exits 0.
+find_ipc_socket() {
+    local socket
+    for socket in ${VSCODE_IPC_HOOK_CLI:-} $( ls -t "$IPC_SOCKET_DIR"/vscode-ipc-*.sock 2> /dev/null )
+    do
+        if VSCODE_IPC_HOOK_CLI="$socket" timeout 2 "$CODE_CLI" --list-extensions > /dev/null 2>&1; then
+            echo "$socket"
+            return 0
+        fi
+    done
+    return 1
+}
+
+IPC_SOCKET=""
+if [ -n "$CODE_CLI" ]; then
+    until IPC_SOCKET=$( find_ipc_socket ) || [ "$SECONDS" -ge "$IPC_WAIT" ]
+    do
+        sleep 2
+    done
+fi
+
+if [ -z "$IPC_SOCKET" ]; then
     echo "Open $WORKSPACE_FILE to get both repos in one window"
     exit 0
 fi
 
 # Set before the call, which may reload the window before this script gets
-# another chance to run. Cleared on failure so the next attach retries.
+# another chance to run. Cleared on failure so the next attach retries, unless
+# the call timed out: the request may still have been delivered, and retrying
+# could then reload the window in a loop.
 touch "$MARKER"
 echo "Opening $WORKSPACE_FILE"
-if ! VSCODE_IPC_HOOK_CLI="$IPC_SOCKET" "$CODE_CLI" --reuse-window "$WORKSPACE_FILE"; then
-    rm -f "$MARKER"
+VSCODE_IPC_HOOK_CLI="$IPC_SOCKET" timeout 10 "$CODE_CLI" --reuse-window "$WORKSPACE_FILE"
+OPEN_RESULT=$?
+if [ "$OPEN_RESULT" -ne 0 ]; then
+    [ "$OPEN_RESULT" -eq 124 ] || rm -f "$MARKER"
     echo "Open $WORKSPACE_FILE to get both repos in one window"
 fi
 
