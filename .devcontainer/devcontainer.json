@@ -24,7 +24,7 @@
   // A fixed name makes the container easy to find in Docker Desktop, unlike the
   // generated default. Creating a second container fails until the first one is
   // removed, which is fine as they couldn't share the volumes and port below.
-  "runArgs": ["--name", "home_connect_alt"],
+  "runArgs": ["--name", "home_connect_hass"],
 
   "appPort": "8123:8123",
 
