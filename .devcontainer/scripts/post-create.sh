@@ -11,7 +11,6 @@ DEVCONTAINER_PATH=$( dirname "$SCRIPT_PATH" )
 INTEGRATION_PATH="${INTEGRATION_PATH:-$( dirname "$DEVCONTAINER_PATH" )}"
 SDK_REPO_URL="${SDK_REPO_URL:-https://github.com/ekutner/home-connect-async.git}"
 SDK_PATH="${SDK_PATH:-/workspaces/home-connect-async}"
-HOST_DATA_PATH="${HOST_DATA_PATH:-/root/.home-connect-dev}"
 # The volume is mounted at /workspaces as a whole, i.e. the parent of this repo
 WORKSPACES_PATH=$( dirname "$INTEGRATION_PATH" )
 WORKSPACE_FILE="$WORKSPACES_PATH/home-connect-dev.code-workspace"
@@ -40,25 +39,6 @@ do
         git config --global --add safe.directory "$repo"
     fi
 done
-
-# ---------------------------------------------------------------------------
-# Secrets live on the host, outside the workspace, so that deleting the
-# container volume doesn't take the Home Connect credentials with it.
-# ---------------------------------------------------------------------------
-mkdir -p "$HOST_DATA_PATH"
-LEGACY_SECRETS="$DEVCONTAINER_PATH/config/secrets.yaml"
-if [ ! -f "$HOST_DATA_PATH/secrets.yaml" ] || grep -q "YOUR_CLIENT_ID" "$HOST_DATA_PATH/secrets.yaml" 2>/dev/null
-then
-    if [ -f "$LEGACY_SECRETS" ]; then
-        # Only reachable when the workspace is bind mounted from the host, or
-        # when someone has dropped their old file into the repo by hand.
-        echo "Migrating existing secrets.yaml from $LEGACY_SECRETS to $HOST_DATA_PATH"
-        cp "$LEGACY_SECRETS" "$HOST_DATA_PATH/secrets.yaml"
-    elif [ ! -f "$HOST_DATA_PATH/secrets.yaml" ]; then
-        echo "Seeding secrets.yaml template into $HOST_DATA_PATH - you must fill it in"
-        cp "$DEVCONTAINER_PATH/config/secrets.yaml.template" "$HOST_DATA_PATH/secrets.yaml"
-    fi
-fi
 
 # ---------------------------------------------------------------------------
 # Multi-root workspace file. It has to live in /workspaces, not in the repo:

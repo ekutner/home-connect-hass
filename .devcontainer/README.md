@@ -9,16 +9,9 @@ The repository is cloned **into a Docker volume** rather than mounted from the h
 
 # Using this devcontainer
 
-1. **One time only**, on the host machine, create a folder to hold your Home Connect credentials and put a `secrets.yaml` in it:
+1. In VSCode press `F1` and select **Dev Containers: Clone Repository in Container Volume...**, then give it this repository. Let the container build — this takes a while the first time.
 
-    * Windows: `%USERPROFILE%\.home-connect-dev\secrets.yaml`
-    * macOS / Linux: `~/.home-connect-dev/secrets.yaml`
-
-    It sits outside the workspace deliberately: it survives deleting the container volume and can never be committed. Leave the file out and the container seeds a template there on first run for you to fill in, using the values from <https://developer.home-connect.com/applications>. Create the folder **before** first opening the container — Docker's handling of a missing bind mount source is inconsistent.
-
-2. In VSCode press `F1` and select **Dev Containers: Clone Repository in Container Volume...**, then give it this repository. Let the container build — this takes a while the first time.
-
-3. The container clones the SDK (`home-connect-async`) in beside the integration and opens a two-folder workspace automatically. If it doesn't, use *File -> Open Workspace...* and pick `/workspaces/home-connect-dev.code-workspace`.
+2. The container clones the SDK (`home-connect-async`) in beside the integration and opens a two-folder workspace automatically. If it doesn't, use *File -> Open Workspace...* and pick `/workspaces/home-connect-dev.code-workspace`.
 
 That's it. There is no host folder structure to set up and no workspace file to save by hand.
 
@@ -34,7 +27,7 @@ When the devcontainer is launched the associated scripts will automatically:
 1. Clone the SDK next to the integration, into the same volume, so it persists across rebuilds
 2. Install Home Assistant
 3. pip install every library in */workspaces* as editable, so edits to the SDK take effect immediately
-4. Create a /config folder and link the files from the .devcontainer/config folder into it, plus `secrets.yaml` from the host folder
+4. Create a /config folder and link the files from the .devcontainer/config folder into it
 5. Set up a set of proxy folders with references to the integration files under */config/custom_components*. This allows Home Assistant to load the integration from its usual location while letting vscode debug it from the standard code location under */workspaces*
 
 The *Home Assistant* launch configuration passes `--skip-pip-packages home-connect-async`. Without it Home Assistant would check the version pinned in `manifest.json` and quietly install the published wheel from PyPI over your editable SDK, so you would be running the released library instead of the one you are editing.
