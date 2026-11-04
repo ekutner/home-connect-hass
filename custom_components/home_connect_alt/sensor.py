@@ -127,6 +127,24 @@ class ProgramSensor(EntityBase, SensorEntity):
 class ProgramOptionSensor(EntityBase, SensorEntity):
     """Special active program sensor"""
 
+    def __init__(self, appliance: Appliance, key: str, conf: Configuration) -> None:
+        super().__init__(appliance, key, conf)
+        self._reset_finish_time()
+
+    def _reset_finish_time(self):
+        self._finish_time = None
+        self._finish_program = None
+        self._finish_program_snapshot = None
+        self._finish_remaining = None
+
+    def _update_finish_time(self, program, remaining):
+        self._finish_program = (program.key, program is self._appliance.active_program)
+        self._finish_program_snapshot = program
+        self._finish_remaining = remaining
+        self._finish_time = datetime.now(timezone.utc).astimezone() + timedelta(
+            seconds=remaining
+        )
+
     @property
     def device_class(self) -> str:
         if self.has_entity_setting("class"):
@@ -199,15 +217,25 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
             else self._appliance.selected_program
         )
         if program is None:
+            self._reset_finish_time()
             return None
 
-        if self._key not in program.options:
+        if not program.options or self._key not in program.options:
+            self._reset_finish_time()
             _LOGGER.debug("Option key %s is missing from program", self._key)
             return None
 
         option = program.options[self._key]
 
         if self.device_class == "timestamp":
+            if self._key == "BSH.Common.Option.RemainingProgramTime":
+                if not self._appliance.connected or option.value is None:
+                    self._reset_finish_time()
+                    return None
+                context = (program.key, program is self._appliance.active_program)
+                if self._finish_time is None or context != self._finish_program:
+                    self._update_finish_time(program, option.value)
+                return self._finish_time
             return datetime.now(timezone.utc).astimezone() + timedelta(
                 seconds=option.value
             )
@@ -233,6 +261,20 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
         return option.value
 
     async def async_on_update(self, appliance: Appliance, key: str, value) -> None:
+        if (
+            self._key == "BSH.Common.Option.RemainingProgramTime"
+            and self.device_class == "timestamp"
+        ):
+            program = appliance.active_program or appliance.selected_program
+            option = program.options.get(self._key) if program and program.options else None
+            if not appliance.connected or option is None or option.value is None:
+                self._reset_finish_time()
+            elif (
+                key == self._key
+                or option.value != self._finish_remaining
+                or program is not self._finish_program_snapshot
+            ):
+                self._update_finish_time(program, option.value)
         self.async_write_ha_state()
 
 
