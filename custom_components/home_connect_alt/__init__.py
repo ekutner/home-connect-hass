@@ -28,6 +28,15 @@ from .services import Services
 
 _LOGGER = logging.getLogger(__name__)
 
+
+def _get_device_by_identifier(registry, identifier, config_entry_id):
+    """Look up a device within its entry, using the legacy API on older Core."""
+    lookup = getattr(registry, "async_get_device_by_identifier", None)
+    if lookup is not None:
+        return lookup(identifier, config_entry_id)
+    return registry.async_get_device({identifier})
+
+
 HC_CONFIG_SCHEMA = vol.Schema(
     {
         # vol.Optional(CONF_CLIENT_ID): cv.string,
@@ -199,8 +208,9 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
 
     async def on_device_removed(appliance:Appliance):
         devreg = dr.async_get(hass)
-        device = devreg.async_get_device({(DOMAIN, appliance.normalized_haId)})
-        devreg.async_remove_device(device.id)
+        device = _get_device_by_identifier(devreg, (DOMAIN, appliance.normalized_haId), config_entry.entry_id)
+        if device is not None:
+            devreg.async_remove_device(device.id)
 
         # We need to wait for the appliance to be removed from the HomeConnect data
         # this is not 100% fail-safe but good enough for a cache
@@ -396,10 +406,10 @@ def register_events_publisher(hass:HomeAssistant, homeconnect:HomeConnect, confi
             last_event['key'] = key
             last_event['value'] = value
             haid = appliance.normalized_haId
-            device = device_reg.async_get_device_by_identifier((DOMAIN, haid), config_entry_id=config_entry_id)
+            device = _get_device_by_identifier(device_reg, (DOMAIN, haid), config_entry_id)
             if not device:
                 haid = EntityBase.get_safe_haID(hass, appliance)
-                device = device_reg.async_get_device({(DOMAIN, haid)})
+                device = _get_device_by_identifier(device_reg, (DOMAIN, haid), config_entry_id)
             if not device:
                 _LOGGER.warning("No device found for appliance %s, cannot publish event %s = %s", appliance.normalized_haId, key, str(value))
                 return
