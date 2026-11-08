@@ -1,8 +1,10 @@
 """ Implement the services of this implementation """
 from home_connect_async import HomeConnect, HomeConnectError, Appliance
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import HomeAssistantError
+from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import device_registry as dr
+
+from .const import DOMAIN
 
 
 class Services():
@@ -110,7 +112,15 @@ class Services():
         """ Helper function to get an appliance from the Home Assistant device_id """
         device = self.dr.devices[device_id]
         haId = list(device.identifiers)[0][1]
-        for (key, appliance) in self.homeconnect.appliances.items():
-            if key.lower().replace('-','_') == haId:
-                return appliance
-        return None
+        # Every config entry has its own HomeConnect instance, but the services are registered by each entry setup
+        # and the last one wins, so look in all the loaded entries and not only in self.homeconnect
+        instances = [self.homeconnect]
+        for entry_conf in self.hass.data.get(DOMAIN, {}).values():
+            homeconnect = entry_conf.get("homeconnect") if isinstance(entry_conf, dict) else None
+            if homeconnect is not None and not any(homeconnect is i for i in instances):
+                instances.append(homeconnect)
+        for homeconnect in instances:
+            for (key, appliance) in homeconnect.appliances.items():
+                if key.lower().replace('-','_') == haId:
+                    return appliance
+        raise ServiceValidationError(f"No Home Connect appliance found for device {device.name or device_id}")
