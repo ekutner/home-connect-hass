@@ -108,7 +108,9 @@ class Services():
 
     def get_appliance_from_device_id(self, device_id) -> Appliance|None:
         """ Helper function to get an appliance from the Home Assistant device_id """
-        device = self.dr.devices[device_id]
+        device = self.dr.async_get(device_id)
+        if device is None:
+            raise KeyError(device_id)
         haId = list(device.identifiers)[0][1]
         for (key, appliance) in self.homeconnect.appliances.items():
             if key.lower().replace('-','_') == haId:
