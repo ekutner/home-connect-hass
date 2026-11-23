@@ -77,6 +77,9 @@ def _get_device_by_identifier(registry, identifier, config_entry_id):
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the Home Connect New component."""
 
+    # The services are registered once and shared by all the config entries
+    register_services(hass)
+
     if DOMAIN not in config:
         # There is no configuration for this integration in the configuration.yaml file
         # hass.data[DOMAIN] = HC_CONFIG_SCHEMA({})
@@ -169,9 +172,7 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> b
     ConditionalLogger.mode(logmode)
     disabled_appliances = [haid for haid in conf[CONF_APPLIANCE_SETTINGS] if "disabled" in conf[CONF_APPLIANCE_SETTINGS][haid] and conf[CONF_APPLIANCE_SETTINGS][haid]["disabled"] ] if conf[CONF_APPLIANCE_SETTINGS] else []
     homeconnect = await HomeConnect.async_create(auth, delayed_load=True, lang=lang, disabled_appliances=disabled_appliances, sse_timeout=conf[CONF_SSE_TIMEOUT])
-    services = register_services(hass, homeconnect)
-
-    conf.update({ "homeconnect": homeconnect, "services": services, "auth": auth })
+    conf.update({ "homeconnect": homeconnect, "auth": auth })
 
     #region internal event handlers
     # async def async_delayed_update_cache(delay:float = 0):
@@ -302,9 +303,9 @@ async def async_save_to_cache(hass:HomeAssistant, homeconnect:HomeConnect, cache
         _LOGGER.debug("Exception when saving HomeConnect to cache", exc_info=ex)
 
 
-def register_services(hass:HomeAssistant, homeconnect:HomeConnect) -> Services:
+def register_services(hass:HomeAssistant) -> Services:
     """ Register the services offered by this integration """
-    services = Services(hass, homeconnect)
+    services = Services(hass)
 
     select_program_schema = vol.Schema(
         {

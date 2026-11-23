@@ -1,14 +1,15 @@
 """ Implement the services of this implementation """
-from home_connect_async import HomeConnect, HomeConnectError, Appliance
+from home_connect_async import HomeConnectError, Appliance
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import HomeAssistantError
+from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers import device_registry as dr
+
+from .const import DOMAIN
 
 
 class Services():
     """ Collection of the Services offered by the integration """
-    def __init__(self, hass:HomeAssistant,  homeconnect:HomeConnect) -> None:
-        self.homeconnect = homeconnect
+    def __init__(self, hass:HomeAssistant) -> None:
         self.hass = hass
         self.dr = dr.async_get(hass)
 
@@ -106,11 +107,20 @@ class Services():
             except ValueError as ex:
                 raise HomeAssistantError(str(ex)) from ex
 
-    def get_appliance_from_device_id(self, device_id) -> Appliance|None:
+    def get_appliance_from_device_id(self, device_id) -> Appliance:
         """ Helper function to get an appliance from the Home Assistant device_id """
-        device = self.dr.devices[device_id]
-        haId = list(device.identifiers)[0][1]
-        for (key, appliance) in self.homeconnect.appliances.items():
-            if key.lower().replace('-','_') == haId:
-                return appliance
-        return None
+        # The services are shared by all the config entries, so route the call to the
+        # loaded entry that owns the device and has the appliance enabled
+        device = self.dr.async_get(device_id)
+        haId = next((identifier[1] for identifier in device.identifiers if identifier[0] == DOMAIN), None) if device else None
+        if not haId:
+            raise ServiceValidationError(f"Device {device_id} is not a Home Connect Alt appliance")
+        for entry_id in device.config_entries:
+            entry_conf = self.hass.data.get(DOMAIN, {}).get(entry_id)
+            homeconnect = entry_conf.get("homeconnect") if entry_conf else None
+            if homeconnect is None:
+                continue
+            for (key, appliance) in homeconnect.appliances.items():
+                if key.lower().replace('-','_') == haId:
+                    return appliance
+        raise ServiceValidationError(f"No loaded Home Connect Alt config entry has the appliance {device.name or device_id} enabled")
