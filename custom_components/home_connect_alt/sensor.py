@@ -127,6 +127,11 @@ class ProgramSensor(EntityBase, SensorEntity):
 class ProgramOptionSensor(EntityBase, SensorEntity):
     """Special active program sensor"""
 
+    def __init__(self, appliance: Appliance, key: str, conf: Configuration, hc_obj=None) -> None:
+        super().__init__(appliance, key, conf, hc_obj)
+        # (value, timestamp) of the last countdown sample of the started program
+        self._timestamp_anchor = None
+
     @property
     def device_class(self) -> str:
         if self.has_entity_setting("class"):
@@ -208,9 +213,7 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
         option = program.options[self._key]
 
         if self.device_class == "timestamp":
-            return datetime.now(timezone.utc).astimezone() + timedelta(
-                seconds=option.value
-            )
+            return self._timestamp_value(option)
         if self.device_class and "timespan" in self.device_class:
             m, s = divmod(option.value, 60)
             h, m = divmod(m, 60)
@@ -232,7 +235,30 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
                 return "On"
         return option.value
 
+    def _timestamp_value(self, option):
+        """Convert a relative time option to an absolute time
+
+        While a started program is active the time is anchored to the last countdown sample so unrelated
+        updates don't move it, and it is kept after the program finished until another program is selected.
+        Otherwise, like for a selected or delayed program, it is relative to the current time.
+        """
+        now = datetime.now(timezone.utc).astimezone()
+        active_program = self._appliance.active_program
+        if active_program and self._key in active_program.options:
+            op_state = self._appliance.status.get("BSH.Common.Status.OperationState")
+            if op_state and op_state.value == "BSH.Common.EnumType.OperationState.DelayedStart":
+                self._timestamp_anchor = None
+            else:
+                value = active_program.options[self._key].value
+                if self._timestamp_anchor is None or self._timestamp_anchor[0] != value:
+                    self._timestamp_anchor = (value, now + timedelta(seconds=value))
+        if self._timestamp_anchor:
+            return self._timestamp_anchor[1]
+        return now + timedelta(seconds=option.value)
+
     async def async_on_update(self, appliance: Appliance, key: str, value) -> None:
+        if key == Events.PROGRAM_SELECTED:
+            self._timestamp_anchor = None
         self.async_write_ha_state()
 
 
