@@ -12,7 +12,7 @@ from home_connect_async import Appliance, HomeConnect, Events, ConditionalLogger
 from homeassistant.components.application_credentials import ClientCredential, async_import_client_credential
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_CLIENT_ID, CONF_CLIENT_SECRET, Platform
-from homeassistant.core import Event, HomeAssistant, HomeAssistantError
+from homeassistant.core import Event, HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import aiohttp_client, config_entry_oauth2_flow
 from homeassistant.helpers import config_validation as cv
@@ -27,15 +27,6 @@ from .const import *
 from .services import Services
 
 _LOGGER = logging.getLogger(__name__)
-
-
-def _get_device_by_identifier(registry, identifier, config_entry_id):
-    """Look up a device within its entry, using the legacy API on older Core."""
-    lookup = getattr(registry, "async_get_device_by_identifier", None)
-    if lookup is not None:
-        return lookup(identifier, config_entry_id)
-    return registry.async_get_device({identifier})
-
 
 HC_CONFIG_SCHEMA = vol.Schema(
     {
@@ -76,6 +67,12 @@ OPTIONS_SCHEMA = vol.Schema(
 
 PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR, Platform.SELECT, Platform.NUMBER, Platform.BUTTON, Platform.SWITCH, Platform.TIME]
 
+def _get_device_by_identifier(registry, identifier, config_entry_id):
+    """Look up a device within its entry, using the legacy API on older Core."""
+    lookup = getattr(registry, "async_get_device_by_identifier", None)
+    if lookup is not None:
+        return lookup(identifier, config_entry_id)
+    return registry.async_get_device({identifier})
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the Home Connect New component."""
