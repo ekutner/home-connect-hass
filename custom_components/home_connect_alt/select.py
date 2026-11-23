@@ -6,7 +6,7 @@ from homeassistant.components.select import SelectEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity_registry import async_get
 
 from .common import InteractiveEntityBase, EntityManager, is_boolean_enum, Configuration, find_delayed_operation_option
@@ -14,7 +14,7 @@ from .const import CONF_DELAYED_OPS, CONF_DELAYED_OPS_ABSOLUTE_TIME, CONF_DELAYE
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
+async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigEntry, async_add_entities:AddEntitiesCallback) -> None:
     """Add Selects for passed config_entry in HA."""
     #homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
     entry_conf:Configuration = hass.data[DOMAIN][config_entry.entry_id]
@@ -25,7 +25,7 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
         conf = entry_conf.get_config()
 
         if appliance.available_programs:
-            device = ProgramSelect(appliance, None, conf)
+            device = ProgramSelect(appliance, "", conf)
             entity_manager.add(device)
 
         delayed_option = find_delayed_operation_option(appliance, conf)
@@ -77,11 +77,11 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
         return "programs"
 
     @property
-    def name_ext(self) -> str:
+    def name_ext(self) -> str|None:
         return "Programs"
 
     @property
-    def icon(self) -> str:
+    def icon(self) -> str|None:
         if self._appliance.type in DEVICE_ICON_MAP:
             return DEVICE_ICON_MAP[self._appliance.type]
         return None
@@ -92,12 +92,12 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
 
     @property
     def available(self) -> bool:
-        return super().available \
+        return bool(super().available \
             and self._appliance.available_programs \
             and  (
                 "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
                 self._appliance.status["BSH.Common.Status.RemoteControlActive"].value
-            )
+            ))
 
     @property
     def options(self) -> list[str]:
@@ -109,7 +109,7 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
         return []
 
     @property
-    def current_option(self) -> str:
+    def current_option(self) -> str|None:
         """Return the selected entity option to represent the entity state."""
         current_program = self._appliance.get_applied_program()
         if current_program:
@@ -126,7 +126,10 @@ class ProgramSelect(InteractiveEntityBase, SelectEntity):
     async def async_select_option(self, option: str) -> None:
         try:
             if self._conf[CONF_TRANSLATION_MODE] == CONF_TRANSLATION_MODE_SERVER:
-                program = next((p for p in self._appliance.available_programs.values() if p.name == option), None)
+                programs = self._appliance.available_programs.values() if self._appliance.available_programs else []
+                program = next((p for p in programs if p.name == option), None)
+                if not program:
+                    raise HomeAssistantError(f"Failed to set the selected program: unknown program {option}")
                 await self._appliance.async_select_program(program_key=program.key)
             else:
                 await self._appliance.async_select_program(program_key=option)
@@ -182,16 +185,16 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
         option = self._appliance.get_applied_program_available_option(self._key)
         if option:
             if self._conf[CONF_TRANSLATION_MODE] == CONF_TRANSLATION_MODE_SERVER:
-                vals = option.allowedvaluesdisplay.copy() if option.allowedvaluesdisplay else option.allowedvalues.copy()
+                vals = (option.allowedvaluesdisplay or option.allowedvalues or []).copy()
             else:
-                vals = option.allowedvalues.copy()
+                vals = (option.allowedvalues or []).copy()
             #vals.append('')
             return vals
 
         return []
 
     @property
-    def current_option(self) -> str:
+    def current_option(self) -> str|None:
         """Return the selected entity option to represent the entity state."""
         # if self._appliance.selected_program.options[self._key].value not in self.options:
         #     _LOGGER.debug("The current option is not in the list of available options")
@@ -200,7 +203,7 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
             CL.debug(_LOGGER, CL.LogMode.VERBOSE, "Option %s current value: %s", self._key, option.value)
             if self._conf[CONF_TRANSLATION_MODE] == CONF_TRANSLATION_MODE_SERVER:
                 available_option = self._appliance.get_applied_program_available_option(self._key)
-                if (available_option.allowedvaluesdisplay):
+                if available_option and available_option.allowedvaluesdisplay and available_option.allowedvalues:
                     idx = available_option.allowedvalues.index(option.value)
                     return available_option.allowedvaluesdisplay[idx]
             return option.value
@@ -214,7 +217,7 @@ class OptionSelect(InteractiveEntityBase, SelectEntity):
         try:
             if self._conf[CONF_TRANSLATION_MODE] == CONF_TRANSLATION_MODE_SERVER:
                 available_option = self._appliance.get_applied_program_available_option(self._key)
-                if (available_option.allowedvaluesdisplay):
+                if available_option and available_option.allowedvaluesdisplay and available_option.allowedvalues:
                     idx = available_option.allowedvaluesdisplay.index(option)
                     option = available_option.allowedvalues[idx]
             await self._appliance.async_set_option(self._key, option)
@@ -249,23 +252,23 @@ class SettingsSelect(InteractiveEntityBase, SelectEntity):
 
     @property
     def available(self) -> bool:
-        return super().available \
+        return bool(super().available \
         and (
             "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
             self._appliance.status["BSH.Common.Status.RemoteControlActive"].value
-        )
+        ))
 
     @property
     def options(self) -> list[str]:
         """Return a set of selectable options."""
         try:
-            return self._appliance.settings[self._key].allowedvalues
+            return self._appliance.settings[self._key].allowedvalues or []
         except Exception as ex:
             pass
         return []
 
     @property
-    def current_option(self) -> str:
+    def current_option(self) -> str|None:
         """Return the selected entity option to represent the entity state."""
         return self._appliance.settings[self._key].value if self._appliance.settings and self._key in self._appliance.settings else None
 
@@ -284,7 +287,7 @@ class SettingsSelect(InteractiveEntityBase, SelectEntity):
 
 class DelayedOperationSelect(InteractiveEntityBase, SelectEntity):
     """ Class for delayed start select box """
-    def __init__(self, appliance: Appliance, key: str = None, conf: dict = None, hc_obj = None) -> None:
+    def __init__(self, appliance: Appliance, key: str, conf: Configuration, hc_obj = None) -> None:
         super().__init__(appliance, key, conf, hc_obj)
         self._current = '0:00'
 

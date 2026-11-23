@@ -7,7 +7,7 @@ from home_connect_async import Appliance, HomeConnect, Events, HealthStatus
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType
+from homeassistant.config_entries import ConfigEntry
 
 from .common import Configuration, EntityBase, EntityManager
 from .const import (
@@ -21,7 +21,7 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigType, async_add_entities: AddEntitiesCallback,) -> None:
+async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities: AddEntitiesCallback,) -> None:
     """Add sensors for passed config_entry in HA"""
     #homeconnect: HomeConnect = hass.data[DOMAIN]["homeconnect"]
     entry_conf:Configuration = hass.data[DOMAIN][config_entry.entry_id]
@@ -33,11 +33,11 @@ async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigType, async
 
         if appliance.selected_program:
             conf = entry_conf.get_config({"program_type": "selected"})
-            device = ProgramSensor(appliance, None, conf)
+            device = ProgramSensor(appliance, "", conf)
             entity_manager.add(device)
         if appliance.active_program:
             conf = entry_conf.get_config({"program_type": "active"})
-            device = ProgramSensor(appliance, None, conf)
+            device = ProgramSensor(appliance, "", conf)
             entity_manager.add(device)
 
         conf = entry_conf.get_config()
@@ -92,7 +92,7 @@ class ProgramSensor(EntityBase, SensorEntity):
         return f"{self.safe_haId}_{self._conf['program_type']}_program"
 
     @property
-    def name_ext(self) -> str:
+    def name_ext(self) -> str|None:
         return f"{self._conf['program_type'].capitalize()} Program"
 
     @property
@@ -100,7 +100,7 @@ class ProgramSensor(EntityBase, SensorEntity):
         return "programs"
 
     @property
-    def icon(self) -> str:
+    def icon(self) -> str|None:
         if self._appliance.type in DEVICE_ICON_MAP:
             return DEVICE_ICON_MAP[self._appliance.type]
         return None
@@ -147,7 +147,7 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
         return self.get_entity_setting("icon", "mdi:office-building-cog")
 
     @property
-    def name_ext(self) -> str:
+    def name_ext(self) -> str|None:
         if self._appliance.selected_program and self._key in self._appliance.selected_program.options:
             return self._appliance.selected_program.options[self._key].name
         if self._appliance.active_program and self._key in self._appliance.active_program.options:
@@ -156,7 +156,7 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
 
     @property
     def available(self) -> bool:
-        return (
+        return bool((
             (
                 self._appliance.selected_program
                 and (self._key in self._appliance.selected_program.options)
@@ -165,7 +165,7 @@ class ProgramOptionSensor(EntityBase, SensorEntity):
                 self._appliance.active_program
                 and (self._key in self._appliance.active_program.options)
             )
-        ) and super().available
+        ) and super().available)
 
     @property
     def internal_unit(self) -> str | None:
@@ -274,7 +274,7 @@ class StatusSensor(EntityBase, SensorEntity):
         return "statuses"
 
     @property
-    def name_ext(self) -> str:
+    def name_ext(self) -> str|None:
         if self._key in self._appliance.status:
             status = self._appliance.status[self._key]
             if status:
@@ -320,7 +320,7 @@ class SettingsSensor(EntityBase, SensorEntity):
         return "settings"
 
     @property
-    def name_ext(self) -> str:
+    def name_ext(self) -> str|None:
         if self._key in self._appliance.settings:
             setting = self._appliance.settings[self._key]
             if setting:
@@ -360,7 +360,7 @@ class SettingsSensor(EntityBase, SensorEntity):
 class HomeConnectStatusSensor(SensorEntity):
     """Global Home Connect status sensor"""
 
-    should_poll = True
+    _attr_should_poll = True
     _attr_has_entity_name = True
 
     def __init__(self, homeconnect: HomeConnect, name_suffix:str) -> None:
@@ -387,11 +387,15 @@ class HomeConnectStatusSensor(SensorEntity):
 
     @property
     def native_value(self):
-        return self._homeconnect.health.get_status().name
+        health = self._homeconnect.health
+        return health.get_status().name if health else None
 
     @property
     def extra_state_attributes(self) -> Mapping[str, Any] | None:
+        health = self._homeconnect.health
+        if not health:
+            return None
         return {
-            "blocked_until": self._homeconnect.health.get_blocked_until(),
-            "blocked_for": self._homeconnect.health.get_block_time_str(),
+            "blocked_until": health.get_blocked_until(),
+            "blocked_for": health.get_block_time_str(),
         }

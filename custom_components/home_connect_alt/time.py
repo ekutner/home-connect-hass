@@ -7,7 +7,7 @@ from home_connect_async import Appliance, HomeConnect, HomeConnectError, Events,
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity_registry import async_get
 
 from .common import InteractiveEntityBase, EntityManager, is_boolean_enum, Configuration, find_delayed_operation_option
@@ -15,7 +15,7 @@ from .const import CONF_DELAYED_OPS, CONF_DELAYED_OPS_ABSOLUTE_TIME, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
+async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigEntry, async_add_entities:AddEntitiesCallback) -> None:
     """Add Selects for passed config_entry in HA."""
     entry_conf:Configuration = hass.data[DOMAIN][config_entry.entry_id]
     homeconnect:HomeConnect = entry_conf["homeconnect"]
@@ -56,9 +56,9 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
     """
     should_poll = True
 
-    def __init__(self, appliance: Appliance, key: str = None, conf: dict = None, hc_obj = None) -> None:
+    def __init__(self, appliance: Appliance, key: str, conf: Configuration, hc_obj = None) -> None:
         super().__init__(appliance, key, conf, hc_obj)
-        self._current:time = None
+        self._current:time|None = None
     @property
     def name_ext(self) -> str|None:
         # Name the control after what the user actually sets, so it stays consistent with its
@@ -86,7 +86,8 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
         """Update the current value."""
         self._current = self.adjust_time(value, True)
         # Notify related entities (e.g. the "Cancel delayed start" button) that a delay is now armed
-        await self._appliance._callbacks.async_broadcast_event(self._appliance, Events.DATA_CHANGED)
+        if self._appliance._callbacks:
+            await self._appliance._callbacks.async_broadcast_event(self._appliance, Events.DATA_CHANGED)
         self.async_write_ha_state()
 
     @property
@@ -107,7 +108,7 @@ class DelayedOperationTime(InteractiveEntityBase, TimeEntity):
         return None
 
 
-    def adjust_time(self, t:time, set_option:bool) -> time|None:
+    def adjust_time(self, t:time, set_option:bool) -> time:
         """ Adjust the time state and set the delay option when required.
 
         The time represents the appliance's native delayed-operation moment: the start time

@@ -113,7 +113,7 @@ class Services():
         # loaded entry that owns the device and has the appliance enabled
         device = self.dr.async_get(device_id)
         haId = next((identifier[1] for identifier in device.identifiers if identifier[0] == DOMAIN), None) if device else None
-        if not haId:
+        if not device or not haId:
             raise ServiceValidationError(f"Device {device_id} is not a Home Connect Alt appliance")
         for entry_id in device.config_entries:
             entry_conf = self.hass.data.get(DOMAIN, {}).get(entry_id)

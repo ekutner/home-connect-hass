@@ -2,6 +2,7 @@ from __future__ import annotations
 import logging
 import re
 from abc import ABC, abstractmethod
+from typing import Any, cast
 
 from home_connect_async import Appliance, Events
 from homeassistant.core import HomeAssistant
@@ -27,7 +28,7 @@ def find_delayed_operation_option(appliance:Appliance, conf:"Configuration"):
                 return option
     return None
 
-def is_boolean_enum(values:list[str]) -> bool:
+def is_boolean_enum(values:list[str]|None) -> bool:
     """ Check if the list of enum values represents a boolean on/off option"""
     if not values or len(values) != 2:
         return False
@@ -56,7 +57,8 @@ class EntityBase(ABC):
         self._safe_haid: str = ""
         self._unique_id:str = ""
         self.entity_id = f'{self._platform_domain()}.{self.unique_id}'
-        self._hc_obj = hc_obj
+        # The SDK object (Option, Command, Program...) backing the entity, if any
+        self._hc_obj: Any = hc_obj
 
     def _platform_domain(self) -> str:
         """Return the HA platform domain (sensor, switch, ...) derived from the MRO."""
@@ -67,7 +69,7 @@ class EntityBase(ABC):
         return DOMAIN
 
 
-    def get_entity_setting(self, option, default=None):
+    def get_entity_setting(self, option, default=None) -> Any:
         """ Gets the specified configuration option for the entity """
         return self._conf.get_entity_setting(self._key, option, default)
 
@@ -165,7 +167,7 @@ class EntityBase(ABC):
     @property
     def program_option_available(self) -> bool:
         """ Helper to be used for program options controls """
-        return (
+        return bool(
             self._appliance.connected
             and self._appliance.is_available_option(self._key)
             and  (
@@ -178,14 +180,14 @@ class EntityBase(ABC):
 
     async def async_added_to_hass(self):
         """Run when this Entity has been added to HA."""
-        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, Events.PROGRAM_SELECTED]
+        events:list[str] = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, Events.PROGRAM_SELECTED]
         if self._key:
             events.append(self._key)
         self._appliance.register_callback(self.async_on_update, events)
 
     async def async_will_remove_from_hass(self):
         """Entity being removed from hass."""
-        events = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, Events.PROGRAM_SELECTED]
+        events:list[str] = [Events.CONNECTION_CHANGED, Events.DATA_CHANGED, Events.PROGRAM_SELECTED]
         if self._key:
             events.append(self._key)
         self._appliance.deregister_callback(self.async_on_update, events)
@@ -224,12 +226,12 @@ class EntityManager():
     """
     def __init__(self, async_add_entities:AddEntitiesCallback, platform:str):
         self._existing_ids = set()
-        self._pending_entities:dict[str, Entity] = {}
+        self._pending_entities:dict[str, EntityBase] = {}
         self._entity_appliance_map = {}
         self._async_add_entities = async_add_entities
         self._platform = platform
 
-    def add(self, entity:Entity) -> None:
+    def add(self, entity:EntityBase) -> None:
         """Add a new entity unless it already exists."""
         if entity and (entity.unique_id not in self._existing_ids) and (entity.unique_id not in self._pending_entities):
             self._pending_entities[entity.unique_id] = entity
@@ -245,7 +247,8 @@ class EntityManager():
         if len(new_ids)>0:
             _LOGGER.debug("Registering new entities for platform=%s: %s", self._platform, new_ids)
             _LOGGER.debug("Already registered entities for platform=%s: %s", self._platform, self._existing_ids)
-            self._async_add_entities(new_entities)
+            # Every EntityBase is mixed into a concrete HA Entity subclass
+            self._async_add_entities(cast(list[Entity], new_entities))
             self._existing_ids |= new_ids
             self._pending_entities = {}
 
@@ -288,7 +291,7 @@ class Configuration(dict):
 
         return destination
 
-    def get_entity_setting(self, key:str, option:str, default=None):
+    def get_entity_setting(self, key:str, option:str, default=None) -> Any:
         """ Retrun an entity config setting or None if it doesn't exist """
         if CONF_ENTITY_SETTINGS in self and  self[CONF_ENTITY_SETTINGS] and key in self[CONF_ENTITY_SETTINGS] and option in self[CONF_ENTITY_SETTINGS][key]:
             return self[CONF_ENTITY_SETTINGS][key][option]

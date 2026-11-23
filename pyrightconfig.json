@@ -1,0 +1,9 @@
+{
+  "include": ["custom_components"],
+  "extraPaths": ["/workspaces/home-connect-async"],
+  "typeCheckingMode": "standard",
+  // Home Assistant declares Entity attributes (icon, available, unique_id, ...) as
+  // cached_property and resolves overrides with its CachedProperties metaclass, so
+  // overriding them with @property is the supported pattern, not an error.
+  "reportIncompatibleVariableOverride": "none"
+}

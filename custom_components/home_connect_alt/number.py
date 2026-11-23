@@ -6,13 +6,13 @@ from homeassistant.components.number import NumberEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType
+from homeassistant.config_entries import ConfigEntry
 
 from .common import Configuration, InteractiveEntityBase, EntityManager
 from .const import DOMAIN
 
 
-async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
+async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigEntry, async_add_entities:AddEntitiesCallback) -> None:
     """Add Numbers for passed config_entry in HA."""
     #auth = hass.data[DOMAIN][config_entry.entry_id]
     #homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
@@ -103,7 +103,7 @@ class OptionNumber(InteractiveEntityBase, NumberEntity):
         return ""
 
     @property
-    def native_value(self) -> float:
+    def native_value(self) -> float|None:
         """Return the entity value to represent the entity state."""
         option = self._appliance.get_applied_program_option(self._key)
         if option:

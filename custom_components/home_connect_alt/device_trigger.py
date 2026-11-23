@@ -1,14 +1,19 @@
 """Provides device triggers for Home Connect New."""
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-import voluptuous as vol
+if TYPE_CHECKING:
+    # Home Assistant swaps voluptuous for its drop-in replacement probatio at runtime
+    # (install_as_voluptuous), and its schema type hints are written against probatio
+    import probatio as vol
+else:
+    import voluptuous as vol
 #from homeassistant.components.automation import (AutomationActionType, AutomationTriggerInfo)
 from homeassistant.components.device_automation import DEVICE_TRIGGER_BASE_SCHEMA
 from homeassistant.components.homeassistant.triggers import event as event_trigger
 from homeassistant.components.homeassistant.triggers import state as state_trigger
-from homeassistant.const import (CONF_DEVICE_ID, CONF_DOMAIN, CONF_PLATFORM, CONF_TYPE)
+from homeassistant.const import (CONF_DEVICE_ID, CONF_DOMAIN, CONF_EVENT_DATA, CONF_PLATFORM, CONF_TYPE)
 from homeassistant.core import CALLBACK_TYPE, HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import entity_registry
@@ -55,9 +60,9 @@ async def async_attach_trigger(
 
     event_config = event_trigger.TRIGGER_SCHEMA(
         {
-            event_trigger.CONF_PLATFORM: "event",
+            CONF_PLATFORM: "event",
             event_trigger.CONF_EVENT_TYPE: f"{DOMAIN}_event",
-            event_trigger.CONF_EVENT_DATA: {
+            CONF_EVENT_DATA: {
                 CONF_DEVICE_ID: config[CONF_DEVICE_ID],
                 "key": TRIGGERS_CONFIG[trigger_type]["key"],
                 "value": TRIGGERS_CONFIG[trigger_type]["value"]

@@ -4,7 +4,7 @@ from home_connect_async import Appliance, HomeConnect, Events
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType
+from homeassistant.config_entries import ConfigEntry
 
 from .common import Configuration, EntityBase, EntityManager
 from .const import DOMAIN
@@ -12,7 +12,7 @@ from .const import DOMAIN
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
+async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigEntry, async_add_entities:AddEntitiesCallback) -> None:
     """Add sensors for passed config_entry in HA."""
     #auth = hass.data[DOMAIN][config_entry.entry_id]
     #homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
@@ -67,7 +67,7 @@ class ProgramOptionBinarySensor(EntityBase, BinarySensorEntity):
         return f"{DOMAIN}__options"
 
     @property
-    def name_ext(self) -> str:
+    def name_ext(self) -> str|None:
         current_program = self._appliance.get_applied_program()
 
         if current_program and current_program.options and self._key in current_program.options:
@@ -81,7 +81,7 @@ class ProgramOptionBinarySensor(EntityBase, BinarySensorEntity):
     @property
     def available(self) -> bool:
         current_program = self._appliance.get_applied_program()
-        return super().available and current_program and current_program.options and self._key in current_program.options
+        return bool(super().available and current_program and current_program.options and self._key in current_program.options)
 
     @property
     def is_on(self):
@@ -98,10 +98,10 @@ class ActivityOptionBinarySensor(ProgramOptionBinarySensor):
 
     @property
     def available(self) -> bool:
-        return self._appliance.active_program and self._key in self._appliance.active_program.options
+        return bool(self._appliance.active_program and self._key in self._appliance.active_program.options)
 
     @property
-    def name_ext(self) -> str:
+    def name_ext(self) -> str|None:
         if self._appliance.active_program and (self._key in self._appliance.active_program.options):
             return self._appliance.active_program.options[self._key].name
         return None
@@ -114,7 +114,7 @@ class StatusBinarySensor(EntityBase, BinarySensorEntity):
         return self.get_entity_setting('icon', 'mdi:gauge-full')
 
     @property
-    def name_ext(self) -> str:
+    def name_ext(self) -> str|None:
         if self._key in self._appliance.status:
             status = self._appliance.status[self._key]
             if status:
@@ -122,7 +122,7 @@ class StatusBinarySensor(EntityBase, BinarySensorEntity):
         return None
 
     @property
-    def is_on(self) -> bool:
+    def is_on(self) -> bool|None:
         if self._key in self._appliance.status:
             if self.has_entity_setting("on_state"):
                 return self._appliance.status[self._key].value == self.get_entity_setting("on_state")
@@ -140,7 +140,7 @@ class SettingsBinarySensor(EntityBase, BinarySensorEntity):
         return f"{DOMAIN}__settings"
 
     @property
-    def name_ext(self) -> str:
+    def name_ext(self) -> str|None:
         if self._key in self._appliance.settings:
             setting = self._appliance.settings[self._key]
             if setting:

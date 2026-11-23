@@ -6,8 +6,14 @@ import copy
 import logging
 import aiohttp
 from datetime import datetime
+from typing import TYPE_CHECKING
 
-import voluptuous as vol
+if TYPE_CHECKING:
+    # Home Assistant swaps voluptuous for its drop-in replacement probatio at runtime
+    # (install_as_voluptuous), and its schema type hints are written against probatio
+    import probatio as vol
+else:
+    import voluptuous as vol
 from home_connect_async import Appliance, HomeConnect, Events, ConditionalLogger
 from homeassistant.components.application_credentials import ClientCredential, async_import_client_credential
 from homeassistant.config_entries import ConfigEntry
@@ -283,7 +289,7 @@ async def async_load_from_cache(hass:HomeAssistant, auth:api.AsyncConfigEntryAut
         _LOGGER.debug("Exception while loading HomeConnect from cache, clearing cache and continuing", exc_info=ex)
         return None
 
-async def async_save_to_cache(hass:HomeAssistant, homeconnect:HomeConnect, cache:storage.Store=None) -> None:
+async def async_save_to_cache(hass:HomeAssistant, homeconnect:HomeConnect, cache:storage.Store|None=None) -> None:
     """ Helper function to save the Home Connect data to Home Assistant storage """
     try:
         if not cache:

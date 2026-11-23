@@ -9,14 +9,14 @@ from homeassistant.components.switch import SwitchEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType
+from homeassistant.config_entries import ConfigEntry
 
 from .common import InteractiveEntityBase, EntityManager, is_boolean_enum, Configuration
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
+async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigEntry, async_add_entities:AddEntitiesCallback) -> None:
     """Add sensors for passed config_entry in HA."""
     #homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
     entry_conf:Configuration = hass.data[DOMAIN][config_entry.entry_id]
@@ -78,7 +78,7 @@ class OptionSwitch(InteractiveEntityBase, SwitchEntity):
         return self.program_option_available
 
     @property
-    def is_on(self) -> bool:
+    def is_on(self) -> bool|None:
         """Return True if entity is on."""
         option = self._appliance.get_applied_program_option(self._key)
         if option:
@@ -126,15 +126,15 @@ class SettingsSwitch(InteractiveEntityBase, SwitchEntity):
 
     @property
     def available(self) -> bool:
-        return self._key in self._appliance.settings \
+        return bool(self._key in self._appliance.settings \
         and super().available \
         and (
             "BSH.Common.Status.RemoteControlActive" not in self._appliance.status or
             self._appliance.status["BSH.Common.Status.RemoteControlActive"].value
-        )
+        ))
 
     @property
-    def is_on(self) -> bool:
+    def is_on(self) -> bool|None:
         """Return True if entity is on."""
         if self._key in self._appliance.settings:
             setting = self._appliance.settings[self._key]
@@ -145,7 +145,7 @@ class SettingsSwitch(InteractiveEntityBase, SwitchEntity):
             return setting.value
         return None
 
-    def bool_to_enum(self, allowedvalues, val:bool) -> str:
+    def bool_to_enum(self, allowedvalues, val:bool) -> str|None:
         """ Get the matching enum value for the provided boolean value """
         for av in allowedvalues:
             if (val and av.lower().endswith('.on')) or (not val and av.lower().endswith('.off')) :

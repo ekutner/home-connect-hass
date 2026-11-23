@@ -1,12 +1,22 @@
 """Config flow for Home Connect New."""
-import logging
-from typing import Any, Mapping
+from __future__ import annotations
 
-import voluptuous as vol
+import logging
+from typing import TYPE_CHECKING, Any, Mapping
+
+if TYPE_CHECKING:
+    # Home Assistant swaps voluptuous for its drop-in replacement probatio at runtime
+    # (install_as_voluptuous), and its schema type hints are written against probatio
+    import probatio as vol
+    # Only used as a type hint, and HA < 2024.4 doesn't have it
+    from homeassistant.config_entries import ConfigFlowResult
+else:
+    import voluptuous as vol
+
 from homeassistant import config_entries
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.data_entry_flow import FlowResult, FlowHandler
+from homeassistant.data_entry_flow import FlowHandler
 from homeassistant.const import CONF_CLIENT_ID, CONF_CLIENT_SECRET
 from homeassistant.helpers import config_entry_oauth2_flow, config_validation as cv
 from homeassistant.helpers.selector import selector
@@ -51,7 +61,7 @@ class OAuth2FlowHandler(config_entry_oauth2_flow.AbstractOAuth2FlowHandler, doma
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Handle a flow start."""
         implementations = await config_entry_oauth2_flow.async_get_implementations(self.hass, self.DOMAIN)
         if user_input is None and not implementations:
@@ -82,22 +92,22 @@ class OAuth2FlowHandler(config_entry_oauth2_flow.AbstractOAuth2FlowHandler, doma
         return await self.async_step_pick_implementation(user_input)
 
 
-    async def async_step_reauth(self, entry_data: Mapping[str, Any]) -> FlowResult:
+    async def async_step_reauth(self, entry_data: Mapping[str, Any]) -> ConfigFlowResult:
         """Perform reauth upon an API authentication error."""
         self.reauth_entry = self.hass.config_entries.async_get_entry(
-            self.context["entry_id"]
+            self.context.get("entry_id", "")
         )
         return await self.async_step_reauth_confirm()
 
     async def async_step_reauth_confirm(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Confirm reauth dialog."""
         if user_input is None:
             return self.async_show_form(step_id="reauth_confirm")
         return await self.async_step_user()
 
-    async def async_oauth_create_entry(self, data: dict[str, Any]) -> FlowResult:
+    async def async_oauth_create_entry(self, data: dict[str, Any]) -> ConfigFlowResult:
         """Create an entry for the flow, or update existing entry."""
         if self.reauth_entry:
             self.hass.config_entries.async_update_entry(self.reauth_entry, data=data)
@@ -139,7 +149,7 @@ class OptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """ Manage the options """
         if user_input is not None:
             # Save the config entry when the user input has been received

@@ -6,14 +6,14 @@ from homeassistant.const import CONF_CLIENT_ID, CONF_CLIENT_SECRET
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType
+from homeassistant.config_entries import ConfigEntry
 
 from .common import Configuration, EntityBase, EntityManager, find_delayed_operation_option
 from .const import CONF_DELAYED_OPS, CONF_DELAYED_OPS_ABSOLUTE_TIME, DOMAIN, HOME_CONNECT_DEVICE
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_add_entities:AddEntitiesCallback) -> None:
+async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigEntry, async_add_entities:AddEntitiesCallback) -> None:
     """ Add buttons for passed config_entry in HA """
     #homeconnect:HomeConnect = hass.data[DOMAIN]['homeconnect']
     entry_conf:Configuration = hass.data[DOMAIN][config_entry.entry_id]
@@ -24,8 +24,8 @@ async def async_setup_entry(hass:HomeAssistant , config_entry:ConfigType, async_
         conf = entry_conf.get_config()
 
         if appliance.available_programs:
-            entity_manager.add(StartButton(appliance, None, conf))
-            entity_manager.add(StopButton(appliance, None, conf))
+            entity_manager.add(StartButton(appliance, "", conf))
+            entity_manager.add(StopButton(appliance, "", conf))
 
         # In absolute-time mode the delayed start/finish is set on a time entity which, being a
         # standard HA time picker, has no "off" position. This button lets the user cancel a
@@ -63,7 +63,7 @@ class StartButton(EntityBase, ButtonEntity):
         return f'{self.safe_haId}_start_pause'
 
     @property
-    def name_ext(self) -> str:
+    def name_ext(self) -> str|None:
         match self.translation_key:
             case "pause_program":
                 return "Pause"
@@ -85,7 +85,7 @@ class StartButton(EntityBase, ButtonEntity):
     @property
     def available(self) -> bool:
         op_state = self._appliance.status.get("BSH.Common.Status.OperationState")
-        return super().available and op_state and \
+        return bool(super().available and op_state and \
             (
                 (
                     op_state.value in ["BSH.Common.EnumType.OperationState.Ready", "BSH.Common.EnumType.OperationState.Inactive" ]
@@ -108,7 +108,7 @@ class StartButton(EntityBase, ButtonEntity):
                     op_state.value == "BSH.Common.EnumType.OperationState.Pause"
                     and  "BSH.Common.Command.ResumeProgram" in self._appliance.commands
                 )
-            )
+            ))
 
 
     @property
@@ -169,7 +169,7 @@ class StopButton(EntityBase, ButtonEntity):
         return f'{self.safe_haId}_stop'
 
     @property
-    def name_ext(self) -> str:
+    def name_ext(self) -> str|None:
         return "Stop"
 
     @property
@@ -178,12 +178,12 @@ class StopButton(EntityBase, ButtonEntity):
 
     @property
     def available(self) -> bool:
-        return super().available \
+        return bool(super().available \
         and self._appliance.active_program \
         and (
             "BSH.Common.Status.RemoteControlStartAllowed" not in self._appliance.status or
             self._appliance.status["BSH.Common.Status.RemoteControlStartAllowed"].value
-        )
+        ))
 
     @property
     def icon(self) -> str:
@@ -234,7 +234,7 @@ class DelayedOperationCancelButton(EntityBase, ButtonEntity):
         return f'{self.safe_haId}_{self._key.lower().replace(".","_")}_cancel'
 
     @property
-    def name_ext(self) -> str:
+    def name_ext(self) -> str|None:
         return "Cancel delayed start"
 
     @property
@@ -252,7 +252,8 @@ class DelayedOperationCancelButton(EntityBase, ButtonEntity):
         """ Handle button press """
         self._appliance.clear_startonly_option(self._key)
         # Refresh the related time entity (and this button) so the cleared state shows immediately
-        await self._appliance._callbacks.async_broadcast_event(self._appliance, Events.DATA_CHANGED)
+        if self._appliance._callbacks:
+            await self._appliance._callbacks.async_broadcast_event(self._appliance, Events.DATA_CHANGED)
         self.async_write_ha_state()
 
     async def async_on_update(self, appliance:Appliance, key:str, value) -> None:
@@ -272,7 +273,7 @@ class CommandButton(EntityBase, ButtonEntity):
 
     @property
     def available(self) -> bool:
-        return super().available and self._appliance.commands and self._key in self._appliance.commands
+        return bool(super().available and self._appliance.commands and self._key in self._appliance.commands)
 
     async def async_press(self) -> None:
         """ Handle button press """
